@@ -1,0 +1,19 @@
+{
+  "name": "pretty-mixer",
+  "author": "PragmaticBeaver",
+  "license": "GNU3",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PragmaticBeaver/pretty-mixer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PragmaticBeaver/pretty-mixer/issues"
+  },
+  "homepage": "https://github.com/PragmaticBeaver/pretty-mixer#readme",
+  "devDependencies": {
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^2.8.8"
+  }
+}
