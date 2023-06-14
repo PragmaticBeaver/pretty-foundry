@@ -1,7 +1,7 @@
 import { MODULE_CONFIG } from "./config.mjs";
 import { logToConsole } from "./log.mjs";
 
-const SETTING_IDS = {
+export const SETTING_IDS = {
   ENABLED: "pm-enabled",
 };
 

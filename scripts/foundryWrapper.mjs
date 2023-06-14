@@ -23,6 +23,16 @@ export async function loadTemplatesWrapper(templates) {
 }
 
 /**
+ * Wrapper of "FoundryVTT Module client" renderTemplate function
+ * @param {string} path HTML template path
+ * @param {any} data data object for template compilation
+ * @returns Promise<string>
+ */
+export async function renderTemplateWrapper(path, data) {
+  return await renderTemplate(path, data);
+}
+
+/**
  * Wrapper of "FoundryVTT ClientSettings" get function
  * @param {string} moduleId
  * @param {string} settingId
