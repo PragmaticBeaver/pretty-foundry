@@ -2,16 +2,25 @@
   --mixer-width: 100%;
   --mixer-height: 100%;
 
-  /* todo */
   background-color: blueviolet;
   height: var(--mixer-height);
   width: var(--mixer-width);
 }
 
 .pretty-mixer-sidebar-button {
-  /* todo */
-}
+  --background-color: rgba(255, 255, 240, 0.8);
+  --background-color-hover: rgba(255, 255, 240, 0.65);
 
-.pretty-mixer-sidebar-icon {
-  /* todo */
+  height: 100%;
+  width: 50%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 15px;
+  background-color: var(--background-color);
+  transition: all 0.25s ease-out;
+}
+.pretty-mixer-sidebar-button:hover {
+  background-color: var(--background-color-hover);
 }

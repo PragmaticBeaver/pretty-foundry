@@ -1,24 +1,23 @@
 import { renderTemplateWrapper } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
-import { errorToConsole, logToConsole } from "./log.mjs";
+import { errorToConsole } from "./log.mjs";
 import { showMixer } from "./moduleUtils.mjs";
 
 export async function injectSidebarButton(html) {
-  const mainControls = html.find(".control-tools.main-controls");
-  if (!mainControls?.length) {
-    errorToConsole("'.control-tools.main-controls' not found!");
+  const sidebarHeader = html.find(".directory-header");
+  if (!sidebarHeader?.length) {
+    errorToConsole("'.directory-header' of SidebarTab Playlists not found!");
     return;
   }
 
-  const dataControlId = "pretty-mixer-sidebar-button";
+  const buttonId = "pretty-mixer-sidebar-button";
   const buttonTemplate = await renderTemplateWrapper(
     `${MODULE_CONFIG.TEMPLATE_PATH}/menuButton.hbs`,
-    { title: MODULE_CONFIG.MODULE_NAME, dataControlId }
+    { title: MODULE_CONFIG.MODULE_NAME, id: buttonId }
   );
-  mainControls.append(buttonTemplate);
+  sidebarHeader.append(buttonTemplate);
 
-  const button = html.find(`li[data-control='${dataControlId}']`); // find rendered HTML element
-  logToConsole({ button });
+  const button = html.find(`#${buttonId}`); // find rendered HTML element
   button.on("click", (_event) => {
     showMixer();
   });

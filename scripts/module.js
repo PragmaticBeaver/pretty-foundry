@@ -18,7 +18,7 @@ Hooks.on("ready", () => {
   loadMixerUi(new PrettyMixer());
 });
 
-Hooks.on("renderSceneControls", async (app, html, data) => {
+Hooks.on("changeSidebarTab", async (sidebarTab) => {
   const isModuleEnabled = getSettingsValue(
     MODULE_CONFIG.MODULE_ID,
     SETTING_IDS.ENABLED
@@ -28,9 +28,12 @@ Hooks.on("renderSceneControls", async (app, html, data) => {
     return;
   }
 
-  // render necessary scene templates
-  await injectSidebarButton(html);
-});
+  const playlistsId = "playlists";
+  const id = sidebarTab.id;
 
-// todo - to open the HTML use this
-// ui.combatCarousel.render(true);
+  if (id === playlistsId) {
+    // switched to SidebarTab "Playlists"
+    const element = sidebarTab.element;
+    await injectSidebarButton(element);
+  }
+});
