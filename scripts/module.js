@@ -1,11 +1,19 @@
-Hooks.on("init", function () {
-  console.log(
-    "This code runs once the Foundry VTT software begins its initialization workflow."
-  );
+import { logToConsole } from "./log.mjs";
+import { registerSettings } from "./settings.mjs";
+import { preloadTemplates } from "./templates.mjs";
+import PrettyMixer from "./mixer.mjs";
+
+Hooks.on("init", async () => {
+  logToConsole("initializing ...");
+  registerSettings();
+  await preloadTemplates();
+  // todo
+  logToConsole("initialized");
 });
 
-Hooks.on("ready", function () {
-  console.log(
-    "This code runs once core initialization is ready and game data is available."
-  );
+Hooks.on("ready", () => {
+  logToConsole("starting ...");
+  // todo
+  ui.prettyMixer = new PrettyMixer();
+  logToConsole("started");
 });

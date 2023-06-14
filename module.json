@@ -14,7 +14,6 @@
       "url": "https://github.com/PragmaticBeaver"
     }
   ],
-  "documentTypes": {},
   "esmodules": ["scripts/module.js"],
   "styles": ["styles/module.css"],
   "url": "#{URL}#",
