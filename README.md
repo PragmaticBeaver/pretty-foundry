@@ -10,6 +10,12 @@ For a simple development environment add a symlink from the root directory of th
 ln -s ~/src/pretty-mixer/ /Users/Beaver/Library/Application\ Support/FoundryVTT/Data/modules
 ```
 
+### Windows example
+
+```bash
+mklink /D "D:\FoundryVTT data\Data\modules\pretty-mixer" "E:\src\pretty-mixer"
+```
+
 ## Dev notes - brain storming
 
 Currently there are multiple ways the mixer UI can be achieved.
