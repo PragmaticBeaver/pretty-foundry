@@ -17,3 +17,6 @@ Hooks.on("ready", () => {
   ui.prettyMixer = new PrettyMixer();
   logToConsole("started");
 });
+
+// todo - to open the HTML use this
+// ui.combatCarousel.render(true);
