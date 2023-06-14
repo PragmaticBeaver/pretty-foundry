@@ -1,15 +1,7 @@
-.pretty-mixer {
-  --mixer-width: 100%;
-  --mixer-height: 100%;
-
-  background-color: blueviolet;
-  height: var(--mixer-height);
-  width: var(--mixer-width);
-}
-
+/* Sidebar Button */
 .pretty-mixer-sidebar-button {
-  --background-color: rgba(255, 255, 240, 0.8);
-  --background-color-hover: rgba(255, 255, 240, 0.65);
+  --sidebar-button-background-color: rgba(255, 255, 240, 0.8);
+  --sidebar-button-background-color-hover: rgba(255, 255, 240, 0.65);
 
   height: 100%;
   width: 50%;
@@ -18,9 +10,98 @@
   padding-top: 5px;
   padding-bottom: 5px;
   border-radius: 15px;
-  background-color: var(--background-color);
+  background-color: var(--sidebar-button-background-color);
   transition: all 0.25s ease-out;
 }
 .pretty-mixer-sidebar-button:hover {
-  background-color: var(--background-color-hover);
+  background-color: var(--sidebar-button-background-color-hover);
+}
+
+/* Main Window */
+.pretty-mixer {
+  --color-primary: #bb99ff;
+  --color-secondary: #ee99ff;
+  --background-color-primary: #222639;
+  --background-color-secondary: #1e2231;
+  --text-color-primary: whitesmoke;
+  --text-color-secondary: darkgray;
+
+  --mixer-width: 600px; /* todo set dynamic */
+  --mixer-height: 100%;
+
+  background-color: var(--background-color-primary);
+  height: var(--mixer-height);
+  width: var(--mixer-width);
+  display: flex;
+  flex-direction: column;
+  color: var(--text-color-primary);
+}
+
+.pretty-mixer-global-audio-controls-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1;
+}
+
+.pretty-mixer-global-audio-controls-queue-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.pretty-mixer-global-audio-controls {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.pretty-mixer-global-audio-controls-song-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-self: flex-start;
+}
+
+.pretty-mixer-global-audio-controls-song-info-song {
+  font-size: medium;
+}
+
+.pretty-mixer-global-audio-controls-song-info-playlist {
+  font-size: small;
+}
+
+.pretty-mixer-global-audio-controls-button-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.pretty-mixer-global-audio-controls-button {
+  transition: all 0.25s ease-out;
+}
+.pretty-mixer-global-audio-controls-button:hover {
+  color: var(--color-primary);
+}
+
+.pretty-mixer-global-audio-controls-volume-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.pretty-mixer-global-audio-controls-song-progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pretty-mixer-global-audio-controls-song-progress-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: small;
+  color: var(--text-color-secondary);
 }

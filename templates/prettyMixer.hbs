@@ -1,4 +1,63 @@
 <div id="pretty-mixer" class="pretty-mixer">
-  {{! todo }}
-  <p>hello world</p>
+  {{! Global audio controls }}
+  <div class="pretty-mixer-global-audio-controls-container">
+    {{! Audio queue }}
+    <div
+      id="pretty-mixer-global-audio-controls-queue-container"
+      class="pretty-mixer-global-audio-controls-queue-container"
+    >
+      {{! todo queued elements here; must be added through state }}
+      {{! <i class="fas fa-xmark"></i> }}
+    </div>
+
+    {{! Controls & song info }}
+    <div class="pretty-mixer-global-audio-controls">
+      {{! Song info }}
+      <div class="pretty-mixer-global-audio-controls-song-info">
+        <div
+          class="pretty-mixer-global-audio-controls-song-info-song"
+        >currentSong.title</div>
+        <div
+          class="pretty-mixer-global-audio-controls-song-info-playlist"
+        >playlist.title</div>
+      </div>
+
+      {{! Controls }}
+      <div class="pretty-mixer-global-audio-controls-button-container">
+        <div class="pretty-mixer-global-audio-controls-button">
+          <i class="fas fa-shuffle"></i>
+        </div>
+        <div class="pretty-mixer-global-audio-controls-button">
+          <i class="fas fa-backward-step"></i>
+        </div>
+        <div class="pretty-mixer-global-audio-controls-button">
+          <i class="fas fa-play"></i>
+        </div>
+        {{! todo <i class="fas fa-pause"></i> }}
+        <div class="pretty-mixer-global-audio-controls-button">
+          <i class="fas fa-forward-step"></i>
+        </div>
+        <div class="pretty-mixer-global-audio-controls-button">
+          <i class="fas fa-repeat"></i>
+        </div>
+      </div>
+
+      {{! Volume }}
+      <div class="pretty-mixer-global-audio-controls-volume-container">
+        <div class="pretty-mixer-global-audio-controls-button">
+          <i class="fas fa-volume"></i>
+        </div>
+        {{! volume-bar }}
+      </div>
+    </div>
+
+    {{! Song progress }}
+    <div class="pretty-mixer-global-audio-controls-song-progress-container">
+      <div>progressbar here</div>
+      <div class="pretty-mixer-global-audio-controls-song-progress-info">
+        <div>currentSong.timeLapsed</div>
+        <div>currentSong.timeRemaining</div>
+      </div>
+    </div>
+  </div>
 </div>
