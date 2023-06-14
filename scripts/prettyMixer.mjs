@@ -3,7 +3,7 @@ import { MODULE_CONFIG } from "./config.mjs";
 
 /**
  * Mixer UI controller.
- * UI can be found at /templates/mixer.hbs
+ * UI can be found at /templates/prettyMixer.hbs
  * @extends Application
  */
 export default class PrettyMixer extends Application {
@@ -17,7 +17,7 @@ export default class PrettyMixer extends Application {
   static get defaultOptions() {
     return mergeObjectWrapper(super.defaultOptions, {
       id: MODULE_CONFIG.MODULE_ID,
-      template: `${MODULE_CONFIG.TEMPLATE_PATH}/mixer.hbs`,
+      template: `${MODULE_CONFIG.TEMPLATE_PATH}/prettyMixer.hbs`,
       popOut: true,
       top: 0,
     });
