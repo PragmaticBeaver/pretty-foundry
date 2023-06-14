@@ -1,6 +1,9 @@
 .pretty-mixer {
+  --mixer-width: 100%;
+  --mixer-height: 100%;
+
   /* todo */
   background-color: blueviolet;
-  height: 300px;
-  width: 400px;
+  height: var(--mixer-height);
+  width: var(--mixer-width);
 }

@@ -19,6 +19,7 @@ export default class PrettyMixer extends Application {
       id: MODULE_CONFIG.MODULE_ID,
       template: `${MODULE_CONFIG.TEMPLATE_PATH}/mixer.hbs`,
       popOut: true,
+      top: 0,
     });
   }
 
