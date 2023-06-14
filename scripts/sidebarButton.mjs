@@ -4,6 +4,10 @@ import { errorToConsole } from "./log.mjs";
 import { showMixer } from "./moduleUtils.mjs";
 
 export async function injectSidebarButton(html) {
+  if (ui.prettyMixer.menuButtonInjected === true) {
+    return;
+  }
+
   const sidebarHeader = html.find(".directory-header");
   if (!sidebarHeader?.length) {
     errorToConsole("'.directory-header' of SidebarTab Playlists not found!");
@@ -21,4 +25,6 @@ export async function injectSidebarButton(html) {
   button.on("click", (_event) => {
     showMixer();
   });
+
+  ui.prettyMixer.menuButtonInjected = true;
 }
