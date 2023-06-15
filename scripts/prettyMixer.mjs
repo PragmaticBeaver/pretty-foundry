@@ -1,5 +1,11 @@
-import { mergeObjectWrapper } from "./foundryWrapper.mjs";
+import {
+  mergeObjectWrapper,
+  getPlayingPlaylists,
+  getPlaylist,
+} from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
+import { logToConsole } from "./log.mjs";
+import { attachElementCallback, convertMilliseconds } from "./moduleUtils.mjs";
 
 /**
  * Mixer UI controller.
@@ -7,6 +13,11 @@ import { MODULE_CONFIG } from "./config.mjs";
  * @extends Application
  */
 export default class PrettyMixer extends Application {
+  state = {
+    intervalId: undefined,
+    selectedPlaylist: undefined,
+  };
+
   constructor(options = {}) {
     super(options);
   }
@@ -28,8 +39,26 @@ export default class PrettyMixer extends Application {
    * https://foundryvtt.com/api/v11/classes/client.Application.html#getData
    */
   getData() {
-    // todo
-    return {};
+    const currentlyPlayingSongId =
+      this.state.selectedPlaylist?.playbackOrder[0];
+    const currentlyPlayingSong =
+      this.state.selectedPlaylist?.sounds.contents.filter((sound) => {
+        return sound.id === currentlyPlayingSongId;
+      })[0];
+
+    logToConsole({ currentlyPlayingSong });
+
+    return {
+      currentlyPlayingPlaylists: getPlayingPlaylists(),
+      selectedPlaylist: this.state.selectedPlaylist,
+      currentlyPlayingSong,
+      // currentlyPlayingSongDuration: convertMilliseconds(
+      //   currentlyPlayingSong?.sound?.duration
+      // ),
+      currentlyPlayingSongDuration: currentlyPlayingSong?.sound?.duration | 100,
+      currentlyPlayingSongProgress:
+        currentlyPlayingSong?.sound?.currentTime | 0,
+    };
   }
 
   /**
@@ -38,6 +67,15 @@ export default class PrettyMixer extends Application {
    */
   async _render(force, options = {}) {
     await super._render(force, options);
+
+    if (this.state.intervalId) {
+      return;
+    }
+
+    // update "Pretty Mixer" UI ever 100 ms
+    this.state.intervalId = setInterval(() => {
+      this._render();
+    }, 250);
   }
 
   /**
@@ -45,6 +83,18 @@ export default class PrettyMixer extends Application {
    * @param {JQuery} html
    */
   activateListeners(html) {
-    // todo
+    super.activateListeners(html);
+    // todo handle clicks
+
+    const activePlaylists = html.find(
+      ".pretty-mixer-global-audio-controls-queue-element"
+    );
+    attachElementCallback(activePlaylists, "click", (e) => {
+      const id = e?.currentTarget?.dataset?.playlistId;
+      const playlist = getPlaylist(id);
+      if (playlist) {
+        this.state.selectedPlaylist = playlist;
+      }
+    });
   }
 }

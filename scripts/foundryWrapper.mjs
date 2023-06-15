@@ -16,7 +16,7 @@ export function mergeObjectWrapper(original, update, config) {
 /**
  * Wrapper of "FoundryVTT Module client" loadTemplates function
  * @param {Record<string, string>} templates
- * @returns Promise<Function[]>
+ * @returns {Promise<Function[]>}
  */
 export async function loadTemplatesWrapper(templates) {
   return await loadTemplates(templates);
@@ -26,7 +26,7 @@ export async function loadTemplatesWrapper(templates) {
  * Wrapper of "FoundryVTT Module client" renderTemplate function
  * @param {string} path HTML template path
  * @param {any} data data object for template compilation
- * @returns Promise<string>
+ * @returns {Promise<string>}
  */
 export async function renderTemplateWrapper(path, data) {
   return await renderTemplate(path, data);
@@ -36,8 +36,25 @@ export async function renderTemplateWrapper(path, data) {
  * Wrapper of "FoundryVTT ClientSettings" get function
  * @param {string} moduleId
  * @param {string} settingId
- * @returns any
+ * @returns {any}
  */
 export function getSettingsValue(moduleId, settingId) {
-  return game.settings.get(moduleId, settingId);
+  return game?.settings?.get(moduleId, settingId);
+}
+
+/**
+ * Wrapper of "FoundryVTT game.playlists.playing" property
+ * @returns {Playlist[] | undefined}
+ */
+export function getPlayingPlaylists() {
+  return game?.playlists?.playing;
+}
+
+/**
+ * Wrapper of "FoundryVTT game.playlists" get function
+ * @param {*} id playlist ID
+ * @returns {Playlist | undefined}
+ */
+export function getPlaylist(id) {
+  return game?.playlists?.get(id);
 }

@@ -1,11 +1,23 @@
 <div id="pretty-mixer" class="pretty-mixer">
   {{! Global audio controls }}
   <div class="pretty-mixer-global-audio-controls-container">
-    {{! Audio queue }}
+    {{! Currently playing playlists }}
     <div
       id="pretty-mixer-global-audio-controls-queue-container"
       class="pretty-mixer-global-audio-controls-queue-container"
     >
+      {{#each currentlyPlayingPlaylists}}
+        <div
+          id="playlist-{{this.id}}"
+          data-playlist-id="{{this.id}}"
+          class="pretty-mixer-global-audio-controls-queue-element"
+        >
+          <div>{{this.name}}</div>
+        </div>
+      {{/each}}
+      <div>
+        {{selectedPlaylist.id}}
+      </div>
       {{! todo queued elements here; must be added through state }}
       {{! <i class="fas fa-xmark"></i> }}
     </div>
@@ -16,10 +28,10 @@
       <div class="pretty-mixer-global-audio-controls-song-info">
         <div
           class="pretty-mixer-global-audio-controls-song-info-song"
-        >currentSong.title</div>
+        >{{currentlyPlayingSong.name}}</div>
         <div
           class="pretty-mixer-global-audio-controls-song-info-playlist"
-        >playlist.title</div>
+        >{{selectedPlaylist.name}}</div>
       </div>
 
       {{! Controls }}
@@ -58,12 +70,12 @@
         id="current-song-progressbar"
         class="pretty-mixer-global-audio-controls-song-progressbar"
         min="0"
-        max="100"
-        steps="5"
+        max="{{currentlyPlayingSongDuration}}"
+        value="{{currentlyPlayingSongProgress}}"
       />
       <div class="pretty-mixer-global-audio-controls-song-progress-info">
         <div>currentSong.timeLapsed</div>
-        <div>currentSong.timeRemaining</div>
+        <div>{{currentlyPlayingSongDuration}}</div>
       </div>
     </div>
   </div>

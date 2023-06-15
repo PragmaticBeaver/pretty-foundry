@@ -21,8 +21,13 @@
 .pretty-mixer {
   --color-primary: #bb99ff;
   --color-secondary: #ee99ff;
+
   --background-color-primary: #222639;
   --background-color-secondary: #1e2231;
+
+  --menu-color-primary: gray;
+  --menu-color-secondary: darkgray;
+
   --text-color-primary: whitesmoke;
   --text-color-secondary: darkgray;
 
@@ -54,6 +59,16 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+}
+
+.pretty-mixer-global-audio-controls-queue-element {
+  background-color: var(--menu-color-secondary);
+  border-radius: 20px;
+  width: 100%;
+  padding: 5px;
+}
+.pretty-mixer-global-audio-controls-queue-element:hover {
+  cursor: pointer;
 }
 
 .pretty-mixer-global-audio-controls {
@@ -106,7 +121,6 @@
 .pretty-mixer-global-audio-controls-song-progressbar {
   width: 100%;
   accent-color: var(--color-primary);
-  appearance: sliderthumb-horizontal !important;
 }
 
 .pretty-mixer-global-audio-controls-song-progress-info {
