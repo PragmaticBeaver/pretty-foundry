@@ -29,7 +29,7 @@
   --mixer-width: 600px; /* todo set dynamic */
   --mixer-height: 100%;
 
-  background-color: var(--background-color-primary);
+  /* background-color: var(--background-color-primary); */
   height: var(--mixer-height);
   width: var(--mixer-width);
   display: flex;
@@ -43,6 +43,11 @@
   flex-direction: column;
   gap: 10px;
   z-index: 1;
+  background-color: var(--background-color-secondary);
+  opacity: 0.8;
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 15px;
 }
 
 .pretty-mixer-global-audio-controls-queue-container {
@@ -96,6 +101,12 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
+}
+
+.pretty-mixer-global-audio-controls-song-progressbar {
+  width: 100%;
+  accent-color: var(--color-primary);
+  appearance: sliderthumb-horizontal !important;
 }
 
 .pretty-mixer-global-audio-controls-song-progress-info {

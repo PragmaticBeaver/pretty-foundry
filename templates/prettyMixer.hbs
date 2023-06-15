@@ -53,7 +53,14 @@
 
     {{! Song progress }}
     <div class="pretty-mixer-global-audio-controls-song-progress-container">
-      <div>progressbar here</div>
+      <input
+        type="range"
+        id="current-song-progressbar"
+        class="pretty-mixer-global-audio-controls-song-progressbar"
+        min="0"
+        max="100"
+        steps="5"
+      />
       <div class="pretty-mixer-global-audio-controls-song-progress-info">
         <div>currentSong.timeLapsed</div>
         <div>currentSong.timeRemaining</div>
