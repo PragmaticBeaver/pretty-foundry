@@ -1,4 +1,4 @@
-import PrettyMixer from "./prettyMixer.mjs";
+import { PrettyMixerVue } from "./prettyMixerVue.mjs";
 import { logToConsole, infoToConsole } from "./log.mjs";
 import { registerSettings, SETTING_IDS } from "./settings.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
@@ -15,7 +15,7 @@ Hooks.on("init", async () => {
 
 Hooks.on("ready", () => {
   logToConsole("starting ...");
-  loadMixerUi(new PrettyMixer());
+  loadMixerUi(new PrettyMixerVue());
 });
 
 Hooks.on("changeSidebarTab", async (sidebarTab) => {
