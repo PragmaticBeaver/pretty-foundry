@@ -5,9 +5,7 @@ import { showMixer } from "./utils.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 
 export async function injectSidebarButton(html) {
-  if (ui.prettyMixer.menuButtonInjected === true) {
-    return;
-  }
+  const buttonId = "pretty-mixer-sidebar-button";
 
   const sidebarHeader = html.find(".directory-header");
   if (!sidebarHeader?.length) {
@@ -15,7 +13,11 @@ export async function injectSidebarButton(html) {
     return;
   }
 
-  const buttonId = "pretty-mixer-sidebar-button";
+  const isRendered = html.find(`#${buttonId}`)?.length > 0;
+  if (isRendered) {
+    return;
+  }
+
   const buttonTemplate = await renderTemplateWrapper(
     getTemplatePath(TEMPLATE_IDS.MENU_BUTTON),
     { title: MODULE_CONFIG.MODULE_NAME, id: buttonId }
@@ -26,6 +28,4 @@ export async function injectSidebarButton(html) {
   button.on("click", () => {
     showMixer();
   });
-
-  ui.prettyMixer.menuButtonInjected = true;
 }

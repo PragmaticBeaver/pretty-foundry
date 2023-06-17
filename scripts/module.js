@@ -1,9 +1,7 @@
 import PrettyMixer from "./prettyMixer.mjs";
-import { logToConsole, infoToConsole } from "./log.mjs";
-import { registerSettings, SETTING_IDS } from "./settings.mjs";
-import { MODULE_CONFIG } from "./config.mjs";
+import { logToConsole } from "./log.mjs";
+import { registerSettings } from "./settings.mjs";
 import { preloadTemplates } from "./templates.mjs";
-import { getSettingsValue } from "./foundryWrapper.mjs";
 import { injectSidebarButton } from "./sidebarButton.mjs";
 import { loadMixerUi } from "./utils.mjs";
 import { registerCustomHooks } from "./customHooks.mjs";
@@ -24,21 +22,15 @@ Hooks.on("ready", () => {
 });
 
 Hooks.on("changeSidebarTab", async (sidebarTab) => {
-  const isModuleEnabled = getSettingsValue(
-    MODULE_CONFIG.MODULE_ID,
-    SETTING_IDS.ENABLED
-  );
-  if (!isModuleEnabled) {
-    infoToConsole("module is disabled");
-    return;
-  }
-
   const playlistsId = "playlists";
-  const id = sidebarTab.id;
+  if (sidebarTab.id === playlistsId) {
+    await injectSidebarButton(sidebarTab.element);
+  }
+});
 
-  if (id === playlistsId) {
-    // switched to SidebarTab "Playlists"
-    const element = sidebarTab.element;
-    await injectSidebarButton(element);
+Hooks.on("renderSidebarTab", async (sidebarTab) => {
+  const playlistsId = "playlists";
+  if (sidebarTab.id === playlistsId) {
+    await injectSidebarButton(sidebarTab.element);
   }
 });
