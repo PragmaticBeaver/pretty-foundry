@@ -6,24 +6,7 @@
       id="pretty-mixer-ambience-node-container"
       class="pretty-mixer-global-audio-controls-queue-container"
     >
-      <div>
-        testVal:
-        {{testVal}}
-      </div>
-      {{#each currentlyPlayingPlaylists}}
-        <div
-          id="playlist-{{this.id}}"
-          data-playlist-id="{{this.id}}"
-          class="pretty-mixer-global-audio-controls-queue-element"
-        >
-          <div>{{this.name}}</div>
-        </div>
-      {{/each}}
-      <div>
-        {{selectedPlaylist.id}}
-      </div>
-      {{! todo queued elements here; must be added through state }}
-      {{! <i class="fas fa-xmark"></i> }}
+      {{! ambienceNodes will be added here }}
     </div>
 
     {{! Controls & song info }}

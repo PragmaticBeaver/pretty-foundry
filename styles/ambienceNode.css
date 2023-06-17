@@ -1,12 +1,33 @@
 .ambience-node-progress {
   height: 30px;
   width: 100%;
-  background-color: red;
+  background-color: var(--color-primary);
+  max-width: 100px;
+  border-radius: 15px;
+  position: absolute;
 }
 
 .ambience-node-progress-bar {
   width: 0%;
   height: 100%;
-  transition: all 0.1s ease-in;
-  background-color: green;
+  transition: all 0.3s ease-in;
+  background-color: var(--color-secondary);
+  border-radius: 15px;
+}
+
+.ambience-node-label {
+  z-index: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding-left: 5px;
+  padding-right: 5px;
+  /* border-radius: 15px;
+  border-color: var(--color-primary);
+  border-style: solid; */
 }
