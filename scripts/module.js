@@ -6,6 +6,8 @@ import { preloadTemplates } from "./templates.mjs";
 import { getSettingsValue } from "./foundryWrapper.mjs";
 import { injectSidebarButton } from "./sidebarButton.mjs";
 import { loadMixerUi } from "./utils.mjs";
+import { registerCustomHooks } from "./customHooks.mjs";
+import { registerObservables } from "./observables.mjs";
 
 Hooks.on("init", async () => {
   logToConsole("initializing ...");
@@ -15,6 +17,8 @@ Hooks.on("init", async () => {
 
 Hooks.on("ready", () => {
   logToConsole("starting ...");
+  registerCustomHooks();
+  registerObservables();
   loadMixerUi(new PrettyMixer());
 });
 
@@ -36,14 +40,4 @@ Hooks.on("changeSidebarTab", async (sidebarTab) => {
     const element = sidebarTab.element;
     await injectSidebarButton(element);
   }
-});
-
-Hooks.on("getPlaylists", (...args) => {
-  logToConsole("HOOK => getPlaylists", args);
-  // const { target, prop } = args;
-});
-
-Hooks.on("setPlaylists", (...args) => {
-  logToConsole("HOOK => setPlaylists", args);
-  // const { target, key, value } = args;
 });
