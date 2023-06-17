@@ -1,7 +1,7 @@
 {
   "name": "pretty-mixer",
   "author": "PragmaticBeaver",
-  "license": "GNU3",
+  "license": "GPL-3.0-only",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PragmaticBeaver/pretty-mixer.git"
