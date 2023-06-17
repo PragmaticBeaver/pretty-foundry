@@ -40,7 +40,11 @@ export function attachElementCallback(elements, type, callback) {
   }
 }
 
-export function convertMilliseconds(ms) {
+/**
+ * @param {number} ms milliseconds to convert
+ * @returns {string} timestamp for example "2:17"
+ */
+export function convertToTimestamp(ms) {
   var minutes = Math.floor(ms / 60000);
   var seconds = ((ms % 60000) / 1000).toFixed(0);
   console.log({ ms, minutes, seconds });

@@ -8,7 +8,7 @@ import { logToConsole } from "./log.mjs";
 import {
   makeObservable,
   attachElementCallback,
-  convertMilliseconds,
+  convertToTimestamp,
 } from "./utils.mjs";
 
 /**
