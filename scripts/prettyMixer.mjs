@@ -3,10 +3,10 @@ import {
   getPlaylist,
   FOUNDRY_PLAYLIST_MODES,
   renderTemplateWrapper,
+  getPlayingPlaylists,
 } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
 import { errorToConsole, logToConsole, warnToConsole } from "./log.mjs";
-import { attachElementCallback } from "./utils.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 
 /**
@@ -15,6 +15,10 @@ import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
  * @extends Application
  */
 export default class PrettyMixer extends Application {
+  state = {
+    updatePlaylistHookId: undefined,
+  };
+
   constructor(options = {}) {
     super(options);
   }
@@ -32,41 +36,11 @@ export default class PrettyMixer extends Application {
   }
 
   /**
-   * required for template
-   * https://foundryvtt.com/api/v11/classes/client.Application.html#getData
-   */
-  getData() {
-    // const currentlyPlayingSongId =
-    //   this.state.selectedPlaylist?.playbackOrder[0];
-    // const currentlyPlayingSong =
-    //   this.state.selectedPlaylist?.sounds.contents.filter((sound) => {
-    //     return sound.id === currentlyPlayingSongId;
-    //   })[0];
-
-    return {
-      // currentlyPlayingPlaylists: getPlayingPlaylists(),
-      // selectedPlaylist: this.state.selectedPlaylist,
-      // currentlyPlayingSong,
-      // // currentlyPlayingSongDuration: convertMilliseconds(
-      // //   currentlyPlayingSong?.sound?.duration
-      // // ),
-      // currentlyPlayingSongDuration: currentlyPlayingSong?.sound?.duration | 100,
-      // currentlyPlayingSongProgress:
-      //   currentlyPlayingSong?.sound?.currentTime | 0,
-    };
-  }
-
-  /**
    * @override
    * https://foundryvtt.com/api/v11/classes/client.Application.html#render
    */
   render(force, options = {}) {
     super.render(force, options);
-
-    Hooks.on(
-      "updatePlaylist",
-      async (...args) => await this.onUpdatePlaylist(...args)
-    );
   }
 
   /**
@@ -78,26 +52,63 @@ export default class PrettyMixer extends Application {
   async close(options) {
     await super.close(options);
 
-    Hooks.off("updatePlaylist", (...args) => this.onUpdatePlaylist(...args));
+    Hooks.off("updatePlaylist", this.state.updatePlaylistHookId);
   }
 
   /**
    * https://foundryvtt.com/api/v11/classes/client.Application.html#activateListeners
    * @param {JQuery} html
+   * @override
    */
   activateListeners(html) {
     super.activateListeners(html);
+    this.renderInitialState();
 
-    const activePlaylists = html.find(
-      ".pretty-mixer-global-audio-controls-queue-element"
+    this.state.updatePlaylistHookId = Hooks.on(
+      "updatePlaylist",
+      async (...args) => await this.onUpdatePlaylist(...args)
     );
-    attachElementCallback(activePlaylists, "click", (e) => {
-      const id = e?.currentTarget?.dataset?.playlistId;
-      const playlist = getPlaylist(id);
-      if (playlist) {
-        logToConsole("clicked on", { playlist });
-      }
+
+    // todo refactor click handler
+    // const activePlaylists = html.find(
+    //   ".pretty-mixer-global-audio-controls-queue-element"
+    // );
+    // attachElementCallback(activePlaylists, "click", (e) => {
+    //   const id = e?.currentTarget?.dataset?.playlistId;
+    //   const playlist = getPlaylist(id);
+    //   if (playlist) {
+    //     logToConsole("clicked on", { playlist });
+    //   }
+    // });
+  }
+
+  /**
+   * Inject initial state after first render.
+   * @returns {void}
+   */
+  renderInitialState() {
+    const containerElement = this.getMixerNode();
+    if (!containerElement) return;
+
+    const playingPlaylists = getPlayingPlaylists().filter(
+      (playlist) => playlist.mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+    );
+    if (!playingPlaylists) {
+      return;
+    }
+
+    // ambience
+    playingPlaylists.forEach((playlist) => {
+      playlist.sounds.forEach(async (sound) => {
+        if (sound.playing) {
+          await this.addAmbienceNode(playlist.id, sound.id);
+        }
+      });
     });
+
+    logToConsole({ playingPlaylists });
+
+    // todo current track / playlist
   }
 
   getMixerNode() {
@@ -111,7 +122,7 @@ export default class PrettyMixer extends Application {
     return containerElement;
   }
 
-  async addAmbienceElement(playlistId, soundId) {
+  async addAmbienceNode(playlistId, soundId) {
     const containerElement = this.getMixerNode();
     if (!containerElement) return;
 
@@ -135,7 +146,7 @@ export default class PrettyMixer extends Application {
     containerElement.append(ambienceNodeTemplate);
   }
 
-  removeAmbienceElement(soundId) {
+  removeAmbienceNode(soundId) {
     const containerElement = this.getMixerNode();
     if (!containerElement) return;
 
@@ -156,8 +167,8 @@ export default class PrettyMixer extends Application {
       switch (playlistMode) {
         case FOUNDRY_PLAYLIST_MODES.SOUNDBOARD:
           sound.playing
-            ? await this.addAmbienceElement(changedPlaylistId, sound._id)
-            : this.removeAmbienceElement(sound._id);
+            ? await this.addAmbienceNode(changedPlaylistId, sound._id)
+            : this.removeAmbienceNode(sound._id);
           break;
         case FOUNDRY_PLAYLIST_MODES.SEQUENTIAL:
         case FOUNDRY_PLAYLIST_MODES.SIMULTANEOUS:
