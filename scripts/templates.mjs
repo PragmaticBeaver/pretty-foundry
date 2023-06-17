@@ -9,6 +9,6 @@ export const TEMPLATE_IDS = {
 export async function preloadTemplates() {
   logToConsole("preloading templates ...");
   await loadTemplatesWrapper({
-    [TEMPLATE_IDS.MIXER]: `${MODULE_CONFIG.TEMPLATE_PATH}/prettyMixer.html`,
+    [TEMPLATE_IDS.MIXER]: `${MODULE_CONFIG.TEMPLATE_PATH}/prettyMixer.hbs`,
   });
 }

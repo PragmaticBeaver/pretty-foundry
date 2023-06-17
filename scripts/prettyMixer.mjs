@@ -6,7 +6,6 @@ import {
 import { MODULE_CONFIG } from "./config.mjs";
 import { logToConsole } from "./log.mjs";
 import { attachElementCallback, convertMilliseconds } from "./moduleUtils.mjs";
-import { createApp } from "./../lib/petite-vue0.4.1.mjs";
 
 /**
  * Mixer UI controller.
@@ -29,7 +28,7 @@ export default class PrettyMixer extends Application {
   static get defaultOptions() {
     return mergeObjectWrapper(super.defaultOptions, {
       id: MODULE_CONFIG.MODULE_ID,
-      template: `${MODULE_CONFIG.TEMPLATE_PATH}/prettyMixer.html`,
+      template: `${MODULE_CONFIG.TEMPLATE_PATH}/prettyMixer.hbs`,
       popOut: true,
       top: 0,
     });
@@ -63,6 +62,23 @@ export default class PrettyMixer extends Application {
   }
 
   /**
+   * @override
+   * https://foundryvtt.com/api/v11/classes/client.Application.html#render
+   */
+  async _render(force, options = {}) {
+    await super._render(force, options);
+
+    if (this.state.intervalId) {
+      return;
+    }
+
+    // update "Pretty Mixer" UI ever 100 ms
+    this.state.intervalId = setInterval(() => {
+      this._render();
+    }, 250);
+  }
+
+  /**
    * https://foundryvtt.com/api/v11/classes/client.Application.html#activateListeners
    * @param {JQuery} html
    */
@@ -79,13 +95,6 @@ export default class PrettyMixer extends Application {
       if (playlist) {
         this.state.selectedPlaylist = playlist;
       }
-    });
-
-    // todo
-    // current-song-progressbar
-    createApp({
-      testPlaying: game?.playlists?.playing,
-      testSelectedPlaylist: this.state.selectedPlaylist,
     });
   }
 }

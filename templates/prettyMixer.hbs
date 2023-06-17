@@ -1,38 +1,40 @@
-<div id="pretty-mixer" class="pretty-mixer" v-scope>
-  <!-- {{! Global audio controls }} -->
+<div id="pretty-mixer" class="pretty-mixer">
+  {{! Global audio controls }}
   <div class="pretty-mixer-global-audio-controls-container">
-    <!-- {{! Currently playing playlists }} -->
+    {{! Currently playing playlists }}
     <div
       id="pretty-mixer-global-audio-controls-queue-container"
       class="pretty-mixer-global-audio-controls-queue-container"
     >
       {{#each currentlyPlayingPlaylists}}
-      <div
-        id="playlist-{{this.id}}"
-        data-playlist-id="{{this.id}}"
-        class="pretty-mixer-global-audio-controls-queue-element"
-      >
-        <div>{{this.name}}</div>
-      </div>
+        <div
+          id="playlist-{{this.id}}"
+          data-playlist-id="{{this.id}}"
+          class="pretty-mixer-global-audio-controls-queue-element"
+        >
+          <div>{{this.name}}</div>
+        </div>
       {{/each}}
-      <div>{{selectedPlaylist.id}}</div>
-      <!-- {{! todo queued elements here; must be added through state }}
-      <i class="fas fa-xmark"></i> -->
+      <div>
+        {{selectedPlaylist.id}}
+      </div>
+      {{! todo queued elements here; must be added through state }}
+      {{! <i class="fas fa-xmark"></i> }}
     </div>
 
-    <!-- {{! Controls & song info }} -->
+    {{! Controls & song info }}
     <div class="pretty-mixer-global-audio-controls">
-      <!-- {{! Song info }} -->
+      {{! Song info }}
       <div class="pretty-mixer-global-audio-controls-song-info">
-        <div class="pretty-mixer-global-audio-controls-song-info-song">
-          {{currentlyPlayingSong.name}}
-        </div>
-        <div class="pretty-mixer-global-audio-controls-song-info-playlist">
-          {{selectedPlaylist.name}}
-        </div>
+        <div
+          class="pretty-mixer-global-audio-controls-song-info-song"
+        >{{currentlyPlayingSong.name}}</div>
+        <div
+          class="pretty-mixer-global-audio-controls-song-info-playlist"
+        >{{selectedPlaylist.name}}</div>
       </div>
 
-      <!-- {{! Controls }} -->
+      {{! Controls }}
       <div class="pretty-mixer-global-audio-controls-button-container">
         <div class="pretty-mixer-global-audio-controls-button">
           <i class="fas fa-shuffle"></i>
@@ -43,7 +45,7 @@
         <div class="pretty-mixer-global-audio-controls-button">
           <i class="fas fa-play"></i>
         </div>
-        <!-- {{! todo <i class="fas fa-pause"></i> }} -->
+        {{! todo <i class="fas fa-pause"></i> }}
         <div class="pretty-mixer-global-audio-controls-button">
           <i class="fas fa-forward-step"></i>
         </div>
@@ -52,16 +54,16 @@
         </div>
       </div>
 
-      <!-- {{! Volume }} -->
+      {{! Volume }}
       <div class="pretty-mixer-global-audio-controls-volume-container">
         <div class="pretty-mixer-global-audio-controls-button">
           <i class="fas fa-volume"></i>
         </div>
-        <!-- {{! volume-bar }} -->
+        {{! volume-bar }}
       </div>
     </div>
 
-    <!-- {{! Song progress }} -->
+    {{! Song progress }}
     <div class="pretty-mixer-global-audio-controls-song-progress-container">
       <input
         type="range"
@@ -71,10 +73,6 @@
         max="{{currentlyPlayingSongDuration}}"
         value="{{currentlyPlayingSongProgress}}"
       />
-      <div>
-        testPlaying: {{testPlaying}} testSelectedPlaylist:
-        {{testSelectedPlaylist}}
-      </div>
       <div class="pretty-mixer-global-audio-controls-song-progress-info">
         <div>currentSong.timeLapsed</div>
         <div>{{currentlyPlayingSongDuration}}</div>
