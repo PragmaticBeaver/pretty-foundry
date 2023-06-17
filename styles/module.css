@@ -58,10 +58,11 @@
   padding: 15px;
 }
 
-.pretty-mixer-global-audio-controls-queue-container {
+.ambience-nodes-container {
   width: 100%;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .pretty-mixer-global-audio-controls-queue-element {

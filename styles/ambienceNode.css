@@ -1,10 +1,15 @@
+.ambience-node {
+  width: 100%;
+  height: 100%;
+  max-width: 100px;
+}
+
 .ambience-node-progress {
   height: 30px;
   width: 100%;
   background-color: var(--color-primary);
-  max-width: 100px;
   border-radius: 15px;
-  position: absolute;
+  position: relative;
 }
 
 .ambience-node-progress-bar {
