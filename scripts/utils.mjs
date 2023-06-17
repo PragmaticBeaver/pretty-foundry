@@ -19,6 +19,10 @@ export function showMixer() {
   ui.prettyMixer.render(true);
 }
 
+export function isPrettyMixerRendered() {
+  return ui.prettyMixer?.rendered;
+}
+
 /**
  *
  * @param {HTMLElement | HTMLElement[]} elements one or many HTMLElements

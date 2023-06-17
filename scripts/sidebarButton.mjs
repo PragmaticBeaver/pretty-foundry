@@ -1,7 +1,7 @@
 import { renderTemplateWrapper } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
 import { errorToConsole } from "./log.mjs";
-import { showMixer } from "./utils.mjs";
+import { showMixer, isPrettyMixerRendered } from "./utils.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 
 export async function injectSidebarButton(html) {
@@ -26,6 +26,7 @@ export async function injectSidebarButton(html) {
 
   const button = html.find(`#${buttonId}`); // find rendered HTML element
   button.on("click", () => {
+    if (isPrettyMixerRendered()) return;
     showMixer();
   });
 }
