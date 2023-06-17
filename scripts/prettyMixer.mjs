@@ -1,11 +1,11 @@
 import {
   mergeObjectWrapper,
   getPlaylist,
-  getPlayingPlaylists,
   FOUNDRY_PLAYLIST_MODES,
+  renderTemplateWrapper,
 } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
-import { logToConsole } from "./log.mjs";
+import { errorToConsole, logToConsole, warnToConsole } from "./log.mjs";
 import { attachElementCallback } from "./utils.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 
@@ -63,7 +63,10 @@ export default class PrettyMixer extends Application {
   render(force, options = {}) {
     super.render(force, options);
 
-    Hooks.on("updatePlaylist", (...args) => this.onUpdatePlaylist(...args));
+    Hooks.on(
+      "updatePlaylist",
+      async (...args) => await this.onUpdatePlaylist(...args)
+    );
   }
 
   /**
@@ -97,34 +100,75 @@ export default class PrettyMixer extends Application {
     });
   }
 
-  addAmbienceElement(playlistId) {
-    logToConsole("addAmbienceElement", playlistId);
-    // todo
-  }
-
-  removeAmbienceElement(playlistId) {
-    logToConsole("removeAmbienceElement", playlistId);
-    // todo
-  }
-
-  onUpdatePlaylist(origin, changes, uiState, id, ...args) {
-    logToConsole("updatePlaylist", { origin, changes, uiState, id, args });
-    const notPlaying = changes.playing !== true;
-    const playlistMode = origin.mode;
-    switch (playlistMode) {
-      case FOUNDRY_PLAYLIST_MODES.SOUNDBOARD:
-        notPlaying
-          ? this.removeAmbienceElement(id)
-          : this.addAmbienceElement(id);
-        break;
-      case FOUNDRY_PLAYLIST_MODES.SEQUENTIAL:
-      case FOUNDRY_PLAYLIST_MODES.SHUFFLE:
-        logToConsole("FOUNDRY_PLAYLIST_MODES...");
-        // todo handle playlists
-        break;
-      default:
-        warnToConsole(`unknown playlist mode: ${playlistMode}`);
-        break;
+  getMixerNode() {
+    const containerElement = this.element.find(
+      "#pretty-mixer-ambience-node-container"
+    );
+    if (!containerElement?.length) {
+      errorToConsole("'#pretty-mixer-ambience-node-container' not found!");
+      return;
     }
+    return containerElement;
+  }
+
+  async addAmbienceElement(playlistId, soundId) {
+    const containerElement = this.getMixerNode();
+    if (!containerElement) return;
+
+    const playlist = getPlaylist(playlistId);
+    if (!playlist) {
+      warnToConsole(`playlist ${playlistId} not found`);
+      return;
+    }
+    // logToConsole({ playlist });
+    const sound = playlist.sounds.get(soundId);
+    if (!sound) {
+      warnToConsole(`song ${soundId} not found`);
+      return;
+    }
+    // logToConsole({ sound });
+
+    const ambienceNodeTemplate = await renderTemplateWrapper(
+      getTemplatePath(TEMPLATE_IDS.AMBIENCE_NODE),
+      { label: sound.name, id: `ambience-node-${soundId}` }
+    );
+    containerElement.append(ambienceNodeTemplate);
+  }
+
+  removeAmbienceElement(soundId) {
+    const containerElement = this.getMixerNode();
+    if (!containerElement) return;
+
+    const ambienceNode = containerElement.find(`#ambience-node-${soundId}`);
+    if (!ambienceNode?.length) {
+      return;
+    }
+    ambienceNode.remove();
+  }
+
+  async onUpdatePlaylist(origin, changes, uiState, id, ...args) {
+    logToConsole("updatePlaylist", { origin, changes, uiState, id, args });
+
+    const changedPlaylistId = changes._id;
+    const changedSounds = changes.sounds;
+    changedSounds?.forEach(async (sound) => {
+      const playlistMode = origin.mode;
+      switch (playlistMode) {
+        case FOUNDRY_PLAYLIST_MODES.SOUNDBOARD:
+          sound.playing
+            ? await this.addAmbienceElement(changedPlaylistId, sound._id)
+            : this.removeAmbienceElement(sound._id);
+          break;
+        case FOUNDRY_PLAYLIST_MODES.SEQUENTIAL:
+        case FOUNDRY_PLAYLIST_MODES.SIMULTANEOUS:
+        case FOUNDRY_PLAYLIST_MODES.SHUFFLE:
+          logToConsole("FOUNDRY_PLAYLIST_MODES...");
+          // todo handle playlists
+          break;
+        default:
+          warnToConsole(`unknown playlist mode: ${playlistMode}`);
+          break;
+      }
+    });
   }
 }

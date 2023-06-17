@@ -21,6 +21,8 @@ module.exports = {
   },
   rules: {},
   globals: {
+    // FoundryVTT Libraries
+    $: "readonly",
     // FoundryVTT props
     ui: "readonly",
     game: "readonly",

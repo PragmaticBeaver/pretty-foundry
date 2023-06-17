@@ -62,5 +62,6 @@ export function getPlaylist(id) {
 export const FOUNDRY_PLAYLIST_MODES = {
   SEQUENTIAL: 0,
   SHUFFLE: 1,
-  SOUNDBOARD: 2,
+  SIMULTANEOUS: 2,
+  SOUNDBOARD: -1,
 };

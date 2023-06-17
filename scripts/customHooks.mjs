@@ -3,7 +3,6 @@
  */
 
 import { logToConsole } from "./log.mjs";
-import { FOUNDRY_PLAYLIST_MODES } from "./foundryWrapper.mjs";
 
 /**
  * IDs for custom FoundryVTT-Hooks.

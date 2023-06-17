@@ -5,6 +5,7 @@ import { logToConsole } from "./log.mjs";
 export const TEMPLATE_IDS = {
   MIXER: "mixer",
   MENU_BUTTON: "menuButton",
+  AMBIENCE_NODE: "ambienceNode",
 };
 
 /**
@@ -15,6 +16,7 @@ export function getTemplatePath(templateId) {
   return {
     [TEMPLATE_IDS.MIXER]: `${MODULE_CONFIG.TEMPLATES_PATH}/prettyMixer.hbs`,
     [TEMPLATE_IDS.MENU_BUTTON]: `${MODULE_CONFIG.TEMPLATES_PATH}/menuButton.hbs`,
+    [TEMPLATE_IDS.AMBIENCE_NODE]: `${MODULE_CONFIG.TEMPLATES_PATH}/ambienceNode.hbs`,
   }[templateId];
 }
 
@@ -23,5 +25,6 @@ export async function preloadTemplates() {
   await loadTemplatesWrapper([
     getTemplatePath(TEMPLATE_IDS.MIXER),
     getTemplatePath(TEMPLATE_IDS.MENU_BUTTON),
+    getTemplatePath(TEMPLATE_IDS.AMBIENCE_NODE),
   ]);
 }
