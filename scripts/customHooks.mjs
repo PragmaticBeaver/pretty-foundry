@@ -3,6 +3,7 @@
  */
 
 import { logToConsole } from "./log.mjs";
+import { FOUNDRY_PLAYLIST_MODES } from "./foundryWrapper.mjs";
 
 /**
  * IDs for custom FoundryVTT-Hooks.
@@ -16,13 +17,11 @@ export const CUSTOM_HOOK_ID = {
  * Listens for custom FoundryVTT-Hooks to handle data & UI refreshes.
  */
 export function registerCustomHooks() {
-  Hooks.on("getPlaylists", (...args) => {
-    logToConsole("HOOK => getPlaylists", args);
-    // const { target, prop } = args;
+  Hooks.on("getPlaylists", (args) => {
+    logToConsole("HOOK => getPlaylists", { args });
   });
 
-  Hooks.on("setPlaylists", (...args) => {
-    logToConsole("HOOK => setPlaylists", args);
-    // const { target, key, value } = args;
+  Hooks.on("setPlaylists", (args) => {
+    logToConsole("HOOK => setPlaylists", { args });
   });
 }

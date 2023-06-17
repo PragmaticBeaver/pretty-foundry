@@ -58,3 +58,9 @@ export function getPlayingPlaylists() {
 export function getPlaylist(id) {
   return game?.playlists?.get(id);
 }
+
+export const FOUNDRY_PLAYLIST_MODES = {
+  SEQUENTIAL: 0,
+  SHUFFLE: 1,
+  SOUNDBOARD: 2,
+};

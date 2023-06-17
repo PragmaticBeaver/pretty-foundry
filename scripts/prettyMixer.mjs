@@ -2,6 +2,7 @@ import {
   mergeObjectWrapper,
   getPlaylist,
   getPlayingPlaylists,
+  FOUNDRY_PLAYLIST_MODES,
 } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
 import { logToConsole } from "./log.mjs";
@@ -14,12 +15,6 @@ import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
  * @extends Application
  */
 export default class PrettyMixer extends Application {
-  state = {
-    intervalId: undefined,
-    selectedPlaylist: undefined,
-    testVal: 0,
-  };
-
   constructor(options = {}) {
     super(options);
   }
@@ -41,23 +36,23 @@ export default class PrettyMixer extends Application {
    * https://foundryvtt.com/api/v11/classes/client.Application.html#getData
    */
   getData() {
-    const currentlyPlayingSongId =
-      this.state.selectedPlaylist?.playbackOrder[0];
-    const currentlyPlayingSong =
-      this.state.selectedPlaylist?.sounds.contents.filter((sound) => {
-        return sound.id === currentlyPlayingSongId;
-      })[0];
+    // const currentlyPlayingSongId =
+    //   this.state.selectedPlaylist?.playbackOrder[0];
+    // const currentlyPlayingSong =
+    //   this.state.selectedPlaylist?.sounds.contents.filter((sound) => {
+    //     return sound.id === currentlyPlayingSongId;
+    //   })[0];
 
     return {
-      currentlyPlayingPlaylists: getPlayingPlaylists(),
-      selectedPlaylist: this.state.selectedPlaylist,
-      currentlyPlayingSong,
-      // currentlyPlayingSongDuration: convertMilliseconds(
-      //   currentlyPlayingSong?.sound?.duration
-      // ),
-      currentlyPlayingSongDuration: currentlyPlayingSong?.sound?.duration | 100,
-      currentlyPlayingSongProgress:
-        currentlyPlayingSong?.sound?.currentTime | 0,
+      // currentlyPlayingPlaylists: getPlayingPlaylists(),
+      // selectedPlaylist: this.state.selectedPlaylist,
+      // currentlyPlayingSong,
+      // // currentlyPlayingSongDuration: convertMilliseconds(
+      // //   currentlyPlayingSong?.sound?.duration
+      // // ),
+      // currentlyPlayingSongDuration: currentlyPlayingSong?.sound?.duration | 100,
+      // currentlyPlayingSongProgress:
+      //   currentlyPlayingSong?.sound?.currentTime | 0,
     };
   }
 
@@ -65,8 +60,22 @@ export default class PrettyMixer extends Application {
    * @override
    * https://foundryvtt.com/api/v11/classes/client.Application.html#render
    */
-  async _render(force, options = {}) {
-    await super._render(force, options);
+  render(force, options = {}) {
+    super.render(force, options);
+
+    Hooks.on("updatePlaylist", (...args) => this.onUpdatePlaylist(...args));
+  }
+
+  /**
+   * @override
+   * https://foundryvtt.com/api/classes/client.Application.html#close
+   * @param {*} [options]
+   * @returns {Promise<void>}
+   */
+  async close(options) {
+    await super.close(options);
+
+    Hooks.off("updatePlaylist", (...args) => this.onUpdatePlaylist(...args));
   }
 
   /**
@@ -83,8 +92,39 @@ export default class PrettyMixer extends Application {
       const id = e?.currentTarget?.dataset?.playlistId;
       const playlist = getPlaylist(id);
       if (playlist) {
-        this.state.selectedPlaylist = playlist;
+        logToConsole("clicked on", { playlist });
       }
     });
+  }
+
+  addAmbienceElement(playlistId) {
+    logToConsole("addAmbienceElement", playlistId);
+    // todo
+  }
+
+  removeAmbienceElement(playlistId) {
+    logToConsole("removeAmbienceElement", playlistId);
+    // todo
+  }
+
+  onUpdatePlaylist(origin, changes, uiState, id, ...args) {
+    logToConsole("updatePlaylist", { origin, changes, uiState, id, args });
+    const notPlaying = changes.playing !== true;
+    const playlistMode = origin.mode;
+    switch (playlistMode) {
+      case FOUNDRY_PLAYLIST_MODES.SOUNDBOARD:
+        notPlaying
+          ? this.removeAmbienceElement(id)
+          : this.addAmbienceElement(id);
+        break;
+      case FOUNDRY_PLAYLIST_MODES.SEQUENTIAL:
+      case FOUNDRY_PLAYLIST_MODES.SHUFFLE:
+        logToConsole("FOUNDRY_PLAYLIST_MODES...");
+        // todo handle playlists
+        break;
+      default:
+        warnToConsole(`unknown playlist mode: ${playlistMode}`);
+        break;
+    }
   }
 }

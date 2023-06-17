@@ -14,7 +14,7 @@ import { logToConsole } from "./log.mjs";
  * @param {boolean} [callAll=false] switch between Hooks.call and Hooks.callAll (see FoundryVTT docs for more information).
  * @returns {Proxy}
  */
-function makeObservable(target, getHook, setHook, callAll = false) {
+export function makeObservable(target, getHook, setHook, callAll = false) {
   const handler = {
     get(target, prop, receiver) {
       const val = Reflect.get(target, prop);
