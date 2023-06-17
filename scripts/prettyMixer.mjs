@@ -5,7 +5,11 @@ import {
 } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
 import { logToConsole } from "./log.mjs";
-import { attachElementCallback, convertMilliseconds } from "./moduleUtils.mjs";
+import {
+  makeObservable,
+  attachElementCallback,
+  convertMilliseconds,
+} from "./utils.mjs";
 
 /**
  * Mixer UI controller.
@@ -68,14 +72,14 @@ export default class PrettyMixer extends Application {
   async _render(force, options = {}) {
     await super._render(force, options);
 
-    if (this.state.intervalId) {
-      return;
-    }
+    // if (this.state.intervalId) {
+    //   return;
+    // }
 
-    // update "Pretty Mixer" UI ever 100 ms
-    this.state.intervalId = setInterval(() => {
-      this._render();
-    }, 250);
+    // // update "Pretty Mixer" UI ever 100 ms
+    // this.state.intervalId = setInterval(() => {
+    //   this._render();
+    // }, 250);
   }
 
   /**
@@ -96,5 +100,36 @@ export default class PrettyMixer extends Application {
         this.state.selectedPlaylist = playlist;
       }
     });
+
+    logToConsole("todo dummy code now");
+    // const playListHandler = {
+    //   get(target, prop, _receiver) {
+    //     logToConsole("get", { target, prop });
+    //     const returnVal = Reflect.get(target, prop);
+    //     if (typeof returnVal === "function") {
+    //       return returnVal.bind(target);
+    //     }
+    //     return returnVal;
+    //   },
+    //   set(target, key, value) {
+    //     logToConsole("set", { target, key, value });
+    //     return Reflect.set(target, key, value);
+    //   },
+    // };
+    // game.playlists = new Proxy(game.playlists, playListHandler);
+
+    game.playlists = makeObservable(
+      game.playlists,
+      "getPlaylists",
+      "setPlaylists"
+    );
+    logToConsole("game.playlists", game.playlists);
+
+    // logToConsole("get", { target, prop });
+    // logToConsole("set", { target, key, value });
+
+    // setInterval(() => {
+    //   playlistProxy;
+    // }, 1000);
   }
 }

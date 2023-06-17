@@ -1,7 +1,7 @@
 import { renderTemplateWrapper } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
 import { errorToConsole } from "./log.mjs";
-import { showMixer } from "./moduleUtils.mjs";
+import { showMixer } from "./utils.mjs";
 
 export async function injectSidebarButton(html) {
   if (ui.prettyMixer.menuButtonInjected === true) {

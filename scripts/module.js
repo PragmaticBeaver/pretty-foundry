@@ -5,7 +5,7 @@ import { MODULE_CONFIG } from "./config.mjs";
 import { preloadTemplates } from "./templates.mjs";
 import { getSettingsValue } from "./foundryWrapper.mjs";
 import { injectSidebarButton } from "./sidebarButton.mjs";
-import { loadMixerUi } from "./moduleUtils.mjs";
+import { loadMixerUi } from "./utils.mjs";
 
 Hooks.on("init", async () => {
   logToConsole("initializing ...");
@@ -36,4 +36,14 @@ Hooks.on("changeSidebarTab", async (sidebarTab) => {
     const element = sidebarTab.element;
     await injectSidebarButton(element);
   }
+});
+
+Hooks.on("getPlaylists", (...args) => {
+  logToConsole("HOOK => getPlaylists", args);
+  // const { target, prop } = args;
+});
+
+Hooks.on("setPlaylists", (...args) => {
+  logToConsole("HOOK => setPlaylists", args);
+  // const { target, key, value } = args;
 });
