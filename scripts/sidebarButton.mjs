@@ -22,7 +22,7 @@ export async function injectSidebarButton(html) {
   sidebarHeader.append(buttonTemplate);
 
   const button = html.find(`#${buttonId}`); // find rendered HTML element
-  button.on("click", (_event) => {
+  button.on("click", () => {
     showMixer();
   });
 
