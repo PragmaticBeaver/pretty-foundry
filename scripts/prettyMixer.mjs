@@ -20,6 +20,7 @@ export default class PrettyMixer extends Application {
     updatePlaylistHookId: undefined,
     getSoundHookIds: [],
     setSoundHookIds: [],
+    ambienceSoundProgress: {},
   };
 
   constructor(options = {}) {
@@ -154,14 +155,34 @@ export default class PrettyMixer extends Application {
       const { prop, returnVal, passthrough } = update;
       const soundId = passthrough.soundId;
 
-      if (prop !== "currentTime") return;
-
       const progressElement = containerElement.find(
         `#ambience-node-${soundId}-progress`
       );
-      if (!progressElement?.length) return;
+      if (!progressElement?.length || !returnVal) return;
 
-      progressElement.val(returnVal);
+      logToConsole({
+        prop,
+        returnVal,
+        state: this.state.ambienceSoundProgress,
+      });
+
+      if (["currentTime", "duration"].includes(prop)) {
+        this.state.ambienceSoundProgress[soundId]
+          ? (this.state.ambienceSoundProgress[soundId][prop] = returnVal)
+          : (this.state.ambienceSoundProgress[soundId] = { [prop]: returnVal });
+
+        const currentProgress = this.state.ambienceSoundProgress[soundId];
+        logToConsole({
+          currentTime: currentProgress.currentTime,
+          duration: currentProgress.duration,
+        });
+
+        const calculatedProgress = Math.min(
+          (currentProgress.currentTime / currentProgress.duration) * 100,
+          100
+        );
+        progressElement.css("width", `${calculatedProgress}%`);
+      }
     });
     this.state.getSoundHookIds.push(getHookId);
 
