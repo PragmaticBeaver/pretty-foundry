@@ -1,3 +1,5 @@
+@import "./songProgressBar.css";
+
 /* Sidebar Button */
 .pretty-mixer-sidebar-button {
   --sidebar-button-background-color: rgba(255, 255, 240, 0.8);
@@ -110,23 +112,4 @@
   display: flex;
   flex-direction: row;
   gap: 10px;
-}
-
-.pretty-mixer-global-audio-controls-song-progress-container {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.pretty-mixer-global-audio-controls-song-progressbar {
-  width: 100%;
-  accent-color: var(--color-primary);
-}
-
-.pretty-mixer-global-audio-controls-song-progress-info {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: small;
-  color: var(--text-color-secondary);
 }

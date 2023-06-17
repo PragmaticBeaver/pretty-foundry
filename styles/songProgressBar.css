@@ -1,0 +1,18 @@
+.pretty-mixer-global-audio-controls-song-progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pretty-mixer-global-audio-controls-song-progressbar {
+  width: 100%;
+  accent-color: var(--color-primary);
+}
+
+.pretty-mixer-global-audio-controls-song-progress-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: small;
+  color: var(--text-color-secondary);
+}

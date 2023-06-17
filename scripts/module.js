@@ -10,6 +10,7 @@ import { registerCustomHooks } from "./customHooks.mjs";
 import { registerObservables } from "./observables.mjs";
 
 Hooks.on("init", async () => {
+  // CONFIG.debug.hooks = true;
   logToConsole("initializing ...");
   registerSettings();
   await preloadTemplates();

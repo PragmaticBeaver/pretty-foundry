@@ -6,6 +6,10 @@
       id="pretty-mixer-global-audio-controls-queue-container"
       class="pretty-mixer-global-audio-controls-queue-container"
     >
+      <div>
+        testVal:
+        {{testVal}}
+      </div>
       {{#each currentlyPlayingPlaylists}}
         <div
           id="playlist-{{this.id}}"
@@ -71,7 +75,8 @@
         class="pretty-mixer-global-audio-controls-song-progressbar"
         min="0"
         max="{{currentlyPlayingSongDuration}}"
-        value="{{currentlyPlayingSongProgress}}"
+        {{!-- value="{{currentlyPlayingSongProgress}}" --}}
+        data-bind="value: currentlyPlayingSongProgress"
       />
       <div class="pretty-mixer-global-audio-controls-song-progress-info">
         <div>currentSong.timeLapsed</div>

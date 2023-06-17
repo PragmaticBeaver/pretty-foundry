@@ -2,6 +2,7 @@ import { renderTemplateWrapper } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
 import { errorToConsole } from "./log.mjs";
 import { showMixer } from "./utils.mjs";
+import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 
 export async function injectSidebarButton(html) {
   if (ui.prettyMixer.menuButtonInjected === true) {
@@ -16,7 +17,7 @@ export async function injectSidebarButton(html) {
 
   const buttonId = "pretty-mixer-sidebar-button";
   const buttonTemplate = await renderTemplateWrapper(
-    `${MODULE_CONFIG.TEMPLATE_PATH}/menuButton.hbs`,
+    getTemplatePath(TEMPLATE_IDS.MENU_BUTTON),
     { title: MODULE_CONFIG.MODULE_NAME, id: buttonId }
   );
   sidebarHeader.append(buttonTemplate);

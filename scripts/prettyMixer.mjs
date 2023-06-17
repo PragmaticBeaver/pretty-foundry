@@ -1,11 +1,12 @@
 import {
   mergeObjectWrapper,
-  getPlayingPlaylists,
   getPlaylist,
+  getPlayingPlaylists,
 } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
 import { logToConsole } from "./log.mjs";
 import { attachElementCallback } from "./utils.mjs";
+import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 
 /**
  * Mixer UI controller.
@@ -16,6 +17,7 @@ export default class PrettyMixer extends Application {
   state = {
     intervalId: undefined,
     selectedPlaylist: undefined,
+    testVal: 0,
   };
 
   constructor(options = {}) {
@@ -28,7 +30,7 @@ export default class PrettyMixer extends Application {
   static get defaultOptions() {
     return mergeObjectWrapper(super.defaultOptions, {
       id: MODULE_CONFIG.MODULE_ID,
-      template: `${MODULE_CONFIG.TEMPLATE_PATH}/prettyMixer.hbs`,
+      template: getTemplatePath(TEMPLATE_IDS.MIXER),
       popOut: true,
       top: 0,
     });
@@ -45,8 +47,6 @@ export default class PrettyMixer extends Application {
       this.state.selectedPlaylist?.sounds.contents.filter((sound) => {
         return sound.id === currentlyPlayingSongId;
       })[0];
-
-    logToConsole({ currentlyPlayingSong });
 
     return {
       currentlyPlayingPlaylists: getPlayingPlaylists(),
@@ -75,7 +75,6 @@ export default class PrettyMixer extends Application {
    */
   activateListeners(html) {
     super.activateListeners(html);
-    // todo handle clicks
 
     const activePlaylists = html.find(
       ".pretty-mixer-global-audio-controls-queue-element"
