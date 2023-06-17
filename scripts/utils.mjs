@@ -58,23 +58,30 @@ export function convertToTimestamp(ms) {
  * Wraps a target object in a Proxy, so that every update can be tracked.
  * The Proxy will emit events using FoundryVTT-Hooks.
  * @param {Record<string,any>} target
- * @param {string} getHook will emit { target, prop, receiver, returnVal }
- * @param {string} setHook will emit { target, key, value }
+ * @param {string} getHook will emit { target, prop, receiver, returnVal, passthrough }
+ * @param {string} setHook will emit { target, key, value, passthrough }
  * @param {boolean} [callAll=false] switch between Hooks.call and Hooks.callAll (see FoundryVTT docs for more information).
+ * @param {*} passthrough will be passed through to subscriber
  * @returns {Proxy}
  */
-export function makeObservable(target, getHook, setHook, callAll = false) {
+export function makeObservable(
+  target,
+  getHook,
+  setHook,
+  callAll = false,
+  passthrough
+) {
   const handler = {
     get(target, prop, receiver) {
       const val = Reflect.get(target, prop);
       const returnVal = typeof val === "function" ? val.bind(target) : val;
-      const obj = { target, prop, receiver, returnVal };
+      const obj = { target, prop, receiver, returnVal, passthrough };
       callAll ? Hooks.callAll(getHook, obj) : Hooks.call(getHook, obj);
       return returnVal;
     },
     set(target, key, value) {
       const success = Reflect.set(target, { key, value });
-      const obj = { target, key, value };
+      const obj = { target, key, value, passthrough };
       callAll ? Hooks.callAll(setHook, obj) : Hooks.call(setHook, obj);
       return success;
     },

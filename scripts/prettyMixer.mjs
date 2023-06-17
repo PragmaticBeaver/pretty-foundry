@@ -8,6 +8,7 @@ import {
 import { MODULE_CONFIG } from "./config.mjs";
 import { errorToConsole, logToConsole, warnToConsole } from "./log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
+import { makeObservable } from "./utils.mjs";
 
 /**
  * Mixer UI controller.
@@ -17,6 +18,8 @@ import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 export default class PrettyMixer extends Application {
   state = {
     updatePlaylistHookId: undefined,
+    getSoundHookIds: [],
+    setSoundHookIds: [],
   };
 
   constructor(options = {}) {
@@ -53,6 +56,14 @@ export default class PrettyMixer extends Application {
     await super.close(options);
 
     Hooks.off("updatePlaylist", this.state.updatePlaylistHookId);
+
+    // remove ambienceNode hooks
+    this.state.getSoundHookIds.forEach((hookId) =>
+      Hooks.off("getSound", hookId)
+    );
+    this.state.setSoundHookIds.forEach((hookId) =>
+      Hooks.off("setSound", hookId)
+    );
   }
 
   /**
@@ -106,8 +117,7 @@ export default class PrettyMixer extends Application {
       });
     });
 
-    logToConsole({ playingPlaylists });
-
+    // logToConsole({ playingPlaylists });
     // todo current track / playlist
   }
 
@@ -132,13 +142,36 @@ export default class PrettyMixer extends Application {
       return;
     }
     // logToConsole({ playlist });
+
     const sound = playlist.sounds.get(soundId);
     if (!sound) {
       warnToConsole(`song ${soundId} not found`);
       return;
     }
-    // logToConsole({ sound });
 
+    // register ambienceNode Hooks
+    const getHookId = Hooks.on("getSound", (update) => {
+      const { prop, returnVal, passthrough } = update;
+      const soundId = passthrough.soundId;
+
+      if (prop !== "currentTime") return;
+
+      const progressElement = containerElement.find(
+        `#ambience-node-${soundId}-progress`
+      );
+      if (!progressElement?.length) return;
+
+      progressElement.val(returnVal);
+    });
+    this.state.getSoundHookIds.push(getHookId);
+
+    const setHookId = Hooks.on("setSound", (update) => logToConsole(update));
+    sound.sound = makeObservable(sound.sound, "getSound", "setSound", false, {
+      soundId: sound.id,
+    });
+    this.state.getSoundHookIds.push(setHookId);
+
+    // create template
     const ambienceNodeTemplate = await renderTemplateWrapper(
       getTemplatePath(TEMPLATE_IDS.AMBIENCE_NODE),
       { label: sound.name, id: `ambience-node-${soundId}` }
