@@ -1,23 +1,22 @@
-@import "./songProgressBar.css";
-@import "./soundboardSoundNode.css";
-
-/* TODO ADD STYLELLINT! */
+@import url("./songProgressBar.css");
+@import url("./soundboardSoundNode.css");
 
 /* Sidebar Button */
 .pretty-mixer-sidebar-button {
-  --sidebar-button-background-color: rgba(255, 255, 240, 0.8);
-  --sidebar-button-background-color-hover: rgba(255, 255, 240, 0.65);
+  --sidebar-button-background-color: rgb(255 255 240 / 80%);
+  --sidebar-button-background-color-hover: rgb(255 255 240 / 65%);
 
-  height: 100%;
   width: 50%;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  height: 100%;
   padding-top: 5px;
   padding-bottom: 5px;
-  border-radius: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   background-color: var(--sidebar-button-background-color);
+  border-radius: 15px;
   transition: all 0.25s ease-out;
 }
+
 .pretty-mixer-sidebar-button:hover {
   background-color: var(--sidebar-button-background-color-hover);
 }
@@ -25,64 +24,61 @@
 /* Main Window */
 .pretty-mixer {
   --color-primary: #a070ff;
-  --color-secondary: #ee99ff;
-
+  --color-secondary: #e9f;
   --background-color-primary: #222639;
   --background-color-secondary: #1e2231;
-
   --menu-color-primary: gray;
   --menu-color-secondary: darkgray;
-
   --text-color-primary: whitesmoke;
   --text-color-secondary: darkgray;
-
   --mixer-width: 100%;
   --mixer-height: 100%;
 
-  /* background-color: var(--background-color-primary); */
-  height: var(--mixer-height);
-  width: var(--mixer-width);
   display: flex;
   flex-direction: column;
+  width: var(--mixer-width);
+
+  /* background-color: var(--background-color-primary); */
+  height: var(--mixer-height);
   color: var(--text-color-primary);
 }
 
 .pretty-mixer-global-audio-controls-container {
-  width: 100%;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  z-index: 1;
+  width: 100%;
+  padding: 15px;
   background-color: var(--background-color-secondary);
+  border-radius: 20px;
   opacity: 0.8;
   backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 15px;
 }
 
 .sound-nodes-container {
-  width: 100%;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   gap: 10px;
+  width: 100%;
 }
 
 .pretty-mixer-global-audio-controls-queue-element {
-  background-color: var(--menu-color-secondary);
-  border-radius: 20px;
   width: 100%;
   padding: 5px;
+  background-color: var(--menu-color-secondary);
+  border-radius: 20px;
 }
+
 .pretty-mixer-global-audio-controls-queue-element:hover {
   cursor: pointer;
 }
 
 .pretty-mixer-global-audio-controls {
-  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  width: 100%;
 }
 
 .pretty-mixer-global-audio-controls-song-info {
@@ -109,6 +105,7 @@
 .pretty-mixer-global-audio-controls-button {
   transition: all 0.25s ease-out;
 }
+
 .pretty-mixer-global-audio-controls-button:hover {
   color: var(--color-primary);
 }
