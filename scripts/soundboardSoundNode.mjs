@@ -68,7 +68,7 @@ export async function addSoundNode(element, playlistId, soundId) {
   registerHooks(progressElement, soundId);
 
   // add "click"-handler
-  const container = element.find(".sound-node");
+  const container = element.find(`#sound-node-${soundId}`);
   if (container?.length) {
     container.on("click", async () => {
       await stopSound(getPlayingPlaylists(), soundId);
