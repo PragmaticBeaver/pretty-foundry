@@ -7,4 +7,5 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "git.ignoreLimitWarning": true,
   "editor.tabSize": 2,
+  "eslint.runtime": "node"
 }
