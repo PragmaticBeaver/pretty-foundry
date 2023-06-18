@@ -17,10 +17,6 @@ import { addAmbienceNode, removeAmbienceNode } from "./soundboardSoundNode.mjs";
 export default class PrettyMixer extends Application {
   updatePlaylistHookId = undefined;
 
-  constructor(options = {}) {
-    super(options);
-  }
-
   /**
    * @override
    */
@@ -95,7 +91,7 @@ export default class PrettyMixer extends Application {
     playingPlaylists.forEach((playlist) => {
       playlist.sounds.forEach(async (sound) => {
         if (sound.playing) {
-          await addAmbienceNode(playlist.id, sound.id);
+          await addAmbienceNode(containerElement, playlist.id, sound.id);
         }
       });
     });
@@ -103,9 +99,7 @@ export default class PrettyMixer extends Application {
     // todo current track / playlist
   }
 
-  async onUpdatePlaylist(origin, changes, uiState, id, ...args) {
-    logToConsole("updatePlaylist", { origin, changes, uiState, id, args });
-
+  async onUpdatePlaylist(origin, changes) {
     const containerElement = this.getSoundboardSoundNodeContainer();
     if (!containerElement) return;
 

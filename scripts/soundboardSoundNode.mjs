@@ -3,11 +3,11 @@ import { logToConsole, warnToConsole } from "./log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { makeObservable } from "./utils.mjs";
 
-function registerHooks(progressElement) {
+function registerHooks(progressElement, soundId) {
   const state = progressElement.data();
 
   // getSound
-  const getHookId = Hooks.on("getSound", (update) => {
+  const getHookId = Hooks.on(`getSound-${soundId}`, (update) => {
     const { prop, returnVal } = update;
     const shouldIgnoreUpdate =
       !["currentTime", "duration"].includes(prop) || !returnVal;
@@ -23,7 +23,9 @@ function registerHooks(progressElement) {
   state["getHookId"] = getHookId;
 
   // setSound
-  const setHookId = Hooks.on("setSound", (update) => logToConsole(update));
+  const setHookId = Hooks.on(`setSound-${soundId}`, (update) =>
+    logToConsole(update)
+  );
   state["setHookId"] = setHookId;
 }
 
@@ -65,12 +67,15 @@ export async function addAmbienceNode(element, playlistId, soundId) {
   element.append(ambienceNodeTemplate);
 
   const progressElement = element.find(`#ambience-node-${soundId}-progress`);
-  registerHooks(progressElement);
+  registerHooks(progressElement, soundId);
 
   // replace sound-obj with Proxy
-  sound.sound = makeObservable(sound.sound, "getSound", "setSound", false, {
-    soundId: sound.id,
-  });
+  sound.sound = makeObservable(
+    sound.sound,
+    `getSound-${soundId}`,
+    `setSound-${soundId}`,
+    false
+  );
 }
 
 /**
@@ -88,8 +93,8 @@ export function removeAmbienceNode(element, soundId) {
   }
 
   const { getHookId, setHookId } = soundboardElement.data();
-  Hooks.off("getSound", getHookId);
-  Hooks.off("setSound", setHookId);
+  Hooks.off(`getSound-${soundId}`, getHookId);
+  Hooks.off(`setSound-${soundId}`, setHookId);
 
   soundboardElement.remove();
 }
