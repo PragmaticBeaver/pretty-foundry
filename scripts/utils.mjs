@@ -35,26 +35,6 @@ export async function stopSound(playingPlaylists, id) {
 
 /**
  *
- * @param {HTMLElement | HTMLElement[]} elements one or many HTMLElements
- * @param {string} type event type to listen for
- * @param {function(e):void} callback
- */
-export function attachElementCallback(elements, type, callback) {
-  if (Array.isArray(elements)) {
-    elements.forEach((playlist) => {
-      playlist.on(type, (e) => {
-        callback(e);
-      });
-    });
-  } else {
-    elements.on(type, (e) => {
-      callback(e);
-    });
-  }
-}
-
-/**
- *
  * @param {jQuery} rootElement ancestor element
  * @param {string} searchQuery jQuery search query
  * @returns {jQuery | undefined}

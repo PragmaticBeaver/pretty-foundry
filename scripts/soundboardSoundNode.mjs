@@ -5,7 +5,7 @@ import {
 } from "./foundryWrapper.mjs";
 import { logToConsole, warnToConsole } from "./log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
-import { makeObservable, attachElementCallback, stopSound } from "./utils.mjs";
+import { makeObservable, stopSound } from "./utils.mjs";
 
 function registerHooks(progressElement, soundId) {
   const state = progressElement.data();
@@ -70,7 +70,7 @@ export async function addSoundNode(element, playlistId, soundId) {
   // add "click"-handler
   const container = element.find(".sound-node");
   if (container?.length) {
-    attachElementCallback(container, "click", async () => {
+    container.on("click", async () => {
       await stopSound(getPlayingPlaylists(), soundId);
     });
   }
