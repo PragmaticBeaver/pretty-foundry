@@ -87,7 +87,7 @@ export async function addSoundNode(element, playlistId, soundId) {
 export function removeSoundNode(element, soundId) {
   if (!element?.length) return;
 
-  const soundboardElement = element.find(`#sound-node-${soundId}`);
+  const soundboardElement = element.find(`#sound-node-${soundId}-progress`);
   if (!soundboardElement?.length) {
     return;
   }
