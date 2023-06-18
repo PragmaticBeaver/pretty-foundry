@@ -1,4 +1,5 @@
 name: Package Release
+run-name: Package Release triggered by ${{ github.actor }}
 on:
   push:
     branches:
