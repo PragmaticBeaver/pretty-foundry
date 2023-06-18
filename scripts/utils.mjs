@@ -1,4 +1,4 @@
-import { warnToConsole } from "./log.mjs";
+import { warnToConsole, errorToConsole } from "./log.mjs";
 
 /**
  * Loads PrettyMixer into Foundry ui-object.
@@ -44,15 +44,30 @@ export function attachElementCallback(elements, type, callback) {
 }
 
 /**
- * @param {number} ms milliseconds to convert
- * @returns {string} timestamp for example "2:17"
+ *
+ * @param {jQuery} rootElement ancestor element
+ * @param {string} searchQuery jQuery search query
+ * @returns {jQuery | undefined}
  */
-export function convertToTimestamp(ms) {
-  var minutes = Math.floor(ms / 60000);
-  var seconds = ((ms % 60000) / 1000).toFixed(0);
-  console.log({ ms, minutes, seconds });
-  return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+export function getElement(rootElement, searchQuery) {
+  const element = rootElement.find(searchQuery);
+  if (!element?.length) {
+    errorToConsole(`"${searchQuery}" not found!`);
+    return;
+  }
+  return element;
 }
+
+// /**
+//  * @param {number} ms milliseconds to convert
+//  * @returns {string} timestamp for example "2:17"
+//  */
+// export function convertToTimestamp(ms) {
+//   var minutes = Math.floor(ms / 60000);
+//   var seconds = ((ms % 60000) / 1000).toFixed(0);
+//   console.log({ ms, minutes, seconds });
+//   return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+// }
 
 /**
  * Wraps a target object in a Proxy, so that every update can be tracked.

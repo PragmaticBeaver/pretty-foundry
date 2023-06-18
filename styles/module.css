@@ -1,5 +1,7 @@
 @import "./songProgressBar.css";
-@import "./ambienceNode.css";
+@import "./soundboardSoundNode.css";
+
+/* TODO ADD STYLELLINT! */
 
 /* Sidebar Button */
 .pretty-mixer-sidebar-button {
