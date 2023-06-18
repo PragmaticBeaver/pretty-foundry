@@ -5,6 +5,7 @@ import {
   mergeObjectWrapper,
 } from "./foundryWrapper.mjs";
 import { logToConsole, warnToConsole } from "./log.mjs";
+import { injectSongInfo } from "./songInfo.mjs";
 import { addSoundNode, removeSoundNode } from "./soundboardSoundNode.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
@@ -47,9 +48,9 @@ export default class PrettyMixer extends Application {
    * @param {JQuery} html
    * @override
    */
-  activateListeners(html) {
+  async activateListeners(html) {
     super.activateListeners(html);
-    this.renderInitialState();
+    await this.renderInitialState();
 
     this.updatePlaylistHookId = Hooks.on(
       "updatePlaylist",
@@ -63,29 +64,42 @@ export default class PrettyMixer extends Application {
 
   /**
    * Inject initial state after first render.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  renderInitialState() {
-    const containerElement = this.getSoundboardSoundNodeContainer();
-    if (!containerElement) return;
+  async renderInitialState() {
+    const soundboardContainerElement = this.getSoundboardSoundNodeContainer();
 
-    const playingPlaylists = getPlayingPlaylists().filter(
-      (playlist) => playlist.mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
-    );
-    if (!playingPlaylists) {
+    const allPlayingPlaylists = getPlayingPlaylists();
+    if (!allPlayingPlaylists) {
       return;
     }
 
+    const playingSoundboards = [];
+    const playingPlaylists = [];
+    allPlayingPlaylists.forEach((playlist) => {
+      playlist.mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+        ? playingSoundboards.push(playlist)
+        : playingPlaylists.push(playlist);
+    });
+
     // Soundboard sounds
-    playingPlaylists.forEach((playlist) => {
+    playingSoundboards.forEach((playlist) => {
       playlist.sounds.forEach(async (sound) => {
         if (sound.playing) {
-          await addSoundNode(containerElement, playlist.id, sound.id);
+          await addSoundNode(soundboardContainerElement, playlist.id, sound.id);
         }
       });
     });
 
-    // todo current track / playlist
+    // Music
+    const musicContainer = this.element.find("#song-info-anchor");
+    playingPlaylists.forEach((playlist) => {
+      playlist.sounds.forEach(async (sound) => {
+        if (sound.playing) {
+          await injectSongInfo(musicContainer, playlist.name, sound.name);
+        }
+      });
+    });
   }
 
   async onUpdatePlaylist(origin, changes) {

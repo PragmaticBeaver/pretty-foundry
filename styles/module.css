@@ -1,5 +1,6 @@
 @import url("./songProgressBar.css");
 @import url("./soundboardSoundNode.css");
+@import url("./songInfo.css");
 
 /* Sidebar Button */
 .pretty-mixer-sidebar-button {
@@ -88,21 +89,6 @@
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-}
-
-.pretty-mixer-global-audio-controls-song-info {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  align-self: flex-start;
-}
-
-.pretty-mixer-global-audio-controls-song-info-song {
-  font-size: medium;
-}
-
-.pretty-mixer-global-audio-controls-song-info-playlist {
-  font-size: small;
 }
 
 .pretty-mixer-global-audio-controls-button-container {
