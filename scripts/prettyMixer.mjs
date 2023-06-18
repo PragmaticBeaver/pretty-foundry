@@ -2,10 +2,11 @@ import { MODULE_CONFIG } from "./config.mjs";
 import {
   FOUNDRY_PLAYLIST_MODES,
   getPlayingPlaylists,
+  getPlaylist,
   mergeObjectWrapper,
 } from "./foundryWrapper.mjs";
 import { logToConsole, warnToConsole } from "./log.mjs";
-import { injectSongInfo } from "./songInfo.mjs";
+import { injectSongInfo, removeSongInfo } from "./songInfo.mjs";
 import { addSoundNode, removeSoundNode } from "./soundboardSoundNode.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
@@ -96,15 +97,15 @@ export default class PrettyMixer extends Application {
     playingPlaylists.forEach((playlist) => {
       playlist.sounds.forEach(async (sound) => {
         if (sound.playing) {
-          await injectSongInfo(musicContainer, playlist.name, sound.name);
+          await injectSongInfo(musicContainer, playlist.name, sound);
         }
       });
     });
   }
 
   async onUpdatePlaylist(origin, changes) {
-    const containerElement = this.getSoundboardSoundNodeContainer();
-    if (!containerElement) return;
+    const soundboardContainerElement = this.getSoundboardSoundNodeContainer();
+    const musicContainerElement = this.element.find("#song-info-anchor");
 
     const changedPlaylistId = changes._id;
     const changedSounds = changes.sounds;
@@ -113,14 +114,25 @@ export default class PrettyMixer extends Application {
       switch (playlistMode) {
         case FOUNDRY_PLAYLIST_MODES.SOUNDBOARD:
           sound.playing
-            ? await addSoundNode(containerElement, changedPlaylistId, sound._id)
-            : removeSoundNode(containerElement, sound._id);
+            ? await addSoundNode(
+                soundboardContainerElement,
+                changedPlaylistId,
+                sound._id
+              )
+            : removeSoundNode(soundboardContainerElement, sound._id);
           break;
         case FOUNDRY_PLAYLIST_MODES.SEQUENTIAL:
         case FOUNDRY_PLAYLIST_MODES.SIMULTANEOUS:
         case FOUNDRY_PLAYLIST_MODES.SHUFFLE:
           logToConsole("FOUNDRY_PLAYLIST_MODES...");
           // todo handle playlists
+          sound.playing
+            ? await injectSongInfo(
+                musicContainerElement,
+                getPlaylist(changedPlaylistId).name,
+                sound
+              )
+            : removeSongInfo(musicContainerElement, sound.id);
           break;
         default:
           warnToConsole(`unknown playlist mode: ${playlistMode}`);
