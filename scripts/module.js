@@ -4,7 +4,6 @@ import { registerSettings } from "./settings.mjs";
 import { preloadTemplates } from "./templates.mjs";
 import { injectSidebarButton } from "./sidebarButton.mjs";
 import { loadMixerUi } from "./utils.mjs";
-import { registerCustomHooks } from "./customHooks.mjs";
 
 Hooks.on("init", async () => {
   // CONFIG.debug.hooks = true;
@@ -15,7 +14,6 @@ Hooks.on("init", async () => {
 
 Hooks.on("ready", () => {
   logToConsole("starting ...");
-  registerCustomHooks();
   loadMixerUi(new PrettyMixer());
 });
 
