@@ -7,8 +7,9 @@
 .sound-node-progress {
   position: relative;
   width: 100%;
-  height: 30px;
+  height: 100%;
   overflow: hidden;
+  cursor: pointer;
   background-color: var(--color-primary);
   border-radius: 13px;
 }
