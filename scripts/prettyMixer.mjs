@@ -26,6 +26,8 @@ export default class PrettyMixer extends Application {
       template: getTemplatePath(TEMPLATE_IDS.MIXER),
       popOut: true,
       top: 0,
+      width: 800,
+      height: 800,
     });
   }
 

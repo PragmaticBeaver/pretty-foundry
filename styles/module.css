@@ -36,7 +36,7 @@
   --text-color-primary: whitesmoke;
   --text-color-secondary: darkgray;
 
-  --mixer-width: 600px; /* todo set dynamic */
+  --mixer-width: 100%;
   --mixer-height: 100%;
 
   /* background-color: var(--background-color-primary); */
