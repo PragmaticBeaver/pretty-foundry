@@ -11,3 +11,4 @@ jobs:
     if: ${{ contains(github.event.head_commit.message, 'PACKAGE RELEASE') }}
     steps:
       - run: echo "Package Module triggert by commit; ${{ github.event.head_commit.message }}"
+      - run: zip -r Release.zip ./lib ./scripts ./styles ./templates ./LICENSE ./module.json
