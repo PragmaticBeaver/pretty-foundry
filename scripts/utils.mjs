@@ -23,6 +23,16 @@ export function isPrettyMixerRendered() {
   return ui.prettyMixer?.rendered;
 }
 
+export async function stopSound(playingPlaylists, id) {
+  playingPlaylists.forEach((playlist) => {
+    playlist.sounds.forEach(async (sound) => {
+      if (sound.id === id && sound.playing) {
+        return await playlist.stopSound(sound);
+      }
+    });
+  });
+}
+
 /**
  *
  * @param {HTMLElement | HTMLElement[]} elements one or many HTMLElements

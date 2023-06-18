@@ -1,7 +1,11 @@
-import { getPlaylist, renderTemplateWrapper } from "./foundryWrapper.mjs";
+import {
+  getPlaylist,
+  renderTemplateWrapper,
+  getPlayingPlaylists,
+} from "./foundryWrapper.mjs";
 import { logToConsole, warnToConsole } from "./log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
-import { makeObservable } from "./utils.mjs";
+import { makeObservable, attachElementCallback, stopSound } from "./utils.mjs";
 
 function registerHooks(progressElement, soundId) {
   const state = progressElement.data();
@@ -40,18 +44,12 @@ export async function addSoundNode(element, playlistId, soundId) {
   if (!element?.length) {
     return;
   }
-  // const containerElement = getElement(
-  //   element,
-  //   "#pretty-mixer-sound-node-container"
-  // );
-  // if (!containerElement) return;
 
   const playlist = getPlaylist(playlistId);
   if (!playlist) {
     warnToConsole(`playlist ${playlistId} not found`);
     return;
   }
-  // logToConsole({ playlist });
 
   const sound = playlist.sounds.get(soundId);
   if (!sound) {
@@ -68,6 +66,14 @@ export async function addSoundNode(element, playlistId, soundId) {
 
   const progressElement = element.find(`#sound-node-${soundId}-progress`);
   registerHooks(progressElement, soundId);
+
+  // add "click"-handler
+  const container = element.find(".sound-node");
+  if (container?.length) {
+    attachElementCallback(container, "click", async () => {
+      await stopSound(getPlayingPlaylists(), soundId);
+    });
+  }
 
   // replace sound-obj with Proxy
   sound.sound = makeObservable(
@@ -87,14 +93,15 @@ export async function addSoundNode(element, playlistId, soundId) {
 export function removeSoundNode(element, soundId) {
   if (!element?.length) return;
 
-  const soundboardElement = element.find(`#sound-node-${soundId}-progress`);
-  if (!soundboardElement?.length) {
+  const soundNode = element.find(`#sound-node-${soundId}`);
+  if (!soundNode?.length) {
     return;
   }
 
-  const { getHookId, setHookId } = soundboardElement.data();
+  const soundProgress = soundNode.find(`#sound-node-${soundId}-progress`);
+  const { getHookId, setHookId } = soundProgress.data();
   Hooks.off(`getSound-${soundId}`, getHookId);
   Hooks.off(`setSound-${soundId}`, setHookId);
 
-  soundboardElement.remove();
+  soundNode.remove();
 }
