@@ -11,6 +11,7 @@
   },
   "homepage": "https://github.com/PragmaticBeaver/pretty-mixer#readme",
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
     "prettier": "^2.8.8"

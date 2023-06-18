@@ -1,8 +1,8 @@
-import { renderTemplateWrapper } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
+import { renderTemplateWrapper } from "./foundryWrapper.mjs";
 import { errorToConsole } from "./log.mjs";
-import { showMixer, isPrettyMixerRendered } from "./utils.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
+import { isPrettyMixerRendered, showMixer } from "./utils.mjs";
 
 export async function injectSidebarButton(html) {
   const buttonId = "pretty-mixer-sidebar-button";

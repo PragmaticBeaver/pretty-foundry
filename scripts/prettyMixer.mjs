@@ -1,13 +1,13 @@
+import { MODULE_CONFIG } from "./config.mjs";
 import {
-  mergeObjectWrapper,
   FOUNDRY_PLAYLIST_MODES,
   getPlayingPlaylists,
+  mergeObjectWrapper,
 } from "./foundryWrapper.mjs";
-import { MODULE_CONFIG } from "./config.mjs";
 import { logToConsole, warnToConsole } from "./log.mjs";
+import { addSoundNode, removeSoundNode } from "./soundboardSoundNode.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
-import { addSoundNode, removeSoundNode } from "./soundboardSoundNode.mjs";
 
 /**
  * Mixer UI controller.

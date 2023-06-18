@@ -1,4 +1,7 @@
 {
+  "importOrder": ["ARRAY OF IMPORT NAMES"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
   "trailingComma": "es5",
   "tabWidth": 2
 }

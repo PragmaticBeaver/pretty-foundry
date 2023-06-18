@@ -1,4 +1,4 @@
-import { warnToConsole, errorToConsole } from "./log.mjs";
+import { errorToConsole, warnToConsole } from "./log.mjs";
 
 /**
  * Loads PrettyMixer into Foundry ui-object.

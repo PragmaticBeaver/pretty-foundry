@@ -1,5 +1,5 @@
-import { loadTemplatesWrapper } from "./foundryWrapper.mjs";
 import { MODULE_CONFIG } from "./config.mjs";
+import { loadTemplatesWrapper } from "./foundryWrapper.mjs";
 import { logToConsole } from "./log.mjs";
 
 export const TEMPLATE_IDS = {
