@@ -36,13 +36,13 @@ function registerHooks(progressElement, soundId) {
  * @param {string} soundId ID of sound to add
  * @returns {Promise<void>}
  */
-export async function addAmbienceNode(element, playlistId, soundId) {
+export async function addSoundNode(element, playlistId, soundId) {
   if (!element?.length) {
     return;
   }
   // const containerElement = getElement(
   //   element,
-  //   "#pretty-mixer-ambience-node-container"
+  //   "#pretty-mixer-sound-node-container"
   // );
   // if (!containerElement) return;
 
@@ -60,13 +60,13 @@ export async function addAmbienceNode(element, playlistId, soundId) {
   }
 
   // create template
-  const ambienceNodeTemplate = await renderTemplateWrapper(
+  const soundNodeTemplate = await renderTemplateWrapper(
     getTemplatePath(TEMPLATE_IDS.SOUNDBOARD_SOUND_NODE),
-    { label: sound.name, id: `ambience-node-${soundId}` }
+    { label: sound.name, id: `sound-node-${soundId}` }
   );
-  element.append(ambienceNodeTemplate);
+  element.append(soundNodeTemplate);
 
-  const progressElement = element.find(`#ambience-node-${soundId}-progress`);
+  const progressElement = element.find(`#sound-node-${soundId}-progress`);
   registerHooks(progressElement, soundId);
 
   // replace sound-obj with Proxy
@@ -84,10 +84,10 @@ export async function addAmbienceNode(element, playlistId, soundId) {
  * @param {string} soundId ID of sound-obj of rendered SoundbardSoundNode to remove
  * @returns {void}
  */
-export function removeAmbienceNode(element, soundId) {
+export function removeSoundNode(element, soundId) {
   if (!element?.length) return;
 
-  const soundboardElement = element.find(`#ambience-node-${soundId}`);
+  const soundboardElement = element.find(`#sound-node-${soundId}`);
   if (!soundboardElement?.length) {
     return;
   }

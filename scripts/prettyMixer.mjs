@@ -7,7 +7,7 @@ import { MODULE_CONFIG } from "./config.mjs";
 import { logToConsole, warnToConsole } from "./log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
-import { addAmbienceNode, removeAmbienceNode } from "./soundboardSoundNode.mjs";
+import { addSoundNode, removeSoundNode } from "./soundboardSoundNode.mjs";
 
 /**
  * Mixer UI controller.
@@ -69,7 +69,7 @@ export default class PrettyMixer extends Application {
   }
 
   getSoundboardSoundNodeContainer() {
-    return getElement(this.element, "#pretty-mixer-ambience-node-container");
+    return getElement(this.element, "#pretty-mixer-sound-node-container");
   }
 
   /**
@@ -91,7 +91,7 @@ export default class PrettyMixer extends Application {
     playingPlaylists.forEach((playlist) => {
       playlist.sounds.forEach(async (sound) => {
         if (sound.playing) {
-          await addAmbienceNode(containerElement, playlist.id, sound.id);
+          await addSoundNode(containerElement, playlist.id, sound.id);
         }
       });
     });
@@ -110,12 +110,8 @@ export default class PrettyMixer extends Application {
       switch (playlistMode) {
         case FOUNDRY_PLAYLIST_MODES.SOUNDBOARD:
           sound.playing
-            ? await addAmbienceNode(
-                containerElement,
-                changedPlaylistId,
-                sound._id
-              )
-            : removeAmbienceNode(containerElement, sound._id);
+            ? await addSoundNode(containerElement, changedPlaylistId, sound._id)
+            : removeSoundNode(containerElement, sound._id);
           break;
         case FOUNDRY_PLAYLIST_MODES.SEQUENTIAL:
         case FOUNDRY_PLAYLIST_MODES.SIMULTANEOUS:
