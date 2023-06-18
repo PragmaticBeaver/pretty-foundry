@@ -27,6 +27,7 @@ module.exports = {
     // FoundryVTT props
     ui: "readonly",
     game: "readonly",
+    CONFIG: "readonly",
 
     // FoundryVTT classes
     Hooks: "readonly",
