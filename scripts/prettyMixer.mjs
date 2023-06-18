@@ -39,7 +39,6 @@ export default class PrettyMixer extends Application {
    */
   async close(options) {
     await super.close(options);
-
     Hooks.off("updatePlaylist", this.updatePlaylistHookId);
   }
 
@@ -56,18 +55,6 @@ export default class PrettyMixer extends Application {
       "updatePlaylist",
       async (...args) => await this.onUpdatePlaylist(...args)
     );
-
-    // todo refactor click handler
-    // const activePlaylists = html.find(
-    //   ".pretty-mixer-global-audio-controls-queue-element"
-    // );
-    // attachElementCallback(activePlaylists, "click", (e) => {
-    //   const id = e?.currentTarget?.dataset?.playlistId;
-    //   const playlist = getPlaylist(id);
-    //   if (playlist) {
-    //     logToConsole("clicked on", { playlist });
-    //   }
-    // });
   }
 
   getSoundboardSoundNodeContainer() {
