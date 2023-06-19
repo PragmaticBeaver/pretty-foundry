@@ -46,6 +46,8 @@ jobs:
               const files = await globber.glob()
               console.log({files});
               core.exportVariable('MODULE_JSON_DATA', files);
+            } catch (error) {
+              core.setFailed(error.message);
             }
       - name: "Add module.json"
         uses: "actions/github-script@v6"
@@ -60,4 +62,6 @@ jobs:
                 name: module.json,
                 data: $MODULE_JSON_DATA,
               })
+            } catch (error) {
+              core.setFailed(error.message);
             }
