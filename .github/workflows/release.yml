@@ -43,8 +43,8 @@ jobs:
           script: |
             try {
               const globber = await glob.create('module.json');
-              const file = await globber.glob();
-              core.debug({file});
+              const file = await globber.glob()[0];
+              console.log({file});
               core.exportVariable('MODULE_JSON_PATH', file);
             } catch (error) {
               core.setFailed(error.message);
