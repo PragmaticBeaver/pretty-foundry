@@ -71,7 +71,7 @@ jobs:
               const response = await github.rest.repos.uploadReleaseAsset({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                release_id: $RELEASE_ID,
+                release_id: process.env.RELEASE_ID,
                 name: module.json,
                 data: process.env.MODULE_JSON_DATA,
               })
