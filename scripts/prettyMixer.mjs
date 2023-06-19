@@ -87,7 +87,7 @@ export default class PrettyMixer extends Application {
     playingSoundboards.forEach((playlist) => {
       playlist.sounds.forEach(async (sound) => {
         if (sound.playing) {
-          await addSoundNode(soundboardContainerElement, playlist.id, sound.id);
+          await addSoundNode(soundboardContainerElement, sound);
         }
       });
     });
@@ -104,40 +104,39 @@ export default class PrettyMixer extends Application {
   }
 
   async onUpdatePlaylist(origin, changes) {
-    const soundboardContainerElement = this.getSoundboardSoundNodeContainer();
-    const musicContainerElement = this.element.find("#song-info-anchor");
-
     const changedPlaylistId = changes._id;
-    const changedSounds = changes.sounds;
-    changedSounds?.forEach(async (sound) => {
-      const playlistMode = origin.mode;
-      switch (playlistMode) {
-        case FOUNDRY_PLAYLIST_MODES.SOUNDBOARD:
-          sound.playing
-            ? await addSoundNode(
-                soundboardContainerElement,
-                changedPlaylistId,
-                sound._id
-              )
-            : removeSoundNode(soundboardContainerElement, sound._id);
-          break;
-        case FOUNDRY_PLAYLIST_MODES.SEQUENTIAL:
-        case FOUNDRY_PLAYLIST_MODES.SIMULTANEOUS:
-        case FOUNDRY_PLAYLIST_MODES.SHUFFLE:
-          logToConsole("FOUNDRY_PLAYLIST_MODES...");
-          // todo handle playlists
-          sound.playing
-            ? await injectSongInfo(
-                musicContainerElement,
-                getPlaylist(changedPlaylistId).name,
-                sound
-              )
-            : removeSongInfo(musicContainerElement, sound.id);
-          break;
-        default:
-          warnToConsole(`unknown playlist mode: ${playlistMode}`);
-          break;
+    const soundChanges = changes.sounds;
+
+    const playlist = getPlaylist(changedPlaylistId);
+    if (!playlist) {
+      warnToConsole(`playlist ${changedPlaylistId} not found`);
+      return;
+    }
+
+    for (const soundChange of soundChanges) {
+      const soundId = soundChange._id;
+      const sound = playlist.sounds.get(soundId);
+      if (!sound) {
+        warnToConsole(`sound ${soundId} not found`);
+        continue;
       }
-    });
+
+      logToConsole({ sound, playlist });
+
+      const isPlaying = soundChange.playing;
+      const playlistMode = origin.mode;
+      if (playlistMode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
+        const soundboardContainerElement =
+          this.getSoundboardSoundNodeContainer();
+        isPlaying
+          ? await addSoundNode(soundboardContainerElement, sound)
+          : removeSoundNode(soundboardContainerElement, sound.id);
+      } else {
+        const musicContainerElement = this.element.find("#song-info-anchor");
+        isPlaying
+          ? await injectSongInfo(musicContainerElement, playlist.name, sound)
+          : removeSongInfo(musicContainerElement, sound.id);
+      }
+    }
   }
 }

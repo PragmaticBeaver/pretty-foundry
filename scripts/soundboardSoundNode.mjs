@@ -1,9 +1,8 @@
 import {
   getPlayingPlaylists,
-  getPlaylist,
   renderTemplateWrapper,
 } from "./foundryWrapper.mjs";
-import { logToConsole, warnToConsole } from "./log.mjs";
+import { logToConsole } from "./log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { makeObservable, stopSound } from "./utils.mjs";
 
@@ -40,22 +39,11 @@ function registerHooks(progressElement, soundId) {
  * @param {string} soundId ID of sound to add
  * @returns {Promise<void>}
  */
-export async function addSoundNode(element, playlistId, soundId) {
+export async function addSoundNode(element, sound) {
   if (!element?.length) {
     return;
   }
-
-  const playlist = getPlaylist(playlistId);
-  if (!playlist) {
-    warnToConsole(`playlist ${playlistId} not found`);
-    return;
-  }
-
-  const sound = playlist.sounds.get(soundId);
-  if (!sound) {
-    warnToConsole(`sound ${soundId} not found`);
-    return;
-  }
+  const soundId = sound.id;
 
   // create template
   const soundNodeTemplate = await renderTemplateWrapper(
@@ -64,6 +52,7 @@ export async function addSoundNode(element, playlistId, soundId) {
   );
   element.append(soundNodeTemplate);
 
+  // register custom Hooks (observable)
   const progressElement = element.find(`#sound-node-${soundId}-progress`);
   registerHooks(progressElement, soundId);
 
