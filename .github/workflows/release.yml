@@ -55,7 +55,7 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
             try {
-              const response await github.rest.repos.uploadReleaseAsset({
+              const response = await github.rest.repos.uploadReleaseAsset({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 release_id: $RELEASE_ID,
