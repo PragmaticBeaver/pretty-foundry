@@ -36,17 +36,30 @@ jobs:
             }
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: "Read module.json"
+      - name: "Find module.json"
         uses: "actions/github-script@v6"
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
             try {
-              const globber = await glob.create('module.json')
-              const files = await globber.glob()
-              core.debug({files});
-              core.exportVariable('MODULE_JSON_DATA', files);
+              const globber = await glob.create('module.json');
+              const file = await globber.glob()[0];
+              core.debug({file});
+              core.exportVariable('MODULE_JSON_PATH', file);
             } catch (error) {
+              core.setFailed(error.message);
+            }
+      - name: "Read module.json"
+        uses: actions/github-script@v6
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            try {
+              const fs = require('fs');
+              const jsonString = fs.readFileSync($MODULE_JSON_PATH);
+              const apps = JSON.parse(jsonString);
+              core.exportVariable('MODULE_JSON_DATA', apps);
+            } catch(error) {
               core.setFailed(error.message);
             }
       - name: "Add module.json"
