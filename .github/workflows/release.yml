@@ -42,6 +42,8 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
             try {
+              console.log(__dirname);
+              console.log(process.cwd());
               const globber = await glob.create('module.json')
               const files = await globber.glob()
               console.log({files});
