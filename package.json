@@ -1,6 +1,11 @@
 {
   "name": "pretty-mixer",
-  "author": "PragmaticBeaver",
+  "authors": [
+    {
+      "name": "PragmaticBeaver",
+      "url": "https://github.com/PragmaticBeaver"
+    }
+  ],
   "license": "GPL-3.0-only",
   "repository": {
     "type": "git",
