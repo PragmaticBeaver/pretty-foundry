@@ -56,7 +56,7 @@ jobs:
           script: |
             try {
               const fs = require('fs');
-              const jsonString = fs.readFileSync($MODULE_JSON_PATH);
+              const jsonString = fs.readFileSync(process.env.MODULE_JSON_PATH);
               const apps = JSON.parse(jsonString);
               core.exportVariable('MODULE_JSON_DATA', apps);
             } catch(error) {
@@ -73,7 +73,7 @@ jobs:
                 repo: context.repo.repo,
                 release_id: $RELEASE_ID,
                 name: module.json,
-                data: $MODULE_JSON_DATA,
+                data: process.env.MODULE_JSON_DATA,
               })
             } catch (error) {
               core.setFailed(error.message);
