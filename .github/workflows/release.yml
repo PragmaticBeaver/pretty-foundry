@@ -36,3 +36,28 @@ jobs:
             } catch (error) {
               core.setFailed(error.message);
             }
+      - name: "Read module.json"
+        uses: "actions/github-script@v6"
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            try {
+              const globber = await glob.create('module.json'))
+              const files = await globber.glob()
+              console.log({files});
+              core.exportVariable('MODULE_JSON_DATA', files);
+            }
+      - name: "Add module.json"
+        uses: "actions/github-script@v6"
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            try {
+              const response await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: $RELEASE_ID,
+                name: module.json,
+                data: $MODULE_JSON_DATA,
+              })
+                          }
