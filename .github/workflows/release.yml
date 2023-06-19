@@ -32,8 +32,8 @@ jobs:
             } catch (error) {
               core.setFailed(error.message);
             }
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      # - name: Checkout repository
+      #   uses: actions/checkout@v3
       - name: "Find module.json"
         uses: "actions/github-script@v6"
         with:
