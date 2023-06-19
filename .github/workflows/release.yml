@@ -8,6 +8,7 @@ jobs:
   release:
     name: "Release"
     runs-on: "ubuntu-latest"
+    permissions: write-all
     steps:
       - name: "Determine tag"
         run: 'echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV'
