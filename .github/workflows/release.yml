@@ -1,6 +1,6 @@
 # https://docs.github.com/en/actions
 name: "Release"
-run-name: "Build release ${GITHUB_REF#refs/tags/}"
+run-name: "Build release"
 on:
   push:
     tags:
