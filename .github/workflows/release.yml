@@ -30,9 +30,7 @@ jobs:
                 repo: context.repo.repo,
                 tag_name: process.env.RELEASE_TAG,
               });
-
               core.exportVariable('RELEASE_ID', response.data.id);
-              core.exportVariable('RELEASE_UPLOAD_URL', response.data.upload_url);
             } catch (error) {
               core.setFailed(error.message);
             }
@@ -42,11 +40,9 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
             try {
-              console.log(__dirname);
-              console.log(process.cwd());
               const globber = await glob.create('module.json')
               const files = await globber.glob()
-              console.log({files});
+              core.debug({files});
               core.exportVariable('MODULE_JSON_DATA', files);
             } catch (error) {
               core.setFailed(error.message);
