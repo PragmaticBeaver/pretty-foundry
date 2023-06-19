@@ -42,7 +42,7 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
             try {
-              const globber = await glob.create('module.json'))
+              const globber = await glob.create('module.json')
               const files = await globber.glob()
               console.log({files});
               core.exportVariable('MODULE_JSON_DATA', files);
@@ -60,4 +60,4 @@ jobs:
                 name: module.json,
                 data: $MODULE_JSON_DATA,
               })
-                          }
+            }
