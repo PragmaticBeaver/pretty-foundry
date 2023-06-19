@@ -1,0 +1,16 @@
+# https://docs.github.com/en/actions
+
+name: "Release"
+on:
+  push:
+    tags:
+      - "**"
+jobs:
+  release:
+    name: "Release"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Create release"
+        uses: "./../actions/create-relase"
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
