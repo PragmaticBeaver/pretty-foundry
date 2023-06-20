@@ -1,9 +1,15 @@
 <div id="pretty-mixer" class="pretty-mixer">
   {{! Global audio controls }}
   <div class="pretty-mixer-global-audio-controls-container">
-    {{! Currently playing playlists }}
+    {{! Currently playing Soundboards }}
     <div class="sound-nodes-container-background">
-      <div id="pretty-mixer-sound-node-container" class="sound-nodes-container">
+      <div id="pretty-mixer-sound-node-anchor" class="nodes-container">
+        {{! SoundboardSoundNode's will be added here by script }}
+      </div>
+    </div>
+    {{! Currently playing Playlists }}
+    <div class="song-nodes-container-background">
+      <div id="pretty-mixer-song-node-anchor" class="nodes-container">
         {{! SoundboardSoundNode's will be added here by script }}
       </div>
     </div>

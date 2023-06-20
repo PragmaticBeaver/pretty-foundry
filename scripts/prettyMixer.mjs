@@ -7,6 +7,7 @@ import {
 } from "./foundryWrapper.mjs";
 import { logToConsole, warnToConsole } from "./log.mjs";
 import { injectSongInfo, removeSongInfo } from "./songInfo.mjs";
+import { addSongNode, removeSongNode } from "./songNode.mjs";
 import { addSoundNode, removeSoundNode } from "./soundboardSoundNode.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
@@ -60,7 +61,11 @@ export default class PrettyMixer extends Application {
   }
 
   getSoundboardSoundNodeContainer() {
-    return getElement(this.element, "#pretty-mixer-sound-node-container");
+    return getElement(this.element, "#pretty-mixer-sound-node-anchor");
+  }
+
+  getSongNodeContainer() {
+    return getElement(this.element, "#pretty-mixer-song-node-anchor");
   }
 
   /**
@@ -94,10 +99,12 @@ export default class PrettyMixer extends Application {
 
     // Music
     const musicContainer = this.element.find("#song-info-anchor");
+    const songContainer = this.getSongNodeContainer();
     playingPlaylists.forEach((playlist) => {
       playlist.sounds.forEach(async (sound) => {
         if (sound.playing) {
           await injectSongInfo(musicContainer, playlist.name, sound);
+          await addSongNode(songContainer, sound);
         }
       });
     });
@@ -106,6 +113,8 @@ export default class PrettyMixer extends Application {
   async onUpdatePlaylist(origin, changes) {
     const changedPlaylistId = changes._id;
     const soundChanges = changes.sounds;
+
+    logToConsole({ origin, changes });
 
     const playlist = getPlaylist(changedPlaylistId);
     if (!playlist) {
@@ -121,9 +130,8 @@ export default class PrettyMixer extends Application {
         continue;
       }
 
-      logToConsole({ sound, playlist });
-
       const isPlaying = soundChange.playing;
+
       const playlistMode = origin.mode;
       if (playlistMode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
         const soundboardContainerElement =
@@ -132,10 +140,10 @@ export default class PrettyMixer extends Application {
           ? await addSoundNode(soundboardContainerElement, sound)
           : removeSoundNode(soundboardContainerElement, sound.id);
       } else {
-        const musicContainerElement = this.element.find("#song-info-anchor");
+        const songContainer = this.getSongNodeContainer();
         isPlaying
-          ? await injectSongInfo(musicContainerElement, playlist.name, sound)
-          : removeSongInfo(musicContainerElement, sound.id);
+          ? await addSongNode(songContainer, sound)
+          : removeSongNode(songContainer, sound.id);
       }
     }
   }

@@ -7,6 +7,7 @@ export const TEMPLATE_IDS = {
   MENU_BUTTON: "menuButton",
   SOUNDBOARD_SOUND_NODE: "soundboardSoundNode",
   SONG_INFO: "songInfo",
+  SONG_NODE: "songNode",
 };
 
 /**
@@ -19,6 +20,7 @@ export function getTemplatePath(templateId) {
     [TEMPLATE_IDS.MENU_BUTTON]: `${MODULE_CONFIG.TEMPLATES_PATH}/openButton.hbs`,
     [TEMPLATE_IDS.SOUNDBOARD_SOUND_NODE]: `${MODULE_CONFIG.TEMPLATES_PATH}/soundboardSoundNode.hbs`,
     [TEMPLATE_IDS.SONG_INFO]: `${MODULE_CONFIG.TEMPLATES_PATH}/songInfo.hbs`,
+    [TEMPLATE_IDS.SONG_NODE]: `${MODULE_CONFIG.TEMPLATES_PATH}/songNode.hbs`,
   }[templateId];
 }
 
@@ -29,5 +31,6 @@ export async function preloadTemplates() {
     getTemplatePath(TEMPLATE_IDS.MENU_BUTTON),
     getTemplatePath(TEMPLATE_IDS.SOUNDBOARD_SOUND_NODE),
     getTemplatePath(TEMPLATE_IDS.SONG_INFO),
+    getTemplatePath(TEMPLATE_IDS.SONG_NODE),
   ]);
 }
