@@ -17,6 +17,15 @@ export async function addPlaylistNode(element, playlist) {
     { id, playlistName: playlist.name }
   );
   element.append(soundNodeTemplate);
+
+  // add "click"-handler only to playlist-name
+  const label = element
+    .find(`#${id}-playlist-node`)
+    .find(`.playlist-node-playlist-name`);
+  if (!label?.length) return;
+  label.on("click", async () => {
+    await playlist.stopAll();
+  });
 }
 
 /**
