@@ -27,5 +27,5 @@ export async function addPlaylistNode(element, playlist) {
  */
 export function removePlaylistNode(element, playlistId) {
   if (!element?.length) return;
-  element.find(`#playlist-node-${playlistId}`)?.remove();
+  element.find(`#${playlistId}-playlist-node`)?.remove();
 }

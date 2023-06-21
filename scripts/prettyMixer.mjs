@@ -70,11 +70,11 @@ export default class PrettyMixer extends Application {
   getSoundNodeOfPlaylistNode(playlistContainer, id) {
     logToConsole({ playlistContainer, id });
     const nodeContainer = playlistContainer
-      .find(`#playlist-node-${id}`)
+      .find(`#${id}-playlist-node`)
       .find(".playlist-node-sound-container");
     if (!nodeContainer?.length) {
       errorToConsole(
-        `"playlist-node-song-container" of "#playlist-node-${id}" not found!`
+        `"playlist-node-song-container" of "#${id}-playlist-node" not found!`
       );
       return;
     }
@@ -153,7 +153,7 @@ export default class PrettyMixer extends Application {
       if (origin.mode !== FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
         const playlistId = playlist.id;
         const hasPlaylistRendered = playlistContainer.find(
-          `#playlist-node-${playlistId}`
+          `#${playlistId}-playlist-node`
         );
         if (!hasPlaylistRendered?.length) {
           await addPlaylistNode(playlistContainer, playlist);
