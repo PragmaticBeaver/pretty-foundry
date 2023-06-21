@@ -1,5 +1,5 @@
-import { renderTemplateWrapper } from "./foundryWrapper.mjs";
-import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
+import { renderTemplateWrapper } from "../foundryWrapper.mjs";
+import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 
 /**
  * Adds PlaylistNode (no SongNode included) as child to element.

@@ -6,8 +6,11 @@ import {
   mergeObjectWrapper,
 } from "./foundryWrapper.mjs";
 import { errorToConsole } from "./log.mjs";
-import { addPlaylistNode, removePlaylistNode } from "./playlistNode.mjs";
-import { addSoundNode, removeSoundNode } from "./soundNode.mjs";
+import {
+  addPlaylistNode,
+  removePlaylistNode,
+} from "./elements/playlistNode.mjs";
+import { addSoundNode, removeSoundNode } from "./elements/soundNode.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
 
