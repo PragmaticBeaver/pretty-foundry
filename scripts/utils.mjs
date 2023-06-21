@@ -23,6 +23,12 @@ export function isPrettyMixerRendered() {
   return ui.prettyMixer?.rendered;
 }
 
+/**
+ * Stops a specific sound by id.
+ * @param {[]} playingPlaylists playlists to search through.
+ * @param {string} id ID of the Sound to stop.
+ * @returns {Promise<void>}
+ */
 export async function stopSound(playingPlaylists, id) {
   playingPlaylists.forEach((playlist) => {
     playlist.sounds.forEach(async (sound) => {
