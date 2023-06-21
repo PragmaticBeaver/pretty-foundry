@@ -5,7 +5,7 @@ import {
   getPlaylist,
   mergeObjectWrapper,
 } from "./foundryWrapper.mjs";
-import { errorToConsole, logToConsole } from "./log.mjs";
+import { errorToConsole } from "./log.mjs";
 import { addPlaylistNode, removePlaylistNode } from "./playlistNode.mjs";
 import { addSoundNode, removeSoundNode } from "./soundNode.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
@@ -18,6 +18,25 @@ import { getElement } from "./utils.mjs";
  */
 export default class PrettyMixer extends Application {
   updatePlaylistHookId = undefined;
+  ANCHOR_IDS = {
+    PLAYLIST_INFO_CONTAINER: "#playlist-info-anchor",
+    SOUND_NODE_CONTAINER: "#sound-node-anchor",
+    PLAYLIST_NODE_CONTAINER: "#playlist-node-anchor",
+  };
+  DYNAMIC_ANCHOR_ID_PARTS = {
+    PLAYLIST_NODE: "-playlist-node",
+    SOUND_NODE: "-sound-node",
+  };
+
+  /**
+   * Converts a static DYNAMIC_ANCHOR_ID_PARTS value to its dynamic counterpart.
+   * @param {*} dynamicAnchorIdPart value of DYNAMIC_ANCHOR_ID_PARTS
+   * @param {string} id Sound or Playlist ID
+   * @returns {string}
+   */
+  buildAnchorId(dynamicAnchorIdPart, id) {
+    return `#${id}${dynamicAnchorIdPart}`;
+  }
 
   /**
    * @override
@@ -60,22 +79,23 @@ export default class PrettyMixer extends Application {
   }
 
   getSoundNodeContainer() {
-    return getElement(this.element, "#pretty-mixer-sound-node-anchor");
+    return getElement(this.element, this.ANCHOR_IDS.SOUND_NODE_CONTAINER);
   }
 
   getPlaylistNodeContainer() {
-    return getElement(this.element, "#pretty-mixer-playlist-node-anchor");
+    return getElement(this.element, this.ANCHOR_IDS.PLAYLIST_NODE_CONTAINER);
   }
 
   getSoundNodeOfPlaylistNode(playlistContainer, id) {
-    logToConsole({ playlistContainer, id });
+    const query = this.buildAnchorId(
+      this.DYNAMIC_ANCHOR_ID_PARTS.PLAYLIST_NODE,
+      id
+    );
     const nodeContainer = playlistContainer
-      .find(`#${id}-playlist-node`)
+      .find(query)
       .find(".playlist-node-sound-container");
     if (!nodeContainer?.length) {
-      errorToConsole(
-        `"playlist-node-song-container" of "#${id}-playlist-node" not found!`
-      );
+      errorToConsole(`"playlist-node-song-container" of "${query}" not found!`);
       return;
     }
     return nodeContainer;
@@ -152,9 +172,11 @@ export default class PrettyMixer extends Application {
       let container;
       if (origin.mode !== FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
         const playlistId = playlist.id;
-        const isPlaylistRendered = playlistContainer.find(
-          `#${playlistId}-playlist-node`
+        const query = this.buildAnchorId(
+          this.DYNAMIC_ANCHOR_ID_PARTS.PLAYLIST_NODE,
+          playlistId
         );
+        const isPlaylistRendered = playlistContainer.find(query);
         if (!isPlaylistRendered?.length) {
           await addPlaylistNode(playlistContainer, playlist);
         }
@@ -171,9 +193,12 @@ export default class PrettyMixer extends Application {
       }
 
       // handle single Sound in Playlist with repeat setting (will be set to playing === true, but already playing)
+      const soundQuery = this.buildAnchorId(
+        this.DYNAMIC_ANCHOR_ID_PARTS.SOUND_NODE,
+        soundId
+      );
       const continuePlaying =
-        soundChange.playing &&
-        this.element.find(`#${soundId}-sound-node`)?.length;
+        soundChange.playing && this.element.find(soundQuery)?.length;
       if (continuePlaying) return;
 
       // add or remove SoundNode
