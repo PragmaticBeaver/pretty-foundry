@@ -13,7 +13,7 @@
   padding: 5px;
   overflow: hidden;
   cursor: pointer;
-  background-color: var(--color-primary);
+  background-color: var(--background-color-primary);
   border-radius: 13px;
 }
 
