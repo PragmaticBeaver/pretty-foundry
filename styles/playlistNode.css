@@ -1,6 +1,4 @@
 .playlist-node {
-  width: 100%;
-  max-width: 100px;
   height: 100%;
 }
 
@@ -8,7 +6,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 2px;
   align-self: flex-start;
   width: 100%;
   height: 100%;
@@ -19,13 +17,25 @@
   border-radius: 13px;
 }
 
+.playlist-node-background .sound-node-progress {
+  height: 20px;
+}
+
+.playlist-node-background .sound-node {
+  max-width: 100px;
+}
+
 .playlist-node-sound-container {
+  display: flex;
+  flex-direction: row;
   width: 100%;
   height: 100%;
   font-size: medium;
 }
 
 .playlist-node-playlist-name {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   font-size: small;
   text-overflow: ellipsis;

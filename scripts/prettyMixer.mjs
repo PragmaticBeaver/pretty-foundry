@@ -55,7 +55,7 @@ export default class PrettyMixer extends Application {
 
     this.updatePlaylistHookId = Hooks.on(
       "updatePlaylist",
-      async (...args) => await this.onUpdatePlaylist(...args)
+      async (...args) => await this.onUpdatePlaylist(...args) // todo enable
     );
   }
 
@@ -149,10 +149,23 @@ export default class PrettyMixer extends Application {
         continue;
       }
 
-      const container =
-        origin.mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
-          ? this.getSoundNodeContainer()
-          : this.getSoundNodeOfPlaylistNode(playlistContainer, playlist.id);
+      let container;
+      if (origin.mode !== FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
+        const playlistId = playlist.id;
+        const hasPlaylistRendered = playlistContainer.find(
+          `#playlist-node-${playlistId}`
+        );
+        if (!hasPlaylistRendered?.length) {
+          await addPlaylistNode(playlistContainer, playlist);
+        }
+
+        container = this.getSoundNodeOfPlaylistNode(
+          playlistContainer,
+          playlistId
+        );
+      } else {
+        container = this.getSoundNodeContainer();
+      }
       if (!container) {
         errorToConsole("unable to find SoundContainer!");
         continue;
