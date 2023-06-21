@@ -95,13 +95,15 @@ export default class PrettyMixer extends Application {
 
     const playingSoundboards = [];
     const playingPlaylists = [];
+
+    // sort Playlist by type
     allPlayingPlaylists.forEach((playlist) => {
       playlist.mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
         ? playingSoundboards.push(playlist)
         : playingPlaylists.push(playlist);
     });
 
-    // Soundboard sounds
+    // Soundboard Sounds
     playingSoundboards.forEach((playlist) => {
       playlist.sounds.forEach(async (sound) => {
         if (sound.playing) {
@@ -131,8 +133,6 @@ export default class PrettyMixer extends Application {
     const changedPlaylistId = changes._id;
     const soundChanges = changes.sounds;
 
-    logToConsole({ origin, changes });
-
     const playlist = getPlaylist(changedPlaylistId);
     if (!playlist) {
       errorToConsole(`playlist ${changedPlaylistId} not found!`);
@@ -152,13 +152,12 @@ export default class PrettyMixer extends Application {
       let container;
       if (origin.mode !== FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
         const playlistId = playlist.id;
-        const hasPlaylistRendered = playlistContainer.find(
+        const isPlaylistRendered = playlistContainer.find(
           `#${playlistId}-playlist-node`
         );
-        if (!hasPlaylistRendered?.length) {
+        if (!isPlaylistRendered?.length) {
           await addPlaylistNode(playlistContainer, playlist);
         }
-
         container = this.getSoundNodeOfPlaylistNode(
           playlistContainer,
           playlistId
@@ -171,12 +170,19 @@ export default class PrettyMixer extends Application {
         continue;
       }
 
+      // handle single Sound in Playlist with repeat setting (will be set to playing === true, but already playing)
+      const continuePlaying =
+        soundChange.playing &&
+        this.element.find(`#${soundId}-sound-node`)?.length;
+      if (continuePlaying) return;
+
+      // add or remove SoundNode
       soundChange.playing
         ? await addSoundNode(container, sound)
         : removeSoundNode(container, sound.id);
     }
 
-    // stop playlist after stopping sounds (because sounds need to remove Hooks first)
+    // stop Playlist after stopping Sounds (because Sounds need to remove Hooks first)
     if (!playlist.playing) {
       removePlaylistNode(playlistContainer, playlist.id);
     }
