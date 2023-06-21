@@ -5,10 +5,9 @@ import {
   getPlaylist,
   mergeObjectWrapper,
 } from "./foundryWrapper.mjs";
-import { logToConsole, warnToConsole } from "./log.mjs";
-import { injectSongInfo, removeSongInfo } from "./songInfo.mjs";
-import { addSongNode, removeSongNode } from "./songNode.mjs";
-import { addSoundNode, removeSoundNode } from "./soundboardSoundNode.mjs";
+import { errorToConsole, logToConsole } from "./log.mjs";
+import { addPlaylistNode, removePlaylistNode } from "./playlistNode.mjs";
+import { addSoundNode, removeSoundNode } from "./soundNode.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
 
@@ -60,12 +59,26 @@ export default class PrettyMixer extends Application {
     );
   }
 
-  getSoundboardSoundNodeContainer() {
+  getSoundNodeContainer() {
     return getElement(this.element, "#pretty-mixer-sound-node-anchor");
   }
 
-  getSongNodeContainer() {
-    return getElement(this.element, "#pretty-mixer-song-node-anchor");
+  getPlaylistNodeContainer() {
+    return getElement(this.element, "#pretty-mixer-playlist-node-anchor");
+  }
+
+  getSoundNodeOfPlaylistNode(playlistContainer, id) {
+    logToConsole({ playlistContainer, id });
+    const nodeContainer = playlistContainer
+      .find(`#playlist-node-${id}`)
+      .find(".playlist-node-sound-container");
+    if (!nodeContainer?.length) {
+      errorToConsole(
+        `"playlist-node-song-container" of "#playlist-node-${id}" not found!`
+      );
+      return;
+    }
+    return nodeContainer;
   }
 
   /**
@@ -73,7 +86,7 @@ export default class PrettyMixer extends Application {
    * @returns {Promise<void>}
    */
   async renderInitialState() {
-    const soundboardContainerElement = this.getSoundboardSoundNodeContainer();
+    const soundboardContainerElement = this.getSoundNodeContainer();
 
     const allPlayingPlaylists = getPlayingPlaylists();
     if (!allPlayingPlaylists) {
@@ -98,13 +111,17 @@ export default class PrettyMixer extends Application {
     });
 
     // Music
-    const musicContainer = this.element.find("#song-info-anchor");
-    const songContainer = this.getSongNodeContainer();
-    playingPlaylists.forEach((playlist) => {
+    const playlistContainer = this.getPlaylistNodeContainer();
+    playingPlaylists.forEach(async (playlist) => {
+      await addPlaylistNode(playlistContainer, playlist);
+      // add Sounds
       playlist.sounds.forEach(async (sound) => {
         if (sound.playing) {
-          await injectSongInfo(musicContainer, playlist.name, sound);
-          await addSongNode(songContainer, sound);
+          const playlistSongContainer = this.getSoundNodeOfPlaylistNode(
+            playlistContainer,
+            playlist.id
+          );
+          await addSoundNode(playlistSongContainer, sound);
         }
       });
     });
@@ -118,33 +135,37 @@ export default class PrettyMixer extends Application {
 
     const playlist = getPlaylist(changedPlaylistId);
     if (!playlist) {
-      warnToConsole(`playlist ${changedPlaylistId} not found`);
+      errorToConsole(`playlist ${changedPlaylistId} not found!`);
       return;
     }
+
+    const playlistContainer = this.getPlaylistNodeContainer();
 
     for (const soundChange of soundChanges) {
       const soundId = soundChange._id;
       const sound = playlist.sounds.get(soundId);
       if (!sound) {
-        warnToConsole(`sound ${soundId} not found`);
+        errorToConsole(`sound ${soundId} not found!`);
         continue;
       }
 
-      const isPlaying = soundChange.playing;
-
-      const playlistMode = origin.mode;
-      if (playlistMode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
-        const soundboardContainerElement =
-          this.getSoundboardSoundNodeContainer();
-        isPlaying
-          ? await addSoundNode(soundboardContainerElement, sound)
-          : removeSoundNode(soundboardContainerElement, sound.id);
-      } else {
-        const songContainer = this.getSongNodeContainer();
-        isPlaying
-          ? await addSongNode(songContainer, sound)
-          : removeSongNode(songContainer, sound.id);
+      const container =
+        origin.mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+          ? this.getSoundNodeContainer()
+          : this.getSoundNodeOfPlaylistNode(playlistContainer, playlist.id);
+      if (!container) {
+        errorToConsole("unable to find SoundContainer!");
+        continue;
       }
+
+      soundChange.playing
+        ? await addSoundNode(container, sound)
+        : removeSoundNode(container, sound.id);
+    }
+
+    // stop playlist after stopping sounds (because sounds need to remove Hooks first)
+    if (!playlist.playing) {
+      removePlaylistNode(playlistContainer, playlist.id);
     }
   }
 }

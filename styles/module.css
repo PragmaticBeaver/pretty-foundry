@@ -1,7 +1,6 @@
 @import url("./songProgressBar.css");
-@import url("./soundboardSoundNode.css");
-@import url("./songInfo.css");
-@import url("./songNode.css");
+@import url("./soundNode.css");
+@import url("./playlistNode.css");
 
 /* Sidebar Button */
 .pretty-mixer-sidebar-button {

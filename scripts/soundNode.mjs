@@ -23,7 +23,7 @@ function registerHooks(progressElement, soundId) {
 }
 
 /**
- * Adds SoundboardSoundNode as child to element.
+ * Adds SoundNode as child to element.
  * @param {jQuery} element to add new SoundbardSoundNode to
  * @param {string} playlistId PlaylistID of sound
  * @param {string} soundId ID of sound to add
@@ -36,21 +36,20 @@ export async function addSoundNode(element, sound) {
   // create template
   const soundNodeTemplate = await renderTemplateWrapper(
     getTemplatePath(TEMPLATE_IDS.SOUNDBOARD_SOUND_NODE),
-    { label: sound.name, id: `sound-node-${soundId}` }
+    { label: sound.name, id: soundId }
   );
   element.append(soundNodeTemplate);
 
-  // register custom Hooks (emitted by observable)
-  const progressElement = element.find(`#sound-node-${soundId}-progress`);
-  registerHooks(progressElement, soundId);
-
   // add "click"-handler
-  const container = element.find(`#sound-node-${soundId}`);
-  if (container?.length) {
-    container.on("click", async () => {
-      await stopSound(getPlayingPlaylists(), soundId);
-    });
-  }
+  const container = element.find(`#${soundId}-sound-node`);
+  if (!container?.length) return;
+  container.on("click", async () => {
+    await stopSound(getPlayingPlaylists(), soundId);
+  });
+
+  // register custom Hooks (emitted by observable)
+  const progressElement = container.find(`#${soundId}-sound-node-progress`);
+  registerHooks(progressElement, soundId);
 
   // replace sound-obj with Proxy
   sound.sound = makeObservable(
@@ -62,7 +61,7 @@ export async function addSoundNode(element, sound) {
 }
 
 /**
- * Removes rendered SoundboardSoundNode from element.
+ * Removes rendered SoundNode from element.
  * @param {jQuery} element parent of SoundbardSoundNode to remove
  * @param {string} soundId ID of Sound-obj of rendered SoundbardSoundNode to remove
  * @returns {void}
@@ -70,10 +69,10 @@ export async function addSoundNode(element, sound) {
 export function removeSoundNode(element, soundId) {
   if (!element?.length) return;
 
-  const soundNode = element.find(`#sound-node-${soundId}`);
+  const soundNode = element.find(`#${soundId}-sound-node`);
   if (!soundNode?.length) return;
 
-  const soundProgress = soundNode.find(`#sound-node-${soundId}-progress`);
+  const soundProgress = soundNode.find(`#${soundId}-sound-node-progress`);
   const { getHookId } = soundProgress.data();
   Hooks.off(`getSound-${soundId}`, getHookId);
   // Hooks.off(`setSound-${soundId}`, setHookId);
