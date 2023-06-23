@@ -46,6 +46,14 @@
           <i class="fas fa-volume"></i>
         </div>
         {{! volume-bar }}
+        <input
+          type="range"
+          id="current-song-progressbar"
+          class="pretty-mixer-global-audio-controls-song-progressbar"
+          min="0"
+          max="{{currentlyPlayingSongDuration}}"
+          data-bind="value: currentlyPlayingSongProgress"
+        />
       </div>
     </div>
   </div>
