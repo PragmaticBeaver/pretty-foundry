@@ -1,21 +1,20 @@
 import { MODULE_CONFIG } from "./config.mjs";
 import {
-  FOUNDRY_PLAYLIST_MODES,
-  getPlayingPlaylists,
-  getPlaylist,
-  mergeObjectWrapper,
-  FOUDNRY_HOOK_IDS,
-  // getPlaylists,
-} from "./foundryWrapper.mjs";
-import { errorToConsole } from "./log.mjs";
-import {
   addPlaylistNode,
   removePlaylistNode,
 } from "./elements/playlistNode.mjs";
 import { addSoundNode, removeSoundNode } from "./elements/soundNode.mjs";
+import {
+  FOUDNRY_HOOK_IDS, // getPlaylists,
+  FOUNDRY_PLAYLIST_MODES,
+  getPlayingPlaylists,
+  getPlaylist,
+  mergeObjectWrapper,
+} from "./foundryWrapper.mjs";
+import { errorToConsole } from "./log.mjs";
+import { logToConsole } from "./log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
-import { logToConsole } from "./log.mjs";
 
 /**
  * Mixer UI controller.
@@ -186,6 +185,7 @@ export default class PrettyMixer extends Application {
     }
   }
 
+  // todo handle playlist name or content changes (Overview)
   async onUpdatePlaylist(playlistDocument, change) {
     const changedPlaylistId = change._id;
     const soundChanges = change.sounds;

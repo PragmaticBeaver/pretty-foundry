@@ -1,0 +1,23 @@
+.playlist-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 20%;
+  height: 20%;
+  background-color: var(--menu-color-secondary);
+  border-radius: 20px;
+}
+
+.playlist-card-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.playlist-card-title {
+  font-size: larger;
+}
+
+.playlist-card-button-icon-inactive {
+  display: none;
+}
