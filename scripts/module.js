@@ -4,9 +4,11 @@ import { registerSettings } from "./settings.mjs";
 import { injectSidebarButton } from "./elements/sidebarButton.mjs";
 import { preloadTemplates } from "./templates.mjs";
 import { loadMixerUi } from "./utils.mjs";
+import { registerGlobalObservables } from "./observables.mjs";
+import { setHookDebugging } from "./foundryWrapper.mjs";
 
 Hooks.on("init", async () => {
-  // CONFIG.debug.hooks = true;
+  setHookDebugging(false);
   logToConsole("initializing ...");
   registerSettings();
   await preloadTemplates();
@@ -15,6 +17,7 @@ Hooks.on("init", async () => {
 Hooks.on("ready", () => {
   logToConsole("starting ...");
   loadMixerUi(new PrettyMixer());
+  registerGlobalObservables();
 });
 
 Hooks.on("changeSidebarTab", async (sidebarTab) => {

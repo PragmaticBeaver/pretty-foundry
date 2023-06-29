@@ -4,6 +4,7 @@ import {
   getPlayingPlaylists,
   getPlaylist,
   mergeObjectWrapper,
+  getPlaylists,
 } from "./foundryWrapper.mjs";
 import { errorToConsole } from "./log.mjs";
 import {
@@ -13,6 +14,7 @@ import {
 import { addSoundNode, removeSoundNode } from "./elements/soundNode.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
+import { addPlaylistOverview } from "./elements/playlistOverview.mjs";
 
 /**
  * Mixer UI controller.
@@ -25,6 +27,7 @@ export default class PrettyMixer extends Application {
     PLAYLIST_INFO_CONTAINER: "#playlist-info-anchor",
     SOUND_NODE_CONTAINER: "#sound-node-anchor",
     PLAYLIST_NODE_CONTAINER: "#playlist-node-anchor",
+    PLAYLIST_OVERVIEW_CONTAINER: "#playlist-overview-anchor",
   };
   DYNAMIC_ANCHOR_ID_PARTS = {
     PLAYLIST_NODE: "-playlist-node",
@@ -64,6 +67,7 @@ export default class PrettyMixer extends Application {
   async close(options) {
     await super.close(options);
     Hooks.off("updatePlaylist", this.updatePlaylistHookId);
+    // todo remove Hooks of components (PlaylistOverview & SoundNode's) - necessary?
   }
 
   /**
@@ -89,6 +93,13 @@ export default class PrettyMixer extends Application {
     return getElement(this.element, this.ANCHOR_IDS.PLAYLIST_NODE_CONTAINER);
   }
 
+  getOverviewContainer() {
+    return getElement(
+      this.element,
+      this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTAINER
+    );
+  }
+
   getSoundNodeOfPlaylistNode(playlistContainer, id) {
     const query = this.buildAnchorId(
       this.DYNAMIC_ANCHOR_ID_PARTS.PLAYLIST_NODE,
@@ -109,47 +120,53 @@ export default class PrettyMixer extends Application {
    * @returns {Promise<void>}
    */
   async renderInitialState() {
+    // Controls panel
     const soundboardContainerElement = this.getSoundNodeContainer();
 
     const allPlayingPlaylists = getPlayingPlaylists();
-    if (!allPlayingPlaylists) {
-      return;
+    if (allPlayingPlaylists?.length) {
+      const playingSoundboards = [];
+      const playingPlaylists = [];
+
+      // sort Playlist by type
+      allPlayingPlaylists.forEach((playlist) => {
+        playlist.mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+          ? playingSoundboards.push(playlist)
+          : playingPlaylists.push(playlist);
+      });
+
+      // Soundboard Sounds
+      playingSoundboards.forEach((playlist) => {
+        playlist.sounds.forEach(async (sound) => {
+          if (sound.playing) {
+            await addSoundNode(soundboardContainerElement, sound);
+          }
+        });
+      });
+
+      // Music
+      const playlistContainer = this.getPlaylistNodeContainer();
+      playingPlaylists.forEach(async (playlist) => {
+        await addPlaylistNode(playlistContainer, playlist);
+        // add Sounds
+        playlist.sounds.forEach(async (sound) => {
+          if (sound.playing) {
+            const playlistSongContainer = this.getSoundNodeOfPlaylistNode(
+              playlistContainer,
+              playlist.id
+            );
+            await addSoundNode(playlistSongContainer, sound);
+          }
+        });
+      });
     }
 
-    const playingSoundboards = [];
-    const playingPlaylists = [];
-
-    // sort Playlist by type
-    allPlayingPlaylists.forEach((playlist) => {
-      playlist.mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
-        ? playingSoundboards.push(playlist)
-        : playingPlaylists.push(playlist);
-    });
-
-    // Soundboard Sounds
-    playingSoundboards.forEach((playlist) => {
-      playlist.sounds.forEach(async (sound) => {
-        if (sound.playing) {
-          await addSoundNode(soundboardContainerElement, sound);
-        }
-      });
-    });
-
-    // Music
-    const playlistContainer = this.getPlaylistNodeContainer();
-    playingPlaylists.forEach(async (playlist) => {
-      await addPlaylistNode(playlistContainer, playlist);
-      // add Sounds
-      playlist.sounds.forEach(async (sound) => {
-        if (sound.playing) {
-          const playlistSongContainer = this.getSoundNodeOfPlaylistNode(
-            playlistContainer,
-            playlist.id
-          );
-          await addSoundNode(playlistSongContainer, sound);
-        }
-      });
-    });
+    // Overview
+    const overviewElement = this.getOverviewContainer();
+    if (overviewElement?.length) {
+      const playlists = getPlaylists();
+      await addPlaylistOverview(overviewElement, playlists);
+    }
   }
 
   async onUpdatePlaylist(origin, changes) {

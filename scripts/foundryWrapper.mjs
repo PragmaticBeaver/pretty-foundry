@@ -4,6 +4,14 @@
  */
 
 /**
+ * Wrapper of FoundryVTT CONFIG.debug.hooks property.
+ * @param {boolean} enabled
+ */
+export function setHookDebugging(enabled = false) {
+  CONFIG.debug.hooks = enabled;
+}
+
+/**
  * Wrapper of "FoundryVTT Namespace utils" mergeObject function
  * @param {Record<string,any>} original
  * @param {Record<string,any>} update
@@ -48,6 +56,14 @@ export function getSettingsValue(moduleId, settingId) {
  */
 export function getPlayingPlaylists() {
   return game?.playlists?.playing;
+}
+
+/**
+ * Wrapper of "FoundryVTT game.playlists" property
+ * @returns {Playlist[] | undefined}
+ */
+export function getPlaylists() {
+  return game?.playlists;
 }
 
 /**

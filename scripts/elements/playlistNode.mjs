@@ -12,11 +12,11 @@ export async function addPlaylistNode(element, playlist) {
   const id = playlist.id;
 
   // create template
-  const soundNodeTemplate = await renderTemplateWrapper(
+  const template = await renderTemplateWrapper(
     getTemplatePath(TEMPLATE_IDS.PLAYLIST_NODE),
     { id, playlistName: playlist.name }
   );
-  element.append(soundNodeTemplate);
+  element.append(template);
 
   // add "click"-handler only to playlist-name
   const label = element

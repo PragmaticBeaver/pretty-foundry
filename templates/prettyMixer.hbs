@@ -1,59 +1,67 @@
 <div id="pretty-mixer" class="pretty-mixer">
+  {{! Playlist overview }}
+  <div id="playlist-overview-anchor" class="playlist-overview-anchor">
+    {{! PlaylistOverview will be added here by script }}
+  </div>
+
   {{! Global audio controls }}
-  <div class="pretty-mixer-global-audio-controls-container">
-    {{! Currently playing Soundboards }}
-    <div class="sound-nodes-container-background">
-      <div id="sound-node-anchor" class="nodes-container">
-        {{! SoundNode's will be added here by script }}
+  <div class="audio-controls-panel-container">
+    {{! todo extract as component }}
+    <div class="pretty-mixer-global-audio-controls-container">
+      {{! Currently playing Soundboards }}
+      <div class="sound-nodes-container-background">
+        <div id="sound-node-anchor" class="nodes-container">
+          {{! SoundNode's will be added here by script }}
+        </div>
       </div>
-    </div>
-    {{! Currently playing Playlists }}
-    <div class="song-nodes-container-background">
-      <div id="playlist-node-anchor" class="nodes-container">
-        {{! SoundNode's will be added here by script }}
-      </div>
-    </div>
-
-    {{! Controls & song info }}
-    <div class="pretty-mixer-global-audio-controls">
-      {{! Selected Playlist Info }}
-      <div id="playlist-info-anchor" class="">
-      </div>
-
-      {{! Controls }}
-      <div class="pretty-mixer-global-audio-controls-button-container">
-        <div class="pretty-mixer-global-audio-controls-button">
-          <i class="fas fa-shuffle"></i>
-        </div>
-        <div class="pretty-mixer-global-audio-controls-button">
-          <i class="fas fa-backward-step"></i>
-        </div>
-        <div class="pretty-mixer-global-audio-controls-button">
-          <i class="fas fa-play"></i>
-        </div>
-        {{! todo <i class="fas fa-pause"></i> }}
-        <div class="pretty-mixer-global-audio-controls-button">
-          <i class="fas fa-forward-step"></i>
-        </div>
-        <div class="pretty-mixer-global-audio-controls-button">
-          <i class="fas fa-repeat"></i>
+      {{! Currently playing Playlists }}
+      <div class="song-nodes-container-background">
+        <div id="playlist-node-anchor" class="nodes-container">
+          {{! SoundNode's will be added here by script }}
         </div>
       </div>
 
-      {{! Volume }}
-      <div class="pretty-mixer-global-audio-controls-volume-container">
-        <div class="pretty-mixer-global-audio-controls-button">
-          <i class="fas fa-volume"></i>
+      {{! Controls & song info }}
+      <div class="pretty-mixer-global-audio-controls">
+        {{! Selected Playlist Info }}
+        <div id="playlist-info-anchor" class="">
         </div>
-        {{! volume-bar }}
-        <input
-          type="range"
-          id="current-song-progressbar"
-          class="pretty-mixer-global-audio-controls-song-progressbar"
-          min="0"
-          max="{{currentlyPlayingSongDuration}}"
-          data-bind="value: currentlyPlayingSongProgress"
-        />
+
+        {{! Controls }}
+        <div class="pretty-mixer-global-audio-controls-button-container">
+          <div class="pretty-mixer-global-audio-controls-button">
+            <i class="fas fa-shuffle"></i>
+          </div>
+          <div class="pretty-mixer-global-audio-controls-button">
+            <i class="fas fa-backward-step"></i>
+          </div>
+          <div class="pretty-mixer-global-audio-controls-button">
+            <i class="fas fa-play"></i>
+          </div>
+          {{! todo <i class="fas fa-pause"></i> }}
+          <div class="pretty-mixer-global-audio-controls-button">
+            <i class="fas fa-forward-step"></i>
+          </div>
+          <div class="pretty-mixer-global-audio-controls-button">
+            <i class="fas fa-repeat"></i>
+          </div>
+        </div>
+
+        {{! Volume }}
+        <div class="pretty-mixer-global-audio-controls-volume-container">
+          <div class="pretty-mixer-global-audio-controls-button">
+            <i class="fas fa-volume"></i>
+          </div>
+          {{! volume-bar }}
+          <input
+            type="range"
+            id="current-song-progressbar"
+            class="pretty-mixer-global-audio-controls-song-progressbar"
+            min="0"
+            max="{{currentlyPlayingSongDuration}}"
+            data-bind="value: currentlyPlayingSongProgress"
+          />
+        </div>
       </div>
     </div>
   </div>
