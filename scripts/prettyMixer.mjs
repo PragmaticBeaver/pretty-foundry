@@ -180,7 +180,7 @@ export default class PrettyMixer extends Application {
       this.element,
       this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTAINER
     );
-    if (overviewElement?.length) {
+    if (overviewElement) {
       // const playlists = getPlaylists();
       // todo render initial Overview State
     }
