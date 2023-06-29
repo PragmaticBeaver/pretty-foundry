@@ -81,3 +81,9 @@ export const FOUNDRY_PLAYLIST_MODES = {
   SIMULTANEOUS: 2,
   SOUNDBOARD: -1,
 };
+
+export const FOUDNRY_HOOK_IDS = {
+  UPDATE_PLAYLIST: "updatePlaylist",
+  CREATE_PLAYLIST: "createPlaylist",
+  DELETE_PLAYLIST: "deletePlaylist",
+};

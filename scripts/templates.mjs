@@ -8,7 +8,6 @@ export const TEMPLATE_IDS = {
   SOUNDBOARD_SOUND_NODE: "soundNode",
   SONG_INFO: "songInfo",
   PLAYLIST_NODE: "playlistNode",
-  PLAYLIST_OVERVIEW: "playlistOverview",
 };
 
 /**
@@ -22,7 +21,6 @@ export function getTemplatePath(templateId) {
     [TEMPLATE_IDS.SOUNDBOARD_SOUND_NODE]: `${MODULE_CONFIG.TEMPLATES_PATH}/soundNode.hbs`,
     [TEMPLATE_IDS.SONG_INFO]: `${MODULE_CONFIG.TEMPLATES_PATH}/songInfo.hbs`,
     [TEMPLATE_IDS.PLAYLIST_NODE]: `${MODULE_CONFIG.TEMPLATES_PATH}/playlistNode.hbs`,
-    [TEMPLATE_IDS.PLAYLIST_OVERVIEW]: `${MODULE_CONFIG.TEMPLATES_PATH}/playlistOverview.hbs`,
   }[templateId];
 }
 
@@ -34,6 +32,5 @@ export async function preloadTemplates() {
     getTemplatePath(TEMPLATE_IDS.SOUNDBOARD_SOUND_NODE),
     getTemplatePath(TEMPLATE_IDS.SONG_INFO),
     getTemplatePath(TEMPLATE_IDS.PLAYLIST_NODE),
-    getTemplatePath(TEMPLATE_IDS.PLAYLIST_OVERVIEW),
   ]);
 }

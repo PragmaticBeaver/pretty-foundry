@@ -1,7 +1,33 @@
 <div id="pretty-mixer" class="pretty-mixer">
   {{! Playlist overview }}
-  <div id="playlist-overview-anchor" class="playlist-overview-anchor">
-    {{! PlaylistOverview will be added here by script }}
+  <div id="playlist-overview-anchor" class="playlist-overview-container">
+    {{! Music-Playlists }}
+    <div class="playlist-overview">
+      <div class="playlist-overview-header">
+        Playlists
+        {{! todo add-Button & collapse/expand-Button }}
+      </div>
+      <div
+        id="playlist-overview-content-anchor"
+        class="playlist-overview-content"
+      >
+        {{! PlaylistCard will be added here by script }}
+      </div>
+    </div>
+
+    {{! Soundboard-Playlists }}
+    <div class="playlist-overview">
+      <div class="playlist-overview-header">
+        Soundboards
+        {{! todo add-Button & collapse/expand-Button }}
+      </div>
+      <div
+        id="soundboard-overview-content-anchor"
+        class="playlist-overview-content"
+      >
+        {{! PlaylistCard will be added here by script }}
+      </div>
+    </div>
   </div>
 
   {{! Global audio controls }}

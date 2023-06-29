@@ -4,7 +4,8 @@ import {
   getPlayingPlaylists,
   getPlaylist,
   mergeObjectWrapper,
-  getPlaylists,
+  FOUDNRY_HOOK_IDS,
+  // getPlaylists,
 } from "./foundryWrapper.mjs";
 import { errorToConsole } from "./log.mjs";
 import {
@@ -14,7 +15,7 @@ import {
 import { addSoundNode, removeSoundNode } from "./elements/soundNode.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
-import { addPlaylistOverview } from "./elements/playlistOverview.mjs";
+import { logToConsole } from "./log.mjs";
 
 /**
  * Mixer UI controller.
@@ -22,12 +23,19 @@ import { addPlaylistOverview } from "./elements/playlistOverview.mjs";
  * @extends Application
  */
 export default class PrettyMixer extends Application {
-  updatePlaylistHookId = undefined;
+  hookIds = {
+    update: undefined,
+    create: undefined,
+    delete: undefined,
+  };
+
   ANCHOR_IDS = {
     PLAYLIST_INFO_CONTAINER: "#playlist-info-anchor",
     SOUND_NODE_CONTAINER: "#sound-node-anchor",
     PLAYLIST_NODE_CONTAINER: "#playlist-node-anchor",
     PLAYLIST_OVERVIEW_CONTAINER: "#playlist-overview-anchor",
+    PLAYLIST_OVERVIEW_CONTENT_ANCHOR: "#playlist-overview-content-anchor",
+    SOUNDBOARD_OVERVIEW_CONTENT_ANCHOR: "#soundboard-overview-content-anchor",
   };
   DYNAMIC_ANCHOR_ID_PARTS = {
     PLAYLIST_NODE: "-playlist-node",
@@ -66,8 +74,11 @@ export default class PrettyMixer extends Application {
    */
   async close(options) {
     await super.close(options);
-    Hooks.off("updatePlaylist", this.updatePlaylistHookId);
-    // todo remove Hooks of components (PlaylistOverview & SoundNode's) - necessary?
+    // remove Hooks
+    Hooks.off(FOUDNRY_HOOK_IDS.UPDATE_PLAYLIST, this.hookIds.update);
+    Hooks.off(FOUDNRY_HOOK_IDS.CREATE_PLAYLIST, this.hookIds.create);
+    Hooks.off(FOUDNRY_HOOK_IDS.DELETE_PLAYLIST, this.hookIds.delete);
+    // todo SoundNode hooks - necessary?
   }
 
   /**
@@ -79,24 +90,21 @@ export default class PrettyMixer extends Application {
     super.activateListeners(html);
     await this.renderInitialState();
 
-    this.updatePlaylistHookId = Hooks.on(
-      "updatePlaylist",
-      async (...args) => await this.onUpdatePlaylist(...args) // todo enable
+    this.hookIds.update = Hooks.on(
+      FOUDNRY_HOOK_IDS.UPDATE_PLAYLIST,
+      async (document, change) => await this.onUpdatePlaylist(document, change)
     );
-  }
 
-  getSoundNodeContainer() {
-    return getElement(this.element, this.ANCHOR_IDS.SOUND_NODE_CONTAINER);
-  }
+    this.hookIds.create = Hooks.on(
+      FOUDNRY_HOOK_IDS.CREATE_PLAYLIST,
+      async (document, options) =>
+        await this.onCreatePlaylist(document, options)
+    );
 
-  getPlaylistNodeContainer() {
-    return getElement(this.element, this.ANCHOR_IDS.PLAYLIST_NODE_CONTAINER);
-  }
-
-  getOverviewContainer() {
-    return getElement(
-      this.element,
-      this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTAINER
+    this.hookIds.delete = Hooks.on(
+      FOUDNRY_HOOK_IDS.DELETE_PLAYLIST,
+      async (document, options) =>
+        await this.onDeletePlaylist(document, options)
     );
   }
 
@@ -121,7 +129,10 @@ export default class PrettyMixer extends Application {
    */
   async renderInitialState() {
     // Controls panel
-    const soundboardContainerElement = this.getSoundNodeContainer();
+    const soundboardContainerElement = getElement(
+      this.element,
+      this.ANCHOR_IDS.SOUND_NODE_CONTAINER
+    );
 
     const allPlayingPlaylists = getPlayingPlaylists();
     if (allPlayingPlaylists?.length) {
@@ -145,7 +156,10 @@ export default class PrettyMixer extends Application {
       });
 
       // Music
-      const playlistContainer = this.getPlaylistNodeContainer();
+      const playlistContainer = getElement(
+        this.element,
+        this.ANCHOR_IDS.PLAYLIST_NODE_CONTAINER
+      );
       playingPlaylists.forEach(async (playlist) => {
         await addPlaylistNode(playlistContainer, playlist);
         // add Sounds
@@ -162,16 +176,19 @@ export default class PrettyMixer extends Application {
     }
 
     // Overview
-    const overviewElement = this.getOverviewContainer();
+    const overviewElement = getElement(
+      this.element,
+      this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTAINER
+    );
     if (overviewElement?.length) {
-      const playlists = getPlaylists();
-      await addPlaylistOverview(overviewElement, playlists);
+      // const playlists = getPlaylists();
+      // todo render initial Overview State
     }
   }
 
-  async onUpdatePlaylist(origin, changes) {
-    const changedPlaylistId = changes._id;
-    const soundChanges = changes.sounds;
+  async onUpdatePlaylist(playlistDocument, change) {
+    const changedPlaylistId = change._id;
+    const soundChanges = change.sounds;
 
     const playlist = getPlaylist(changedPlaylistId);
     if (!playlist) {
@@ -179,7 +196,10 @@ export default class PrettyMixer extends Application {
       return;
     }
 
-    const playlistContainer = this.getPlaylistNodeContainer();
+    const playlistContainer = getElement(
+      this.element,
+      this.ANCHOR_IDS.PLAYLIST_NODE_CONTAINER
+    );
 
     for (const soundChange of soundChanges) {
       const soundId = soundChange._id;
@@ -190,7 +210,7 @@ export default class PrettyMixer extends Application {
       }
 
       let container;
-      if (origin.mode !== FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
+      if (playlistDocument.mode !== FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
         const playlistId = playlist.id;
         const query = this.buildAnchorId(
           this.DYNAMIC_ANCHOR_ID_PARTS.PLAYLIST_NODE,
@@ -205,7 +225,10 @@ export default class PrettyMixer extends Application {
           playlistId
         );
       } else {
-        container = this.getSoundNodeContainer();
+        container = getElement(
+          this.element,
+          this.ANCHOR_IDS.SOUND_NODE_CONTAINER
+        );
       }
       if (!container) {
         errorToConsole("unable to find SoundContainer!");
@@ -231,5 +254,15 @@ export default class PrettyMixer extends Application {
     if (!playlist.playing) {
       removePlaylistNode(playlistContainer, playlist.id);
     }
+  }
+
+  async onCreatePlaylist(playlistDocument, options) {
+    logToConsole("onCreatePlaylist", { playlistDocument, options });
+    // todo add new playlist to UI
+  }
+
+  async onDeletePlaylist(playlistDocument, options) {
+    logToConsole("onDeletePlaylist", { playlistDocument, options });
+    // todo remove rendered playlist form UI
   }
 }
