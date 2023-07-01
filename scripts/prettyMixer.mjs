@@ -1,5 +1,9 @@
 import { MODULE_CONFIG } from "./config.mjs";
 import {
+  addPlaylistCard,
+  removePlaylistCard,
+} from "./elements/playlistCard.mjs";
+import {
   addPlaylistNode,
   removePlaylistNode,
 } from "./elements/playlistNode.mjs";
@@ -9,6 +13,7 @@ import {
   FOUNDRY_PLAYLIST_MODES,
   getPlayingPlaylists,
   getPlaylist,
+  getPlaylists,
   mergeObjectWrapper,
 } from "./foundryWrapper.mjs";
 import { errorToConsole } from "./log.mjs";
@@ -180,12 +185,25 @@ export default class PrettyMixer extends Application {
       this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTAINER
     );
     if (overviewElement) {
-      // const playlists = getPlaylists();
-      // todo render initial Overview State
+      const playlists = getPlaylists();
+      playlists.forEach(async (playlist) => {
+        const { id, name, mode } = playlist;
+        const element =
+          mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+            ? getElement(
+                this.element,
+                this.ANCHOR_IDS.SOUNDBOARD_OVERVIEW_CONTENT_ANCHOR
+              )
+            : getElement(
+                this.element,
+                this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTENT_ANCHOR
+              );
+        await addPlaylistCard(element, name, id);
+      });
     }
   }
 
-  // todo handle playlist name or content changes (Overview)
+  // todo - handle playlist name or content changes (Overview)
   async onUpdatePlaylist(playlistDocument, change) {
     const changedPlaylistId = change._id;
     const soundChanges = change.sounds;
@@ -258,11 +276,33 @@ export default class PrettyMixer extends Application {
 
   async onCreatePlaylist(playlistDocument, options) {
     logToConsole("onCreatePlaylist", { playlistDocument, options });
-    // todo add new playlist to UI
+    const { name, id, mode } = playlistDocument;
+    const element =
+      mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+        ? getElement(
+            this.element,
+            this.ANCHOR_IDS.SOUNDBOARD_OVERVIEW_CONTENT_ANCHOR
+          )
+        : getElement(
+            this.element,
+            this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTENT_ANCHOR
+          );
+    await addPlaylistCard(element, name, id);
   }
 
   async onDeletePlaylist(playlistDocument, options) {
     logToConsole("onDeletePlaylist", { playlistDocument, options });
-    // todo remove rendered playlist form UI
+    const { id, mode } = playlistDocument;
+    const element =
+      mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+        ? getElement(
+            this.element,
+            this.ANCHOR_IDS.SOUNDBOARD_OVERVIEW_CONTENT_ANCHOR
+          )
+        : getElement(
+            this.element,
+            this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTENT_ANCHOR
+          );
+    removePlaylistCard(element, id);
   }
 }
