@@ -29,6 +29,10 @@ export function removePlaylistCard(element, id) {
   card.remove();
 }
 
-export function updatePlaylistCard() {
-  // todo
+export function updatePlaylistCard(element, id, name) {
+  const titleElement = element
+    .find(`#${id}-playlist-card`)
+    .find(".playlist-card-title");
+  if (!titleElement?.length) return;
+  titleElement.html(name);
 }

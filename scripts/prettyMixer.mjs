@@ -2,6 +2,7 @@ import { MODULE_CONFIG } from "./config.mjs";
 import {
   addPlaylistCard,
   removePlaylistCard,
+  updatePlaylistCard,
 } from "./elements/playlistCard.mjs";
 import {
   addPlaylistNode,
@@ -203,7 +204,6 @@ export default class PrettyMixer extends Application {
     }
   }
 
-  // todo - handle playlist name or content changes (Overview)
   async onUpdatePlaylist(playlistDocument, change) {
     const changedPlaylistId = change._id;
     const soundChanges = change.sounds;
@@ -214,95 +214,105 @@ export default class PrettyMixer extends Application {
       return;
     }
 
-    const playlistContainer = getElement(
-      this.element,
-      this.ANCHOR_IDS.PLAYLIST_NODE_CONTAINER
-    );
-
-    for (const soundChange of soundChanges) {
-      const soundId = soundChange._id;
-      const sound = playlist.sounds.get(soundId);
-      if (!sound) {
-        errorToConsole(`sound ${soundId} not found!`);
-        continue;
-      }
-
-      let container;
-      if (playlistDocument.mode !== FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
-        const playlistId = playlist.id;
-        const query = this.buildAnchorId(
-          this.DYNAMIC_ANCHOR_ID_PARTS.PLAYLIST_NODE,
-          playlistId
-        );
-        const isPlaylistRendered = playlistContainer.find(query);
-        if (!isPlaylistRendered?.length) {
-          await addPlaylistNode(playlistContainer, playlist);
-        }
-        container = this.getSoundNodeOfPlaylistNode(
-          playlistContainer,
-          playlistId
-        );
-      } else {
-        container = getElement(
-          this.element,
-          this.ANCHOR_IDS.SOUND_NODE_CONTAINER
-        );
-      }
-      if (!container) {
-        errorToConsole("unable to find SoundContainer!");
-        continue;
-      }
-
-      // handle single Sound in Playlist with repeat setting (will be set to playing === true, but already playing)
-      const soundQuery = this.buildAnchorId(
-        this.DYNAMIC_ANCHOR_ID_PARTS.SOUND_NODE,
-        soundId
+    // handle sound change
+    if (soundChanges) {
+      const playlistContainer = getElement(
+        this.element,
+        this.ANCHOR_IDS.PLAYLIST_NODE_CONTAINER
       );
-      const continuePlaying =
-        soundChange.playing && this.element.find(soundQuery)?.length;
-      if (continuePlaying) return;
 
-      // add or remove SoundNode
-      soundChange.playing
-        ? await addSoundNode(container, sound)
-        : removeSoundNode(container, sound.id);
+      for (const soundChange of soundChanges) {
+        const soundId = soundChange._id;
+        const sound = playlist.sounds.get(soundId);
+        if (!sound) {
+          errorToConsole(`sound ${soundId} not found!`);
+          continue;
+        }
+
+        let container;
+        if (playlistDocument.mode !== FOUNDRY_PLAYLIST_MODES.SOUNDBOARD) {
+          const playlistId = playlist.id;
+          const query = this.buildAnchorId(
+            this.DYNAMIC_ANCHOR_ID_PARTS.PLAYLIST_NODE,
+            playlistId
+          );
+          const isPlaylistRendered = playlistContainer.find(query);
+          if (!isPlaylistRendered?.length) {
+            await addPlaylistNode(playlistContainer, playlist);
+          }
+          container = this.getSoundNodeOfPlaylistNode(
+            playlistContainer,
+            playlistId
+          );
+        } else {
+          container = getElement(
+            this.element,
+            this.ANCHOR_IDS.SOUND_NODE_CONTAINER
+          );
+        }
+        if (!container) {
+          errorToConsole("unable to find SoundContainer!");
+          continue;
+        }
+
+        // handle single Sound in Playlist with repeat setting (will be set to playing === true, but already playing)
+        const soundQuery = this.buildAnchorId(
+          this.DYNAMIC_ANCHOR_ID_PARTS.SOUND_NODE,
+          soundId
+        );
+        const continuePlaying =
+          soundChange.playing && this.element.find(soundQuery)?.length;
+        if (continuePlaying) return;
+
+        // add or remove SoundNode
+        soundChange.playing
+          ? await addSoundNode(container, sound)
+          : removeSoundNode(container, sound.id);
+      }
+
+      // stop Playlist after stopping Sounds (because Sounds need to remove Hooks first)
+      if (!playlist.playing) {
+        removePlaylistNode(playlistContainer, playlist.id);
+      }
     }
 
-    // stop Playlist after stopping Sounds (because Sounds need to remove Hooks first)
-    if (!playlist.playing) {
-      removePlaylistNode(playlistContainer, playlist.id);
+    // handle name change
+    const nameChange = change.name;
+    if (nameChange) {
+      const element = getOverviewAnchorByPlaylistMode(
+        this.element,
+        this.ANCHOR_IDS,
+        playlist.mode
+      );
+      updatePlaylistCard(element, changedPlaylistId, nameChange);
     }
   }
 
   async onCreatePlaylist(playlistDocument, options) {
     logToConsole("onCreatePlaylist", { playlistDocument, options });
     const { name, id, mode } = playlistDocument;
-    const element =
-      mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
-        ? getElement(
-            this.element,
-            this.ANCHOR_IDS.SOUNDBOARD_OVERVIEW_CONTENT_ANCHOR
-          )
-        : getElement(
-            this.element,
-            this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTENT_ANCHOR
-          );
+    const element = getOverviewAnchorByPlaylistMode(
+      this.element,
+      this.ANCHOR_IDS,
+      mode
+    );
     await addPlaylistCard(element, name, id);
   }
 
   async onDeletePlaylist(playlistDocument, options) {
     logToConsole("onDeletePlaylist", { playlistDocument, options });
     const { id, mode } = playlistDocument;
-    const element =
-      mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
-        ? getElement(
-            this.element,
-            this.ANCHOR_IDS.SOUNDBOARD_OVERVIEW_CONTENT_ANCHOR
-          )
-        : getElement(
-            this.element,
-            this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTENT_ANCHOR
-          );
+    const element = getOverviewAnchorByPlaylistMode(
+      this.element,
+      this.ANCHOR_IDS,
+      mode
+    );
     removePlaylistCard(element, id);
   }
+}
+
+function getOverviewAnchorByPlaylistMode(element, ANCHOR_IDS, mode) {
+  return mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+    ? getElement(element, ANCHOR_IDS.SOUNDBOARD_OVERVIEW_CONTENT_ANCHOR)
+    : getElement(element, ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTENT_ANCHOR);
 }
