@@ -29,10 +29,29 @@ export function removePlaylistCard(element, id) {
   card.remove();
 }
 
-export function updatePlaylistCard(element, id, name) {
+export function updatePlaylistCardTitle(element, id, title) {
   const titleElement = element
     .find(`#${id}-playlist-card`)
     .find(".playlist-card-title");
   if (!titleElement?.length) return;
-  titleElement.html(name);
+  titleElement.html(title);
+}
+
+export function updatePlaylistCardButton(element, id, isPlaying) {
+  const buttonElement = element
+    .find(`#${id}-playlist-card`)
+    .find(".playlist-card-button");
+  if (!buttonElement?.length) return;
+
+  const playIcon = buttonElement.find(".fa-play");
+  const pauseIcon = buttonElement.find(".fa-pause");
+  logToConsole({ buttonElement, playIcon, pauseIcon });
+
+  const inactiveClass = "playlist-card-button-icon-inactive";
+  playIcon.removeClass(inactiveClass);
+  pauseIcon.removeClass(inactiveClass);
+
+  isPlaying
+    ? playIcon.addClass(inactiveClass)
+    : pauseIcon.addClass(inactiveClass);
 }

@@ -2,7 +2,8 @@ import { MODULE_CONFIG } from "./config.mjs";
 import {
   addPlaylistCard,
   removePlaylistCard,
-  updatePlaylistCard,
+  updatePlaylistCardButton,
+  updatePlaylistCardTitle,
 } from "./elements/playlistCard.mjs";
 import {
   addPlaylistNode,
@@ -270,10 +271,27 @@ export default class PrettyMixer extends Application {
           : removeSoundNode(container, sound.id);
       }
 
-      // stop Playlist after stopping Sounds (because Sounds need to remove Hooks first)
       if (!playlist.playing) {
+        // stop Playlist after stopping Sounds (because Sounds need to remove Hooks first)
         removePlaylistNode(playlistContainer, playlist.id);
       }
+
+      // update Overview
+      const playlistCardContainer =
+        playlist.mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+          ? getElement(
+              this.element,
+              this.ANCHOR_IDS.SOUNDBOARD_OVERVIEW_CONTENT_ANCHOR
+            )
+          : getElement(
+              this.element,
+              this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTENT_ANCHOR
+            );
+      updatePlaylistCardButton(
+        playlistCardContainer,
+        playlist.id,
+        playlist.playing
+      );
     }
 
     // handle name change
@@ -284,7 +302,7 @@ export default class PrettyMixer extends Application {
         this.ANCHOR_IDS,
         playlist.mode
       );
-      updatePlaylistCard(element, changedPlaylistId, nameChange);
+      updatePlaylistCardTitle(element, changedPlaylistId, nameChange);
     }
   }
 
