@@ -45,7 +45,6 @@ export function updatePlaylistCardButton(element, id, isPlaying) {
 
   const playIcon = buttonElement.find(".fa-play");
   const pauseIcon = buttonElement.find(".fa-pause");
-  logToConsole({ buttonElement, playIcon, pauseIcon });
 
   const inactiveClass = "playlist-card-button-icon-inactive";
   playIcon.removeClass(inactiveClass);
