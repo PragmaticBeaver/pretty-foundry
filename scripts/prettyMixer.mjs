@@ -203,6 +203,7 @@ export default class PrettyMixer extends Application {
               );
         await addPlaylistCard(element, name, id);
         updatePlaylistCardButton(element, id, playlist.playing);
+        updatePlaylistCardMode(element, id, mode);
       });
     }
   }
