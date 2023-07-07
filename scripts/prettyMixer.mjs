@@ -201,6 +201,7 @@ export default class PrettyMixer extends Application {
                 this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTENT_ANCHOR
               );
         await addPlaylistCard(element, name, id);
+        updatePlaylistCardButton(element, id, playlist.playing);
       });
     }
   }
