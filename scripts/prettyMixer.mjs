@@ -208,8 +208,6 @@ export default class PrettyMixer extends Application {
 
   async onUpdatePlaylist(playlistDocument, change) {
     const changedPlaylistId = change._id;
-    const soundChanges = change.sounds;
-
     const playlist = getPlaylist(changedPlaylistId);
     if (!playlist) {
       errorToConsole(`playlist ${changedPlaylistId} not found!`);
@@ -217,6 +215,7 @@ export default class PrettyMixer extends Application {
     }
 
     // handle sound change
+    const soundChanges = change.sounds;
     if (soundChanges) {
       const playlistContainer = getElement(
         this.element,
@@ -304,6 +303,34 @@ export default class PrettyMixer extends Application {
         playlist.mode
       );
       updatePlaylistCardTitle(element, changedPlaylistId, nameChange);
+    }
+
+    // handle mode change
+    const modeChange = change.mode;
+    if (modeChange !== undefined) {
+      const { name, id } = playlist;
+
+      const soundboardContainerElement = getOverviewAnchorByPlaylistMode(
+        this.element,
+        this.ANCHOR_IDS,
+        FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+      );
+      removePlaylistCard(soundboardContainerElement, id);
+
+      const playlistContainerElement = getOverviewAnchorByPlaylistMode(
+        this.element,
+        this.ANCHOR_IDS,
+        undefined
+      );
+      removePlaylistCard(playlistContainerElement, id);
+
+      const container = getOverviewAnchorByPlaylistMode(
+        this.element,
+        this.ANCHOR_IDS,
+        modeChange
+      );
+      await addPlaylistCard(container, name, id);
+      updatePlaylistCardButton(container, id, playlist.playing);
     }
   }
 
