@@ -25,3 +25,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.playlist-card-icons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
