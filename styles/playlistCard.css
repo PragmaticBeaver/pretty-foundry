@@ -25,7 +25,3 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.playlist-card-button-icon-inactive {
-  display: none;
-}

@@ -3,6 +3,7 @@ import {
   addPlaylistCard,
   removePlaylistCard,
   updatePlaylistCardButton,
+  updatePlaylistCardMode,
   updatePlaylistCardTitle,
 } from "./elements/playlistCard.mjs";
 import {
@@ -331,6 +332,7 @@ export default class PrettyMixer extends Application {
       );
       await addPlaylistCard(container, name, id);
       updatePlaylistCardButton(container, id, playlist.playing);
+      updatePlaylistCardMode(container, id, modeChange);
     }
   }
 

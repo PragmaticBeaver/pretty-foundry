@@ -1,4 +1,7 @@
-import { renderTemplateWrapper } from "../foundryWrapper.mjs";
+import {
+  FOUNDRY_PLAYLIST_MODES,
+  renderTemplateWrapper,
+} from "../foundryWrapper.mjs";
 import { logToConsole } from "../log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 
@@ -46,11 +49,37 @@ export function updatePlaylistCardButton(element, id, isPlaying) {
   const playIcon = buttonElement.find(".fa-play");
   const pauseIcon = buttonElement.find(".fa-pause");
 
-  const inactiveClass = "playlist-card-button-icon-inactive";
+  const inactiveClass = "inactive";
   playIcon.removeClass(inactiveClass);
   pauseIcon.removeClass(inactiveClass);
 
   isPlaying
     ? playIcon.addClass(inactiveClass)
     : pauseIcon.addClass(inactiveClass);
+}
+
+export function updatePlaylistCardMode(element, id, mode) {
+  const ICON_MAP = {
+    [FOUNDRY_PLAYLIST_MODES.SEQUENTIAL]: "fa-arrow-alt-circle-right",
+    [FOUNDRY_PLAYLIST_MODES.SHUFFLE]: "fa-random",
+    [FOUNDRY_PLAYLIST_MODES.SIMULTANEOUS]: "fa-compress-arrows-alt",
+    [FOUNDRY_PLAYLIST_MODES.SOUNDBOARD]: "fa-ban",
+  };
+
+  const iconContainer = element
+    .find(`#${id}-playlist-card`)
+    .find(".playlist-card-mode-icon");
+  if (!iconContainer?.length) return;
+
+  const inactiveClass = "inactive";
+  const children = iconContainer.find("i");
+  children.each(function () {
+    const child = $(this);
+    const activeIconClass = ICON_MAP[mode];
+    if (child.hasClass(activeIconClass)) {
+      child.removeClass(inactiveClass);
+    } else if (!child.hasClass(inactiveClass)) {
+      child.addClass(inactiveClass);
+    }
+  });
 }
