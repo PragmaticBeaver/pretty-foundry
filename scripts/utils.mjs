@@ -48,7 +48,6 @@ export async function stopSound(playingPlaylists, id) {
 export function getElement(rootElement, searchQuery) {
   const element = rootElement?.find(searchQuery);
   if (!element?.length) {
-    errorToConsole(`"${searchQuery}" not found!`);
     return;
   }
   return element;

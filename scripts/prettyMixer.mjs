@@ -309,30 +309,41 @@ export default class PrettyMixer extends Application {
     // handle mode change
     const modeChange = change.mode;
     if (modeChange !== undefined) {
-      const { name, id } = playlist;
-
-      const soundboardContainerElement = getOverviewAnchorByPlaylistMode(
-        this.element,
-        this.ANCHOR_IDS,
-        FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
-      );
-      removePlaylistCard(soundboardContainerElement, id);
-
       const playlistContainerElement = getOverviewAnchorByPlaylistMode(
         this.element,
         this.ANCHOR_IDS,
         undefined
       );
-      removePlaylistCard(playlistContainerElement, id);
-
-      const container = getOverviewAnchorByPlaylistMode(
+      const soundboardContainerElement = getOverviewAnchorByPlaylistMode(
         this.element,
         this.ANCHOR_IDS,
-        modeChange
+        FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
       );
-      await addPlaylistCard(container, name, id);
-      updatePlaylistCardButton(container, id, playlist.playing);
-      updatePlaylistCardMode(container, id, modeChange);
+
+      const oldContainer =
+        modeChange === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+          ? playlistContainerElement
+          : soundboardContainerElement;
+      const newContainer =
+        modeChange === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
+          ? soundboardContainerElement
+          : playlistContainerElement;
+
+      const positionedCorrectly = getElement(
+        newContainer,
+        `#${changedPlaylistId}-playlist-card`
+      );
+      if (!positionedCorrectly) {
+        removePlaylistCard(oldContainer, changedPlaylistId);
+        await addPlaylistCard(newContainer, playlist.name, changedPlaylistId);
+      }
+
+      updatePlaylistCardButton(
+        newContainer,
+        changedPlaylistId,
+        playlist.playing
+      );
+      updatePlaylistCardMode(newContainer, changedPlaylistId, modeChange);
     }
   }
 
