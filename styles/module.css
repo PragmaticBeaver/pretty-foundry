@@ -1,9 +1,25 @@
+/* Element styles */
 @import url("./songProgressBar.css");
 @import url("./soundNode.css");
 @import url("./playlistNode.css");
 @import url("./prettyMixer.css");
 @import url("./playlistCard.css");
+@import url(".playlistDetails.css");
 
-.inactive {
+/* global styles */
+.pm-inactive {
   display: none;
+}
+
+.pm-icon {
+  transition: all 0.25s ease-out;
+}
+
+.pm-icon:hover {
+  color: var(--color-primary);
+}
+
+.pm-volume-bar {
+  width: 100%;
+  accent-color: var(--color-primary);
 }

@@ -4,11 +4,6 @@
   gap: 3px;
 }
 
-.pretty-mixer-global-audio-controls-song-progressbar {
-  width: 100%;
-  accent-color: var(--color-primary);
-}
-
 .pretty-mixer-global-audio-controls-song-progress-info {
   display: flex;
   flex-direction: row;

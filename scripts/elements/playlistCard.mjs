@@ -4,6 +4,7 @@ import {
 } from "../foundryWrapper.mjs";
 import { logToConsole } from "../log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
+import { switchPlayPause } from "../utils.mjs";
 
 export async function addPlaylistCard(element, name, id) {
   if (!element?.length) return;
@@ -41,21 +42,10 @@ export function updatePlaylistCardTitle(element, id, title) {
 }
 
 export function updatePlaylistCardButton(element, id, isPlaying) {
-  const buttonElement = element
-    .find(`#${id}-playlist-card`)
-    .find(".playlist-card-button");
+  const buttonElement = element.find(`#${id}-playlist-card`).find(".pm-icon");
   if (!buttonElement?.length) return;
 
-  const playIcon = buttonElement.find(".fa-play");
-  const pauseIcon = buttonElement.find(".fa-pause");
-
-  const inactiveClass = "inactive";
-  playIcon.removeClass(inactiveClass);
-  pauseIcon.removeClass(inactiveClass);
-
-  isPlaying
-    ? playIcon.addClass(inactiveClass)
-    : pauseIcon.addClass(inactiveClass);
+  switchPlayPause(buttonElement, isPlaying);
 }
 
 export function updatePlaylistCardMode(element, id, mode) {
@@ -71,7 +61,7 @@ export function updatePlaylistCardMode(element, id, mode) {
     .find(".playlist-card-mode-icon");
   if (!iconContainer?.length) return;
 
-  const inactiveClass = "inactive";
+  const inactiveClass = "pm-inactive";
   const children = iconContainer.find("i");
   children.each(function () {
     const child = $(this);

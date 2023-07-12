@@ -1,0 +1,21 @@
+.song-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 5px;
+  background-color: var(--menu-color-secondary);
+  border-radius: 20px;
+}
+
+.song-info-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.song-info-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

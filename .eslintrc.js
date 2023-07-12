@@ -23,6 +23,7 @@ module.exports = {
   globals: {
     // FoundryVTT Libraries
     $: "readonly",
+    Handlebars: "readonly",
 
     // FoundryVTT props
     ui: "readonly",

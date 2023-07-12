@@ -2,6 +2,8 @@ import { MODULE_CONFIG } from "./config.mjs";
 import { loadTemplatesWrapper } from "./foundryWrapper.mjs";
 import { logToConsole } from "./log.mjs";
 
+// Dev-info; Handlebars partials are not supported by Prettier.
+
 export const TEMPLATE_IDS = {
   MIXER: "mixer",
   MENU_BUTTON: "menuButton",
@@ -9,6 +11,7 @@ export const TEMPLATE_IDS = {
   SONG_INFO: "songInfo",
   PLAYLIST_NODE: "playlistNode",
   PLAYLIST_CARD: "playlistCard",
+  PLAYLIST_DETAILS: "playlistDetails",
 };
 
 /**
@@ -23,6 +26,7 @@ export function getTemplatePath(templateId) {
     [TEMPLATE_IDS.SONG_INFO]: `${MODULE_CONFIG.TEMPLATES_PATH}/songInfo.hbs`,
     [TEMPLATE_IDS.PLAYLIST_NODE]: `${MODULE_CONFIG.TEMPLATES_PATH}/playlistNode.hbs`,
     [TEMPLATE_IDS.PLAYLIST_CARD]: `${MODULE_CONFIG.TEMPLATES_PATH}/playlistCard.hbs`,
+    [TEMPLATE_IDS.PLAYLIST_DETAILS]: `${MODULE_CONFIG.TEMPLATES_PATH}/playlistDetails.hbs`,
   }[templateId];
 }
 
@@ -35,5 +39,6 @@ export async function preloadTemplates() {
     getTemplatePath(TEMPLATE_IDS.SONG_INFO),
     getTemplatePath(TEMPLATE_IDS.PLAYLIST_NODE),
     getTemplatePath(TEMPLATE_IDS.PLAYLIST_CARD),
+    getTemplatePath(TEMPLATE_IDS.PLAYLIST_DETAILS),
   ]);
 }

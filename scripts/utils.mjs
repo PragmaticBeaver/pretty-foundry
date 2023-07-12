@@ -1,4 +1,4 @@
-import { errorToConsole, warnToConsole } from "./log.mjs";
+import { warnToConsole } from "./log.mjs";
 
 /**
  * Loads PrettyMixer into Foundry ui-object.
@@ -97,4 +97,28 @@ export function makeObservable(
     },
   };
   return new Proxy(target, handler);
+}
+
+/**
+ * Set active icon inactive and vice versa.
+ * @param {jQuery} element playPause icon container
+ * @param {boolean} isPlaying switch to Play-icon
+ * @returns {void}
+ */
+export function switchPlayPause(element, isPlaying = undefined) {
+  if (!element?.length) return;
+
+  const playIcon = element.find(".fa-play");
+  const pauseIcon = element.find(".fa-pause");
+  if (!playIcon?.length || !pauseIcon?.length) return;
+
+  const inactiveClass = "pm-inactive";
+  const playing = isPlaying ? isPlaying : pauseIcon.hasClass(inactiveClass);
+  if (playing) {
+    playIcon.addClass(inactiveClass);
+    pauseIcon.removeClass(inactiveClass);
+  } else {
+    pauseIcon.addClass(inactiveClass);
+    playIcon.removeClass(inactiveClass);
+  }
 }

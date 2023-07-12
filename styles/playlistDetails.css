@@ -1,0 +1,28 @@
+.playlist-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.playlist-details-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.playlist-details-header-title {
+  font-size: large;
+}
+
+.playlist-details-header-configurations {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.playlist-details-body {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 10px;
+}

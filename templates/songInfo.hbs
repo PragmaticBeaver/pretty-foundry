@@ -1,4 +1,33 @@
-<div id="song-info-{{id}}" class="song-info">
-  <div class="song-info-name">{{songName}}</div>
-  <div class="song-info-playlist">{{playlistName}}</div>
+<div id="{{id}}-song-info" class="song-info">
+
+  {{! header }}
+  <div class="song-info-header">
+    {{name}}
+    {{! todo button ? }}
+  </div>
+
+  {{! body }}
+  <div class="song-info-body">
+    {{! repeat }}
+    <div class="pm-icon" data-icon="repeat">
+      <i class="fas fa-repeat"></i>
+    </div>
+    {{! volume }}
+    <div class="pm-icon" data-icon="volume">
+      <i class="fas fa-volume"></i>
+    </div>
+    {{! volume-bar }}
+    <input
+      type="range"
+      class="pm-volume-bar"
+      min="0"
+      max="{{currentlyPlayingSongDuration}}"
+      data-bind="value: currentlyPlayingSongProgress"
+    />
+    {{! play/pause }}
+    <div class="pm-icon" data-icon="play">
+      <i class="fas fa-play"></i>
+      <i class="fas fa-pause pm-inactive"></i>
+    </div>
+  </div>
 </div>
