@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ["eslint:recommended", "prettier"],
+  extends: ["eslint:recommended", "prettier", "plugin:import/recommended"],
   overrides: [
     {
       env: {
@@ -19,7 +19,9 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  rules: {},
+  rules: {
+    "import/extensions": [2, { js: "never", mjs: "always" }], // disallow js and enforce mjs
+  },
   globals: {
     // FoundryVTT Libraries
     $: "readonly",
@@ -33,6 +35,7 @@ module.exports = {
     // FoundryVTT classes
     Hooks: "readonly",
     Application: "readonly",
+    Dialog: "readonly",
 
     // FoundryVTT Namespace utils
     mergeObject: "readonly",
