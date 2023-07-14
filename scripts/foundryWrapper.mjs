@@ -2,6 +2,7 @@
  * !!! DEV-INFO !!!
  * The following wrapper functions are mainly used for type support inside other files.
  */
+import { errorToConsole, logToConsole } from "./log.mjs";
 
 /**
  * Wrapper of FoundryVTT CONFIG.debug.hooks property.
@@ -87,3 +88,61 @@ export const FOUDNRY_HOOK_IDS = {
   CREATE_PLAYLIST: "createPlaylist",
   DELETE_PLAYLIST: "deletePlaylist",
 };
+
+/**
+ * Wrapper of "FoundryVTT Dialog" constructor
+ * @param {string} title dialog title
+ * @param {string} template preloaded template (use 'renderTemplateWrapper' function)
+ * @param {(html: jQuery) => void} renderCallback callback for dialog render function
+ * @param {(html: jQuery) => void} closeCallback callback for dialog close function
+ * @param {Record<string, any>} buttons optional config for dialog buttons
+ * @returns {Promise<Dialog>}
+ */
+export async function dialogWrapper(
+  title,
+  template,
+  renderCallback,
+  closeCallback,
+  buttons = undefined
+) {
+  const dialog = new Dialog(
+    {
+      title,
+      content: template,
+      buttons: !buttons ? {} : buttons, // will error if not set to object
+      render: (html) => {
+        logToConsole({ html });
+        !buttons ? html.last()?.addClass("pm-force-inactive") : undefined;
+        overrideApplicationStyles(dialogId);
+        renderCallback(html);
+      },
+      close: (html) => closeCallback(html),
+    },
+    {
+      top: 0,
+      width: 800,
+      height: 800,
+    }
+  );
+  const dialogId = dialog.id;
+  return dialog;
+}
+
+export function overrideApplicationStyles(appId) {
+  const mixerElement = $.find(`#${appId}`);
+  if (!mixerElement?.length) {
+    errorToConsole(`${appId} not found, style override not possible!`);
+    return;
+  }
+
+  const styles = [
+    "pm-force-background-none",
+    // "pm-force-box-shadow-none"
+  ];
+
+  const element = $(mixerElement);
+  element.addClass(styles);
+
+  const content = element.find(".window-content");
+  content.addClass(styles);
+}

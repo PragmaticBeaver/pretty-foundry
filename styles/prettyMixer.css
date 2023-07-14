@@ -20,14 +20,6 @@
 
 /* Main Window */
 .pretty-mixer {
-  --color-primary: #a070ff;
-  --color-secondary: #e9f;
-  --background-color-primary: #222639;
-  --background-color-secondary: #4f5a81;
-  --menu-color-primary: gray;
-  --menu-color-secondary: darkgray;
-  --text-color-primary: whitesmoke;
-  --text-color-secondary: darkgray;
   --mixer-width: 100%;
   --mixer-height: 100%;
 
@@ -49,7 +41,8 @@
   padding: 15px;
   background-color: var(--background-color-primary);
   border-radius: 20px;
-  opacity: 0.8;
+
+  /* opacity: 0.8; */
   backdrop-filter: blur(10px);
 }
 

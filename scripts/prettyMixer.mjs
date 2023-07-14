@@ -18,9 +18,9 @@ import {
   getPlaylist,
   getPlaylists,
   mergeObjectWrapper,
+  overrideApplicationStyles,
 } from "./foundryWrapper.mjs";
-import { errorToConsole } from "./log.mjs";
-import { logToConsole } from "./log.mjs";
+import { errorToConsole, logToConsole } from "./log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "./templates.mjs";
 import { getElement } from "./utils.mjs";
 
@@ -66,6 +66,7 @@ export default class PrettyMixer extends Application {
     return mergeObjectWrapper(super.defaultOptions, {
       id: MODULE_CONFIG.MODULE_ID,
       template: getTemplatePath(TEMPLATE_IDS.MIXER),
+      title: MODULE_CONFIG.MODULE_NAME,
       popOut: true,
       top: 0,
       width: 800,
@@ -95,6 +96,8 @@ export default class PrettyMixer extends Application {
    */
   async activateListeners(html) {
     super.activateListeners(html);
+
+    overrideApplicationStyles(MODULE_CONFIG.MODULE_ID);
     await this.renderInitialState();
 
     this.hookIds.update = Hooks.on(
@@ -190,7 +193,7 @@ export default class PrettyMixer extends Application {
     if (overviewElement) {
       const playlists = getPlaylists();
       playlists.forEach(async (playlist) => {
-        const { id, name, mode } = playlist;
+        const { id, mode } = playlist;
         const element =
           mode === FOUNDRY_PLAYLIST_MODES.SOUNDBOARD
             ? getElement(
@@ -201,7 +204,7 @@ export default class PrettyMixer extends Application {
                 this.element,
                 this.ANCHOR_IDS.PLAYLIST_OVERVIEW_CONTENT_ANCHOR
               );
-        await addPlaylistCard(element, name, id);
+        await addPlaylistCard(element, playlist);
         updatePlaylistCardButton(element, id, playlist.playing);
         updatePlaylistCardMode(element, id, mode);
       });
@@ -336,7 +339,7 @@ export default class PrettyMixer extends Application {
       );
       if (!positionedCorrectly) {
         removePlaylistCard(oldContainer, changedPlaylistId);
-        await addPlaylistCard(newContainer, playlist.name, changedPlaylistId);
+        await addPlaylistCard(newContainer, playlist);
       }
 
       updatePlaylistCardButton(
@@ -350,13 +353,13 @@ export default class PrettyMixer extends Application {
 
   async onCreatePlaylist(playlistDocument, options) {
     logToConsole("onCreatePlaylist", { playlistDocument, options });
-    const { name, id, mode } = playlistDocument;
+    const { mode } = playlistDocument;
     const element = getOverviewAnchorByPlaylistMode(
       this.element,
       this.ANCHOR_IDS,
       mode
     );
-    await addPlaylistCard(element, name, id);
+    await addPlaylistCard(element, playlistDocument);
   }
 
   async onDeletePlaylist(playlistDocument, options) {

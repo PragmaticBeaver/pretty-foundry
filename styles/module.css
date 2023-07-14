@@ -4,11 +4,35 @@
 @import url("./playlistNode.css");
 @import url("./prettyMixer.css");
 @import url("./playlistCard.css");
-@import url(".playlistDetails.css");
+@import url("./playlistDetails.css");
+
+/* coloar variables (need to be defined inside body for dialogs to get access) */
+body {
+  --color-primary: #a070ff;
+  --color-secondary: #e9f;
+  --background-color-primary: #222639;
+  --background-color-secondary: #4f5a81;
+  --menu-color-primary: gray;
+  --menu-color-secondary: darkgray;
+  --text-color-primary: whitesmoke;
+  --text-color-secondary: darkgray;
+}
 
 /* global styles */
+.pm-force-inactive {
+  display: none !important;
+}
+
 .pm-inactive {
   display: none;
+}
+
+.pm-force-background-none {
+  background: none !important;
+}
+
+.pm-force-box-shadow-none {
+  box-shadow: none !important;
 }
 
 .pm-icon {

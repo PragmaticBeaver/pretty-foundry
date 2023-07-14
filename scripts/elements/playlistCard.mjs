@@ -2,12 +2,13 @@ import {
   FOUNDRY_PLAYLIST_MODES,
   renderTemplateWrapper,
 } from "../foundryWrapper.mjs";
-import { logToConsole } from "../log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 import { switchPlayPause } from "../utils.mjs";
+import { openPlaylistDetailsDialog } from "./playlistDetails.mjs";
 
-export async function addPlaylistCard(element, name, id) {
+export async function addPlaylistCard(element, playlist) {
   if (!element?.length) return;
+  const { name, id } = playlist;
 
   // create template
   const tempalte = await renderTemplateWrapper(
@@ -19,9 +20,8 @@ export async function addPlaylistCard(element, name, id) {
   // add "click"-handler
   const card = element.find(`#${id}-playlist-card`);
   if (!card?.length) return;
-  card.on("click", () => {
-    // todo - open playlist info
-    logToConsole(`PlaylistCard ${id} clicked`);
+  card.on("click", async () => {
+    await openPlaylistDetailsDialog(playlist);
   });
 }
 
