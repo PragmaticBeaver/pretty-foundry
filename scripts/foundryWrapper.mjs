@@ -93,16 +93,16 @@ export const FOUDNRY_HOOK_IDS = {
  * Wrapper of "FoundryVTT Dialog" constructor
  * @param {string} title dialog title
  * @param {string} template preloaded template (use 'renderTemplateWrapper' function)
- * @param {(html: jQuery) => void} renderCallback callback for dialog render function
- * @param {(html: jQuery) => void} closeCallback callback for dialog close function
+ * @param {(html: jQuery) => void} renderCallback optional callback for dialog render function
+ * @param {(html: jQuery) => void} closeCallback optional callback for dialog close function
  * @param {Record<string, any>} buttons optional config for dialog buttons
  * @returns {Promise<Dialog>}
  */
 export async function dialogWrapper(
   title,
   template,
-  renderCallback,
-  closeCallback,
+  renderCallback = undefined,
+  closeCallback = undefined,
   buttons = undefined
 ) {
   const dialog = new Dialog(
@@ -114,9 +114,9 @@ export async function dialogWrapper(
         logToConsole({ html });
         !buttons ? html.last()?.addClass("pm-force-inactive") : undefined;
         overrideApplicationStyles(dialogId);
-        renderCallback(html);
+        renderCallback && renderCallback(html);
       },
-      close: (html) => closeCallback(html),
+      close: (html) => closeCallback && closeCallback(html),
     },
     {
       top: 0,
