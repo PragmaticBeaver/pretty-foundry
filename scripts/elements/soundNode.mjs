@@ -2,8 +2,9 @@ import {
   getPlayingPlaylists,
   renderTemplateWrapper,
 } from "../foundryWrapper.mjs";
+import { makeObservable } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
-import { makeObservable, stopSound } from "../utils.mjs";
+import { stopSound } from "../utils.mjs";
 
 /**
  * Update ProgressBar-Element "width" by calculating the Sound progress.
