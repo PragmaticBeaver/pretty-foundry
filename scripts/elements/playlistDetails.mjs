@@ -1,6 +1,7 @@
 import { dialogWrapper, renderTemplateWrapper } from "../foundryWrapper.mjs";
 import { logToConsole } from "../log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
+import { addSongInfo } from "./songInfo.mjs";
 
 export async function openPlaylistDetailsDialog(playlist) {
   const title = playlist.name;
@@ -12,12 +13,43 @@ export async function openPlaylistDetailsDialog(playlist) {
     title,
     template,
     (html) => {
-      // todo register click handler
-      // todo render songInfo's
-      logToConsole({ html });
+      // register click handler
+      const header = html.find(".playlist-details-header");
+      const buttons = header.find(".playlist-details-header-icon");
+      buttons.each(function () {
+        const child = $(this);
+        const buttonType = child.data()?.buttonType;
+        switch (buttonType) {
+          case "back":
+            child.on("click", async () => {
+              await dialog.close();
+            });
+            break;
+          case "add":
+            child.on("click", () => {
+              logToConsole(title, "add was clicked");
+            });
+            break;
+          case "edit":
+            child.on("click", () => {
+              logToConsole(title, "edit was clicked");
+            });
+            break;
+          default:
+            break;
+        }
+      });
+
+      // render initial state
+      const body = html.find(".playlist-details-body");
+      playlist?.sounds?.forEach(async (sound) => {
+        await addSongInfo(body, sound);
+      });
     },
-    () => logToConsole(`closed ${title}`)
+    () => {
+      // todo remove Hooks
+      logToConsole(`closed ${title}`);
+    }
   );
   dialog.render(true);
-  logToConsole({ dialog });
 }
