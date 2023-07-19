@@ -29,8 +29,6 @@ export async function openPlaylistDetailsDialog(playlist) {
           case "add":
             // add button
             child.on("click", () => {
-              logToConsole(title, "add was clicked");
-              Hooks.call("renderPlaylistSoundConfig");
               new PlaylistSound(
                 { name: game.i18n.localize("SOUND.New") },
                 { parent: playlist }
