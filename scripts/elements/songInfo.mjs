@@ -40,7 +40,9 @@ export async function addSongInfo(element, song) {
   );
   element.append(template);
 
-  // event handler
+  // event handling
+
+  // volume
   const volumeBar = element.find(`#${id}-song-info`)?.find(".pm-volume-bar");
   volumeBar.on("change", (event) => {
     const element = $(event.target);
@@ -54,6 +56,8 @@ export async function addSongInfo(element, song) {
       ?.val(value);
     song.debounceVolume(value);
   });
+
+  // todo buttons
 
   // register custom Hooks (emitted by observable)
   registerHooks(volumeBar, id);

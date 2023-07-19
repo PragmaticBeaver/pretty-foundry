@@ -69,11 +69,20 @@ export function getPlaylists() {
 
 /**
  * Wrapper of "FoundryVTT game.playlists" get function
- * @param {*} id playlist ID
+ * @param {string} id playlist ID
  * @returns {Playlist | undefined}
  */
 export function getPlaylist(id) {
   return game?.playlists?.get(id);
+}
+
+/**
+ * Wrapper of "FoundryVTT game.playlists.getName" function
+ * @param {string} name playlist name
+ * @returns {Playlist | undefined}
+ */
+export function getPlaylistByName(name) {
+  return game?.playlists?.getName(name);
 }
 
 export const FOUNDRY_PLAYLIST_MODES = {
