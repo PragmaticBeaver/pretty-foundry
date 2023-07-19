@@ -17,6 +17,8 @@ import {
   getPlayingPlaylists,
   getPlaylist,
   getPlaylists,
+  hooksOff,
+  hooksOn,
   mergeObjectWrapper,
   overrideApplicationStyles,
 } from "./foundryWrapper.mjs";
@@ -81,12 +83,13 @@ export default class PrettyMixer extends Application {
    * @returns {Promise<void>}
    */
   async close(options) {
-    await super.close(options);
     // remove Hooks
-    Hooks.off(FOUDNRY_HOOK_IDS.UPDATE_PLAYLIST, this.hookIds.update);
-    Hooks.off(FOUDNRY_HOOK_IDS.CREATE_PLAYLIST, this.hookIds.create);
-    Hooks.off(FOUDNRY_HOOK_IDS.DELETE_PLAYLIST, this.hookIds.delete);
-    // todo SoundNode hooks - necessary?
+    const element = this.element;
+    hooksOff(FOUDNRY_HOOK_IDS.UPDATE_PLAYLIST, element);
+    hooksOff(FOUDNRY_HOOK_IDS.CREATE_PLAYLIST, element);
+    hooksOff(FOUDNRY_HOOK_IDS.DELETE_PLAYLIST, element);
+
+    await super.close(options);
   }
 
   /**
@@ -100,19 +103,21 @@ export default class PrettyMixer extends Application {
     overrideApplicationStyles(MODULE_CONFIG.MODULE_ID);
     await this.renderInitialState();
 
-    this.hookIds.update = Hooks.on(
+    const element = this.element;
+    hooksOn(
       FOUDNRY_HOOK_IDS.UPDATE_PLAYLIST,
+      element,
       async (document, change) => await this.onUpdatePlaylist(document, change)
     );
-
-    this.hookIds.create = Hooks.on(
+    hooksOn(
       FOUDNRY_HOOK_IDS.CREATE_PLAYLIST,
+      element,
       async (document, options) =>
         await this.onCreatePlaylist(document, options)
     );
-
-    this.hookIds.delete = Hooks.on(
+    hooksOn(
       FOUDNRY_HOOK_IDS.DELETE_PLAYLIST,
+      element,
       async (document, options) =>
         await this.onDeletePlaylist(document, options)
     );

@@ -1,7 +1,7 @@
 import { dialogWrapper, renderTemplateWrapper } from "../foundryWrapper.mjs";
 import { logToConsole } from "../log.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
-import { addSongInfo } from "./songInfo.mjs";
+import { addSongInfo, removeSongInfoHooks } from "./songInfo.mjs";
 
 export async function openPlaylistDetailsDialog(playlist) {
   const title = playlist.name;
@@ -46,9 +46,12 @@ export async function openPlaylistDetailsDialog(playlist) {
         await addSongInfo(body, sound);
       });
     },
-    () => {
-      // todo remove Hooks
-      logToConsole(`closed ${title}`);
+    (html) => {
+      // remove Hooks
+      const body = html.find(".playlist-details-body");
+      playlist?.sounds?.forEach((sound) => {
+        removeSongInfoHooks(body, sound.id);
+      });
     }
   );
   dialog.render(true);

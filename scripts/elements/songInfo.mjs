@@ -1,11 +1,14 @@
-import { renderTemplateWrapper } from "../foundryWrapper.mjs";
+import {
+  hooksOff,
+  hooksOn,
+  renderTemplateWrapper,
+} from "../foundryWrapper.mjs";
 import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 
 function registerHooks(volumeBar, songId) {
   // getSound
-  const customGetHook = CUSTOM_HOOKS.getSound;
-  const getHookId = Hooks.on(customGetHook, (update) => {
+  hooksOn(CUSTOM_HOOKS.getSound, volumeBar, (update) => {
     const soundId = update?.passthrough?.soundId;
     if (!soundId || soundId !== songId) return;
 
@@ -17,8 +20,6 @@ function registerHooks(volumeBar, songId) {
 
     $(volumeBar).val(volume * 100);
   });
-  const state = volumeBar.data();
-  state[customGetHook] = getHookId;
 }
 
 export async function addSongInfo(element, song) {
@@ -37,7 +38,7 @@ export async function addSongInfo(element, song) {
   registerHooks(volumeBar, id);
 }
 
-export function removeSongInfo(element, id) {
-  // todo
-  // const volumeBar = element.find(`#${id}-song-info`)?.find(".pm-volume-bar");
+export function removeSongInfoHooks(element, id) {
+  const volumeBar = element.find(`#${id}-song-info`)?.find(".pm-volume-bar");
+  hooksOff(CUSTOM_HOOKS.getSound, volumeBar);
 }
