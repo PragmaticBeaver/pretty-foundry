@@ -43,5 +43,8 @@ module.exports = {
     // FoundryVTT client functions
     loadTemplates: "readonly",
     renderTemplate: "readonly",
+
+    // FoundryVTT dialogs
+    PlaylistSound: "readonly",
   },
 };

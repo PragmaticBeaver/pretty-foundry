@@ -21,16 +21,27 @@ export async function openPlaylistDetailsDialog(playlist) {
         const buttonType = child.data()?.buttonType;
         switch (buttonType) {
           case "back":
+            // back button
             child.on("click", async () => {
               await dialog.close();
             });
             break;
           case "add":
+            // add button
             child.on("click", () => {
               logToConsole(title, "add was clicked");
+              Hooks.call("renderPlaylistSoundConfig");
+              new PlaylistSound(
+                { name: game.i18n.localize("SOUND.New") },
+                { parent: playlist }
+              ).sheet.render(true);
+
+              // todo renderPlaylistSoundConfig
+              // const addButton = element.find(`#${id}-song-info`);
             });
             break;
           case "edit":
+            // edit button
             child.on("click", () => {
               logToConsole(title, "edit was clicked");
             });
