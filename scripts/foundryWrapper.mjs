@@ -146,3 +146,31 @@ export function overrideApplicationStyles(appId) {
   const content = element.find(".window-content");
   content.addClass(styles);
 }
+
+/**
+ * Custom wrapper for FoundryVTT Hooks.on function.
+ * @param {string} hook name of hook
+ * @param {jQuery} element element which will hold the hook-ID as state using Data-Attibute
+ * @param {(...props) => Promise<void>} callback will be called on hook events
+ */
+export function hooksOn(hook, element, callback) {
+  if (!hook || !element?.length || !callback) return;
+
+  const hookId = Hooks.on(hook, async (...props) => await callback(...props));
+  const state = element.data();
+  state[hook] = hookId;
+}
+
+/**
+ *  Custom wrapper for FoundryVTT Hooks.off function.
+ * @param {string} hook name of hook
+ * @param {jQuery} element element which holds the hook-ID as state using Data-Attibute
+ */
+export function hooksOff(hook, element) {
+  if (!hook || !element?.length) return;
+
+  const hookId = element.data()[hook];
+  if (!hookId) return;
+
+  Hooks.off(hook, hookId);
+}

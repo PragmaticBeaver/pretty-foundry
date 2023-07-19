@@ -2,46 +2,20 @@ import {
   getPlayingPlaylists,
   renderTemplateWrapper,
 } from "../foundryWrapper.mjs";
-import { makeObservable } from "../observables.mjs";
+import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
-import { stopSound } from "../utils.mjs";
-
-/**
- * Update ProgressBar-Element "width" by calculating the Sound progress.
- * @param {jQuery} element Element which holds data-attributes (currentTime, duration) and will be updated
- * @param {*} update FoundryVTT object update
- * @returns {void}
- */
-export function updateProgressBar(element, update) {
-  const state = element.data();
-  const { prop, returnVal } = update;
-
-  const shouldIgnoreUpdate =
-    !["currentTime", "duration"].includes(prop) || !returnVal;
-  if (shouldIgnoreUpdate) return;
-  state[prop] = returnVal;
-
-  const { currentTime, duration } = state;
-  if (!currentTime || !duration) return; // only update if both are set
-
-  const calculatedProgress = Math.min((currentTime / duration) * 100, 100);
-  element.css("width", `${calculatedProgress}%`);
-}
+import { stopSound, updateProgressBar } from "../utils.mjs";
 
 function registerHooks(progressElement, soundId) {
-  const state = progressElement.data();
-
   // getSound
-  const getHookId = Hooks.on(`getSound-${soundId}`, (update) => {
+  const customGetHook = CUSTOM_HOOKS.getSound;
+  const getHookId = Hooks.on(customGetHook, (update) => {
+    const updateId = update?.passthrough?.soundId;
+    if (!updateId || updateId !== soundId) return;
     updateProgressBar(progressElement, update);
   });
-  state["getHookId"] = getHookId;
-
-  // setSound
-  // const setHookId = Hooks.on(`setSound-${soundId}`, (update) =>
-  //   logToConsole(update)
-  // );
-  // state["setHookId"] = setHookId;
+  const state = progressElement.data();
+  state[customGetHook] = getHookId;
 }
 
 /**
@@ -72,14 +46,6 @@ export async function addSoundNode(element, sound) {
   // register custom Hooks (emitted by observable)
   const progressElement = container.find(`#${soundId}-sound-node-progress`);
   registerHooks(progressElement, soundId);
-
-  // replace sound-obj with Proxy
-  sound.sound = makeObservable(
-    sound.sound,
-    `getSound-${soundId}`,
-    `setSound-${soundId}`,
-    false
-  );
 }
 
 /**
@@ -95,8 +61,8 @@ export function removeSoundNode(element, soundId) {
   if (!soundNode?.length) return;
 
   const soundProgress = soundNode.find(`#${soundId}-sound-node-progress`);
-  const { getHookId } = soundProgress.data();
-  Hooks.off(`getSound-${soundId}`, getHookId);
-  // Hooks.off(`setSound-${soundId}`, setHookId);
+  const getHookId = soundProgress.data()[CUSTOM_HOOKS.getSound];
+  Hooks.off(CUSTOM_HOOKS.getSound, getHookId);
+  // Hooks.off(CUSTOM_HOOKS.setSound, setHookId);
   soundNode.remove();
 }

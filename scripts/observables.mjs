@@ -1,4 +1,27 @@
+import { getPlaylists } from "./foundryWrapper.mjs";
 import { logToConsole } from "./log.mjs";
+
+export const CUSTOM_HOOKS = {
+  getSound: "getSound",
+  setSound: "setSound",
+};
+
+export function registerObservables() {
+  // sound
+  const playlists = getPlaylists();
+  playlists.forEach((playlist) => {
+    playlist.sounds.forEach((sound) => {
+      // replace sound-obj with Proxy
+      sound.sound = makeObservable(
+        sound.sound,
+        CUSTOM_HOOKS.getSound,
+        CUSTOM_HOOKS.setSound,
+        false,
+        { soundId: sound.id }
+      );
+    });
+  });
+}
 
 const OBSERVABLES = {};
 
@@ -12,7 +35,7 @@ const OBSERVABLES = {};
  * @param {*} passthrough will be passed through to subscriber
  * @returns {Proxy}
  */
-export function makeObservable(
+function makeObservable(
   target,
   getHook,
   setHook,

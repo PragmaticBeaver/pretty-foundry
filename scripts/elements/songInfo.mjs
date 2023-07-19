@@ -1,18 +1,24 @@
 import { renderTemplateWrapper } from "../foundryWrapper.mjs";
+import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 
-function registerHooks(progressElement, soundId) {
-  //   const state = progressElement.data();
-  //   // getSound
-  //   const getHookId = Hooks.on(`getSound-${soundId}`, (update) => {
-  //     updateProgressBar(progressElement, update);
-  //   });
-  //   state["getHookId"] = getHookId;
-  //   // setSound
-  //   // const setHookId = Hooks.on(`setSound-${soundId}`, (update) =>
-  //   //   logToConsole(update)
-  //   // );
-  //   // state["setHookId"] = setHookId;
+function registerHooks(volumeBar, songId) {
+  // getSound
+  const customGetHook = CUSTOM_HOOKS.getSound;
+  const getHookId = Hooks.on(customGetHook, (update) => {
+    const soundId = update?.passthrough?.soundId;
+    if (!soundId || soundId !== songId) return;
+
+    const ignoreUpdate = update.prop !== "play";
+    if (ignoreUpdate) return;
+
+    const volume = update?.target?.volume;
+    if (!volume && volume !== 0) return;
+
+    $(volumeBar).val(volume * 100);
+  });
+  const state = volumeBar.data();
+  state[customGetHook] = getHookId;
 }
 
 export async function addSongInfo(element, song) {
@@ -27,10 +33,11 @@ export async function addSongInfo(element, song) {
   element.append(template);
 
   // register custom Hooks (emitted by observable)
-  const volumeBar = element.find(`#${id}-song-info`)?.find("pm-volume-bar");
+  const volumeBar = element.find(`#${id}-song-info`)?.find(".pm-volume-bar");
   registerHooks(volumeBar, id);
 }
 
-// export function removeSongInfo(element, id) {
-//   // todo
-// }
+export function removeSongInfo(element, id) {
+  // todo
+  // const volumeBar = element.find(`#${id}-song-info`)?.find(".pm-volume-bar");
+}
