@@ -22,11 +22,9 @@ export function makeObservable(
   const knownTarget = OBSERVABLES[target?.pmState?.pmId];
   if (knownTarget) {
     const changes = evalChanges(target, knownTarget);
-    if (!changes) {
-      logToConsole("already observable");
-    } else {
-      // todo implement proxy override ?
+    if (changes) {
       logToConsole(changes);
+      // todo implement proxy override ?
     }
     return knownTarget;
   }
