@@ -8,7 +8,7 @@ import { preloadTemplates } from "./templates.mjs";
 import { loadMixerUi } from "./utils.mjs";
 
 Hooks.on("init", async () => {
-  setHookDebugging(false);
+  setHookDebugging(true);
   logToConsole("initializing ...");
   registerSettings();
   await preloadTemplates();
