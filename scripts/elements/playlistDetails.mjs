@@ -2,6 +2,8 @@ import { dialogWrapper, renderTemplateWrapper } from "../foundryWrapper.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 import { addSongInfo, removeSongInfoHooks } from "./songInfo.mjs";
 
+// todo update Dialog on Playlist (name) or Song (removed, added, renamed) change
+
 export async function openPlaylistDetailsDialog(playlist) {
   const title = playlist.name;
   const template = await renderTemplateWrapper(
