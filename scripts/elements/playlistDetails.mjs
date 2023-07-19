@@ -29,19 +29,18 @@ export async function openPlaylistDetailsDialog(playlist) {
           case "add":
             // add button
             child.on("click", () => {
-              new PlaylistSound(
+              const dialog = new PlaylistSound(
                 { name: game.i18n.localize("SOUND.New") },
                 { parent: playlist }
-              ).sheet.render(true);
-
-              // todo renderPlaylistSoundConfig
-              // const addButton = element.find(`#${id}-song-info`);
+              );
+              dialog.sheet.render(true);
             });
             break;
           case "edit":
             // edit button
             child.on("click", () => {
-              logToConsole(title, "edit was clicked");
+              const dialog = new PlaylistConfig(playlist);
+              dialog.render(true);
             });
             break;
           default:

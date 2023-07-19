@@ -46,5 +46,6 @@ module.exports = {
 
     // FoundryVTT dialogs
     PlaylistSound: "readonly",
+    PlaylistConfig: "readonly",
   },
 };
