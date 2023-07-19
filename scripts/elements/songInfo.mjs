@@ -3,6 +3,7 @@ import {
   hooksOn,
   renderTemplateWrapper,
 } from "../foundryWrapper.mjs";
+import { logToConsole } from "../log.mjs";
 import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 
@@ -15,10 +16,19 @@ function registerHooks(volumeBar, songId) {
     const ignoreUpdate = update.prop !== "play";
     if (ignoreUpdate) return;
 
-    const volume = update?.target?.volume;
-    if (!volume && volume !== 0) return;
+    const foundryInputVolume = $($.find("#currently-playing"))
+      ?.find('*[data-sound-id="S32cs3O21XeLGtDQ"]')
+      ?.find("input")
+      ?.val();
+    if (!foundryInputVolume && foundryInputVolume !== 0) return;
 
-    $(volumeBar).val(volume * 100);
+    const volumeBarVolume = $(volumeBar)?.val();
+    logToConsole({ foundryInputVolume, volumeBarVolume });
+    if (foundryInputVolume === volumeBarVolume) return;
+
+    // todo how to handle Updates from PM to FoundryVTT ?
+    // todo what event re-renders the volume slider? is there even an event?
+    $(volumeBar).val(foundryInputVolume);
   });
 }
 
@@ -29,12 +39,21 @@ export async function addSongInfo(element, song) {
   // create template
   const template = await renderTemplateWrapper(
     getTemplatePath(TEMPLATE_IDS.SONG_INFO),
-    { id, name: song.name, currentVolume: song.volume * 100 }
+    { id, name: song.name, currentVolume: song.volume }
   );
   element.append(template);
 
   // register custom Hooks (emitted by observable)
   const volumeBar = element.find(`#${id}-song-info`)?.find(".pm-volume-bar");
+  volumeBar.on("change", (event) => {
+    const element = $(event.target);
+    const value = element?.val();
+    if (!value && value !== 0) return;
+
+    logToConsole("volume at the time of change-event", value);
+    // todo
+    song.debounceVolume(value);
+  });
   registerHooks(volumeBar, id);
 }
 

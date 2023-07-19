@@ -84,9 +84,12 @@ export const FOUNDRY_PLAYLIST_MODES = {
 };
 
 export const FOUDNRY_HOOK_IDS = {
+  // Playlist
   UPDATE_PLAYLIST: "updatePlaylist",
   CREATE_PLAYLIST: "createPlaylist",
   DELETE_PLAYLIST: "deletePlaylist",
+  // Sound
+  UPDATE_PLAYLIST_SOUND: "updatePlaylistSound",
 };
 
 /**

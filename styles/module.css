@@ -5,6 +5,7 @@
 @import url("./prettyMixer.css");
 @import url("./playlistCard.css");
 @import url("./playlistDetails.css");
+@import url("./songInfo.css");
 
 /* coloar variables (need to be defined inside body for dialogs to get access) */
 body {
