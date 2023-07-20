@@ -18,8 +18,8 @@ function registerHooks(volumeBar, songId) {
     const ignoreUpdate = update.prop !== "play";
     if (ignoreUpdate) return;
 
-    const foundryInputVolume = $($.find("#currently-playing"))
-      ?.find('*[data-sound-id="S32cs3O21XeLGtDQ"]')
+    const foundryInputVolume = $()
+      ?.find(`*[data-sound-id="${songId}"]`)
       ?.find("input")
       ?.val();
     if (!foundryInputVolume && foundryInputVolume !== 0) return;
