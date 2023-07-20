@@ -4,9 +4,10 @@ import {
   renderTemplateWrapper,
   updateWrapper,
 } from "../foundryWrapper.mjs";
+import { logToConsole } from "../log.mjs";
 import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
-import { cycleClass } from "../utils.mjs";
+import { cycleClass, cycleIcon } from "../utils.mjs";
 
 function registerHooks(volumeBar, songId) {
   // getSound
@@ -43,6 +44,7 @@ export async function addSongInfo(element, song) {
   element.append(template);
 
   // event handling => updates from PM-slider to FoundryVTT-slider
+
   const songInfo = element.find(`#${id}-song-info`);
   if (!songInfo?.length) return;
 
@@ -64,11 +66,13 @@ export async function addSongInfo(element, song) {
     updateVolume(song, newVolume);
     switchVolumeIcon(volumeButton, newVolume > 0);
   });
+  // set initial volume icon
+  switchVolumeIcon(volumeButton, Number(volumeBar.val()) > 0);
 
   // repeat button
-  const repeat = songInfo.find('*[data-icon="repeat"]');
-  repeat?.on("click", async () => {
-    cycleClass(repeat, "pm-enabled");
+  const repeatButton = songInfo.find('*[data-icon="repeat"]');
+  repeatButton?.on("click", async () => {
+    cycleClass(repeatButton, "pm-enabled");
     // update Song value
     await updateWrapper(song, { repeat: !song.repeat });
     // update FoundryVTT repeat icon
@@ -78,15 +82,33 @@ export async function addSongInfo(element, song) {
       ? soundControls.removeClass("inactive")
       : soundControls.addClass("inactive");
   });
+  // set inital repeat icon
+  if (song.repeat) {
+    cycleClass(repeatButton, "pm-enabled");
+  }
+
+  // play/pause button
+  const playButton = songInfo.find('*[data-icon="play"]');
+  playButton?.on("click", async () => {
+    if (song.playing) {
+      await updateWrapper(song, {
+        playing: false,
+        pausedTime: song.sound.currentTime,
+      });
+    } else {
+      const playlist = song.parent;
+      playlist.playSound(song);
+    }
+
+    cycleIcon(playButton);
+  });
+  // set initial play/pause icon
+  if (song.playing) {
+    cycleIcon(playButton);
+  }
 
   // register custom Hooks (emitted by observable)
   registerHooks(volumeBar, id);
-
-  // render initial state
-  if (song.repeat) {
-    cycleClass(repeat, "pm-enabled");
-  }
-  switchVolumeIcon(volumeButton, Number(volumeBar.val()) > 0);
 }
 
 export function removeSongInfoHooks(element, id) {
