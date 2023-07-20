@@ -65,6 +65,28 @@ export function getElement(rootElement, searchQuery) {
 // }
 
 /**
+ * Update ProgressBar-Element "width" by calculating the Sound progress.
+ * @param {jQuery} element Element which holds data-attributes (currentTime, duration) and will be updated
+ * @param {Record<string,any>} update FoundryVTT update-object
+ * @returns {void}
+ */
+export function updateProgressBar(element, update) {
+  const state = element.data();
+  const { prop, returnVal } = update;
+
+  const shouldIgnoreUpdate =
+    !["currentTime", "duration"].includes(prop) || !returnVal;
+  if (shouldIgnoreUpdate) return;
+  state[prop] = returnVal;
+
+  const { currentTime, duration } = state;
+  if (!currentTime || !duration) return; // only update if both are set
+
+  const calculatedProgress = Math.min((currentTime / duration) * 100, 100);
+  element.css("width", `${calculatedProgress}%`);
+}
+
+/**
  * Set active icon inactive and vice versa.
  * @param {jQuery} element playPause icon container
  * @param {boolean} isPlaying switch to Play-icon
@@ -89,23 +111,32 @@ export function switchPlayPause(element, isPlaying = undefined) {
 }
 
 /**
- * Update ProgressBar-Element "width" by calculating the Sound progress.
- * @param {jQuery} element Element which holds data-attributes (currentTime, duration) and will be updated
- * @param {Record<string,any>} update FoundryVTT update-object
- * @returns {void}
+ * Cycle active icon.
+ * @param {jQuery} container element containing icons to switch active / inactive
+ * @param {string} inactiveClass optional class to search and set for inactivity
+ * @returns
  */
-export function updateProgressBar(element, update) {
-  const state = element.data();
-  const { prop, returnVal } = update;
+export function cycleIcon(container, inactiveClass = "pm-inactive") {
+  if (!container?.length) return;
 
-  const shouldIgnoreUpdate =
-    !["currentTime", "duration"].includes(prop) || !returnVal;
-  if (shouldIgnoreUpdate) return;
-  state[prop] = returnVal;
+  const activeElement = container.find(`:not(.${inactiveClass})`);
+  const index = activeElement.index();
+  const children = container.children();
+  const length = children?.length;
+  const nextIndex = index + 1 === length ? 0 : index + 1;
 
-  const { currentTime, duration } = state;
-  if (!currentTime || !duration) return; // only update if both are set
+  activeElement.addClass(inactiveClass);
+  const nextElement = children.eq(nextIndex);
+  nextElement.removeClass(inactiveClass);
+}
 
-  const calculatedProgress = Math.min((currentTime / duration) * 100, 100);
-  element.css("width", `${calculatedProgress}%`);
+/**
+ * Add or remove class depending on wether the class is present or not.
+ * @param {jQuery} element which should hold the class
+ * @param {string} className class to toggle
+ */
+export function cycleClass(element, className) {
+  element.hasClass(className)
+    ? element.removeClass(className)
+    : element.addClass(className);
 }

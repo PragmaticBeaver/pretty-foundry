@@ -186,3 +186,13 @@ export function hooksOff(hook, element) {
 
   Hooks.off(hook, hookId);
 }
+
+/**
+ *  Custom wrapper for FoundryVTT Document.update function.
+ * @param {Document} target FoundryVTT Document to update
+ * @param {Record<string,any>} value object with properties & values to update
+ * @returns {Promise<Document>} updated Document
+ */
+export async function updateWrapper(target, value) {
+  return await target.update(value);
+}

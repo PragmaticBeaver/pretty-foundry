@@ -2,9 +2,11 @@ import {
   hooksOff,
   hooksOn,
   renderTemplateWrapper,
+  updateWrapper,
 } from "../foundryWrapper.mjs";
 import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
+import { cycleClass, cycleIcon } from "../utils.mjs";
 
 function registerHooks(volumeBar, songId) {
   // getSound
@@ -41,29 +43,75 @@ export async function addSongInfo(element, song) {
   element.append(template);
 
   // event handling
+  const songInfo = element.find(`#${id}-song-info`);
+  if (!songInfo?.length) return;
 
-  // volume
-  const volumeBar = element.find(`#${id}-song-info`)?.find(".pm-volume-bar");
+  // volume-bar
+  const volumeBar = songInfo.find(".pm-volume-bar");
   volumeBar.on("change", (event) => {
     const element = $(event.target);
     const value = element?.val();
     if (!value && value !== 0) return;
-
-    // hack: set volume of FoundryVTT input element because volume-slider doesn't react to .debounceVolume()
-    $($.find("#currently-playing"))
-      ?.find(`*[data-sound-id="${id}"]`)
-      ?.find("input")
-      ?.val(value);
-    song.debounceVolume(value);
+    updateVolume(song, value);
+    // todo change icon
+    // idea => save previous value as data-attribute
   });
 
-  // todo buttons
+  // volume button
+  const volume = songInfo.find('*[data-icon="volume"]');
+  volume?.on("click", () => {
+    const val = $(volumeBar)?.val();
+    const newVolume = val === "0" ? 1.0 : 0.0;
+
+    $(volumeBar)?.val(newVolume);
+    updateVolume(song, newVolume);
+    cycleIcon(volume);
+  });
+
+  // repeat button
+  const repeat = songInfo.find('*[data-icon="repeat"]');
+  repeat?.on("click", async () => {
+    cycleClass(repeat, "pm-enabled");
+    // update Song value
+    await updateWrapper(song, { repeat: !song.repeat });
+    // update FoundryVTT repeat icon
+    const soundControls = $(`*[data-sound-id="${id}"]`)?.find(".sound-control");
+    if (!soundControls?.length) return;
+    song.repeat
+      ? soundControls.removeClass("inactive")
+      : soundControls.addClass("inactive");
+  });
 
   // register custom Hooks (emitted by observable)
   registerHooks(volumeBar, id);
+
+  // set correct repeat-icon on load
+  if (song.repeat) {
+    cycleClass(repeat, "pm-enabled");
+  }
+
+  // set correct volume-icon on load
+  if (volumeBar.val() === "0") {
+    cycleIcon(volume);
+  }
 }
 
 export function removeSongInfoHooks(element, id) {
   const volumeBar = element.find(`#${id}-song-info`)?.find(".pm-volume-bar");
   hooksOff(CUSTOM_HOOKS.getSound, volumeBar);
+}
+
+/**
+ * Hack for FoundryVTT volume update of slider and sound.
+ * Necessary because sound.debounceVolume() function doesn't update UI.
+ * @param {Sound} sound Sound-obj of FoundryVTT
+ * @param {number} volume volume between 0.0 and 1.0.
+ */
+function updateVolume(sound, volume) {
+  const soundId = sound.id;
+  $($.find("#currently-playing"))
+    ?.find(`*[data-sound-id="${soundId}"]`)
+    ?.find("input")
+    ?.val(volume);
+  sound.debounceVolume(volume);
 }

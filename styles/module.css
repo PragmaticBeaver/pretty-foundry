@@ -41,7 +41,12 @@ body {
 }
 
 .pm-icon:hover {
-  color: var(--color-primary);
+  color: var(--color-primary) !important;
+  cursor: pointer;
+}
+
+.pm-icon.pm-enabled {
+  color: var(--color-secondary);
 }
 
 .pm-volume-bar {
