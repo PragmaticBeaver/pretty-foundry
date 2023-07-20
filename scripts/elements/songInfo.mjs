@@ -4,10 +4,9 @@ import {
   renderTemplateWrapper,
   updateWrapper,
 } from "../foundryWrapper.mjs";
-import { logToConsole } from "../log.mjs";
 import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
-import { cycleClass, cycleIcon } from "../utils.mjs";
+import { cycleClass } from "../utils.mjs";
 
 function registerHooks(volumeBar, songId) {
   // getSound
@@ -43,30 +42,27 @@ export async function addSongInfo(element, song) {
   );
   element.append(template);
 
-  // event handling
+  // event handling => updates from PM-slider to FoundryVTT-slider
   const songInfo = element.find(`#${id}-song-info`);
   if (!songInfo?.length) return;
 
   // volume-bar
   const volumeBar = songInfo.find(".pm-volume-bar");
-  volumeBar.on("change", (event) => {
+  volumeBar.on("input", (event) => {
     const element = $(event.target);
-    const value = element?.val();
-    if (!value && value !== 0) return;
+    const value = Number(element?.val());
     updateVolume(song, value);
-    // todo change icon
-    // idea => save previous value as data-attribute
+    switchVolumeIcon(volumeButton, value > 0);
   });
 
   // volume button
-  const volume = songInfo.find('*[data-icon="volume"]');
-  volume?.on("click", () => {
+  const volumeButton = songInfo.find('*[data-icon="volume"]');
+  volumeButton?.on("click", () => {
     const val = Number($(volumeBar)?.val());
     const newVolume = val > 0 ? 0.0 : 1.0;
-
     $(volumeBar)?.val(newVolume);
     updateVolume(song, newVolume);
-    switchVolumeIcon(volume, newVolume > 0);
+    switchVolumeIcon(volumeButton, newVolume > 0);
   });
 
   // repeat button
@@ -86,13 +82,11 @@ export async function addSongInfo(element, song) {
   // register custom Hooks (emitted by observable)
   registerHooks(volumeBar, id);
 
-  // set correct repeat-icon on load
+  // render initial state
   if (song.repeat) {
     cycleClass(repeat, "pm-enabled");
   }
-
-  // set correct volume-icon on load
-  switchVolumeIcon(volume, Number(volumeBar.val()) > 0);
+  switchVolumeIcon(volumeButton, Number(volumeBar.val()) > 0);
 }
 
 export function removeSongInfoHooks(element, id) {
@@ -118,7 +112,6 @@ function updateVolume(sound, volume) {
 function switchVolumeIcon(container, enabled) {
   const volEnabledIcon = container.find(".fa-volume");
   const volDisabledIcon = container.find(".fa-volume-xmark");
-
   const inactiveClass = "pm-inactive";
   if (enabled) {
     volEnabledIcon.removeClass(inactiveClass);
