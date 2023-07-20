@@ -123,7 +123,6 @@ export async function dialogWrapper(
       content: template,
       buttons: !buttons ? {} : buttons, // will error if not set to object
       render: (html) => {
-        logToConsole({ html });
         !buttons ? html.last()?.addClass("pm-force-inactive") : undefined;
         overrideApplicationStyles(dialogId);
         renderCallback && renderCallback(html);
