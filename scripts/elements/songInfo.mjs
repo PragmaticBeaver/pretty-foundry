@@ -4,6 +4,7 @@ import {
   renderTemplateWrapper,
   updateWrapper,
 } from "../foundryWrapper.mjs";
+import { logToConsole } from "../log.mjs";
 import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 import { cycleClass, cycleIcon } from "../utils.mjs";
@@ -60,12 +61,12 @@ export async function addSongInfo(element, song) {
   // volume button
   const volume = songInfo.find('*[data-icon="volume"]');
   volume?.on("click", () => {
-    const val = $(volumeBar)?.val();
-    const newVolume = val === "0" ? 1.0 : 0.0;
+    const val = Number($(volumeBar)?.val());
+    const newVolume = val > 0 ? 0.0 : 1.0;
 
     $(volumeBar)?.val(newVolume);
     updateVolume(song, newVolume);
-    cycleIcon(volume);
+    switchVolumeIcon(volume, newVolume > 0);
   });
 
   // repeat button
@@ -91,9 +92,7 @@ export async function addSongInfo(element, song) {
   }
 
   // set correct volume-icon on load
-  if (volumeBar.val() === "0") {
-    cycleIcon(volume);
-  }
+  switchVolumeIcon(volume, Number(volumeBar.val()) > 0);
 }
 
 export function removeSongInfoHooks(element, id) {
@@ -114,4 +113,18 @@ function updateVolume(sound, volume) {
     ?.find("input")
     ?.val(volume);
   sound.debounceVolume(volume);
+}
+
+function switchVolumeIcon(container, enabled) {
+  const volEnabledIcon = container.find(".fa-volume");
+  const volDisabledIcon = container.find(".fa-volume-xmark");
+
+  const inactiveClass = "pm-inactive";
+  if (enabled) {
+    volEnabledIcon.removeClass(inactiveClass);
+    volDisabledIcon.addClass(inactiveClass);
+  } else {
+    volEnabledIcon.addClass(inactiveClass);
+    volDisabledIcon.removeClass(inactiveClass);
+  }
 }
