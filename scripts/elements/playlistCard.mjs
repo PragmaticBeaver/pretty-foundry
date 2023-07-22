@@ -6,7 +6,6 @@ import {
   renderTemplateWrapper,
 } from "../foundryWrapper.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
-import { switchPlayPause } from "../utils.mjs";
 import { openPlaylistDetailsDialog } from "./playlistDetails.mjs";
 
 export async function addPlaylistCard(element, playlist) {
@@ -20,11 +19,32 @@ export async function addPlaylistCard(element, playlist) {
   );
   element.append(tempalte);
 
-  // add "click"-handler
-  const card = element.find(`#${id}-playlist-card`);
-  if (!card?.length) return;
-  card.on("click", async () => {
+  // "click"-handler
+  const cardElement = element.find(`#${id}-playlist-card`);
+  // open dialog
+  if (!cardElement?.length) return;
+  const bufferElement = cardElement.find(".playlist-card-buffer");
+  bufferElement.on("click", async () => {
     await openPlaylistDetailsDialog(playlist);
+  });
+  const titleElement = cardElement.find(".playlist-card-title");
+  titleElement.on("click", async () => {
+    await openPlaylistDetailsDialog(playlist);
+  });
+  // play/stop button
+  const playButton = cardElement.find('*[data-icon="play"]');
+  playButton.on("click", async () => {
+    if (playlist.mode === FOUNDRY_PLAYLIST_MODES.SIMULTANEOUS) {
+      await playlist.playAll();
+    } else {
+      // single playback
+      const sound = playlist.sounds.contents[0];
+      await playlist.playSound(sound);
+    }
+  });
+  const stopButton = cardElement.find('*[data-icon="stop"]');
+  stopButton.on("click", async () => {
+    await playlist.stopAll();
   });
 }
 
@@ -45,10 +65,20 @@ export function updatePlaylistCardTitle(element, id, title) {
 }
 
 export function updatePlaylistCardButton(element, id, isPlaying) {
-  const buttonElement = element.find(`#${id}-playlist-card`).find(".pm-icon");
-  if (!buttonElement?.length) return;
+  const playlistCardElement = element.find(`#${id}-playlist-card`);
+  if (!playlistCardElement?.length) return;
 
-  switchPlayPause(buttonElement, isPlaying);
+  const playButton = playlistCardElement.find('*[data-icon="play"]');
+  const stopButton = playlistCardElement.find('*[data-icon="stop"]');
+
+  const inactiveClass = "pm-inactive";
+  if (isPlaying) {
+    stopButton.removeClass(inactiveClass);
+    playButton.addClass(inactiveClass);
+  } else {
+    playButton.removeClass(inactiveClass);
+    stopButton.addClass(inactiveClass);
+  }
 }
 
 export function updatePlaylistCardMode(element, id, mode) {

@@ -1,4 +1,5 @@
 <div id="{{id}}-playlist-card" class="playlist-card">
+  <div class="playlist-card-buffer"></div>
   <div class="playlist-card-content">
     <div class="playlist-card-title" title="{{title}}">{{title}}</div>
     <div class="playlist-card-icons">
@@ -8,9 +9,9 @@
         <i class="fas fa-random pm-inactive"></i>
         <i class="fas fa-ban pm-inactive"></i>
       </div>
-      <div class="pm-icon" data-icon="playPause">
-        <i class="fas fa-play"></i>
-        <i class="fas fa-pause pm-inactive"></i>
+      <div>
+        <i class="pm-icon fas fa-play" data-pm-id="{{id}}" data-icon="play"></i>
+        <i class="pm-icon fas fa-stop" data-pm-id="{{id}}" data-icon="stop"></i>
       </div>
     </div>
 
