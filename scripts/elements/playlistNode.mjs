@@ -1,3 +1,6 @@
+/**
+ * Component for displaying playlist name as small node. Which will hold SoundNode's as children.
+ */
 import { renderTemplateWrapper } from "../foundryWrapper.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 

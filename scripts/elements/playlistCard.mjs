@@ -1,3 +1,6 @@
+/**
+ * Component for displaying details of a single playlist and controls for said playlist.
+ */
 import {
   FOUNDRY_PLAYLIST_MODES,
   renderTemplateWrapper,

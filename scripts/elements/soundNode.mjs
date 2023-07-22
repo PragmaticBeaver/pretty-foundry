@@ -1,3 +1,6 @@
+/**
+ * Component for displaying song progress and name as small node.
+ */
 import {
   getPlayingPlaylists,
   hooksOffWrapper,

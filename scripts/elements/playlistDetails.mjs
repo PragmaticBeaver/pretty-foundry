@@ -1,3 +1,6 @@
+/**
+ * Dialog for displaying playlist details and controls for said playlist.
+ */
 import { dialogWrapper, renderTemplateWrapper } from "../foundryWrapper.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 import { addSongInfo, removeSongInfoHooks } from "./songInfo.mjs";

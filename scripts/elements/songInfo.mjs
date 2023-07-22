@@ -1,3 +1,6 @@
+/**
+ * Component for displaying song details and controls for said song.
+ */
 import {
   hooksOffWrapper,
   hooksOnWrapper,

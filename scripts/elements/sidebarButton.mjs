@@ -1,3 +1,6 @@
+/**
+ * Button for opening Pretty Mixer UI.
+ */
 import { MODULE_CONFIG } from "../config.mjs";
 import { renderTemplateWrapper } from "../foundryWrapper.mjs";
 import { errorToConsole } from "../log.mjs";
