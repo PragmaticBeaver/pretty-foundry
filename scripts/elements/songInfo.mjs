@@ -66,7 +66,7 @@ export async function addSongInfo(element, song) {
     switchVolumeIcon(volumeButton, newVolume > 0);
   });
   // set initial volume icon
-  switchVolumeIcon(volumeButton, Number(volumeBar.val()) > 0);
+  switchVolumeIcon(volumeButton, song.effectiveVolume > 0);
 
   // repeat button
   const repeatButton = songInfo.find('*[data-icon="repeat"]');
