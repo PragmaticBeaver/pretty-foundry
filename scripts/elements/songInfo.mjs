@@ -106,6 +106,15 @@ export async function addSongInfo(element, song) {
     cycleIcon(playButton);
   }
 
+  // stop button
+  const stopButton = songInfo.find('*[data-icon="stop"]');
+  stopButton?.on("click", async () => {
+    if (song.playing) {
+      cycleIcon(playButton);
+    }
+    song?.parent?.stopSound(song);
+  });
+
   // register custom Hooks (emitted by observable)
   registerHooks(volumeBar, id);
 }
