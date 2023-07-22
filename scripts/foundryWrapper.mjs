@@ -2,7 +2,7 @@
  * !!! DEV-INFO !!!
  * The following wrapper functions are mainly used for type support inside other files.
  */
-import { errorToConsole, logToConsole } from "./log.mjs";
+import { errorToConsole } from "./log.mjs";
 
 /**
  * Wrapper of FoundryVTT CONFIG.debug.hooks property.
@@ -92,15 +92,6 @@ export const FOUNDRY_PLAYLIST_MODES = {
   SOUNDBOARD: -1,
 };
 
-export const FOUDNRY_HOOK_IDS = {
-  // Playlist
-  UPDATE_PLAYLIST: "updatePlaylist",
-  CREATE_PLAYLIST: "createPlaylist",
-  DELETE_PLAYLIST: "deletePlaylist",
-  // Sound
-  UPDATE_PLAYLIST_SOUND: "updatePlaylistSound",
-};
-
 /**
  * Wrapper of "FoundryVTT Dialog" constructor
  * @param {string} title dialog title
@@ -159,12 +150,31 @@ export function overrideApplicationStyles(appId) {
 }
 
 /**
- * Custom wrapper for FoundryVTT Hooks.on function.
+ *  Custom wrapper for FoundryVTT Document.update function.
+ * @param {Document} target FoundryVTT Document to update
+ * @param {Record<string,any>} value object with properties & values to update
+ * @returns {Promise<Document>} updated Document
+ */
+export async function updateWrapper(target, value) {
+  return await target.update(value);
+}
+
+export const FOUDNRY_HOOK_IDS = {
+  // Playlist
+  UPDATE_PLAYLIST: "updatePlaylist",
+  CREATE_PLAYLIST: "createPlaylist",
+  DELETE_PLAYLIST: "deletePlaylist",
+  // Sound
+  UPDATE_PLAYLIST_SOUND: "updatePlaylistSound",
+};
+
+/**
+ * Custom wrapper for FoundryVTT Hooks.on function, which will set hook-ID as Data-Attribute.
  * @param {string} hook name of hook
  * @param {jQuery} element element which will hold the hook-ID as state using Data-Attibute
  * @param {(...props) => Promise<void>} callback will be called on hook events
  */
-export function hooksOn(hook, element, callback) {
+export function hooksOnWrapper(hook, element, callback) {
   if (!hook || !element?.length || !callback) return;
 
   const hookId = Hooks.on(hook, async (...props) => await callback(...props));
@@ -173,11 +183,11 @@ export function hooksOn(hook, element, callback) {
 }
 
 /**
- *  Custom wrapper for FoundryVTT Hooks.off function.
+ *  Custom wrapper for FoundryVTT Hooks.off function, which will use hook-ID from Data-Attribute to remove hook.
  * @param {string} hook name of hook
  * @param {jQuery} element element which holds the hook-ID as state using Data-Attibute
  */
-export function hooksOff(hook, element) {
+export function hooksOffWrapper(hook, element) {
   if (!hook || !element?.length) return;
 
   const hookId = element.data()[hook];
@@ -187,11 +197,10 @@ export function hooksOff(hook, element) {
 }
 
 /**
- *  Custom wrapper for FoundryVTT Document.update function.
- * @param {Document} target FoundryVTT Document to update
- * @param {Record<string,any>} value object with properties & values to update
- * @returns {Promise<Document>} updated Document
+ * Wrapper of FoundryVTT Hooks.call function
+ * @param {string} hook
+ * @param  {...any} props
  */
-export async function updateWrapper(target, value) {
-  return await target.update(value);
+export function hooksCallWrapper(hook, ...props) {
+  Hooks.call(hook, ...props);
 }

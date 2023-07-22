@@ -1,17 +1,16 @@
 import {
-  hooksOff,
-  hooksOn,
+  hooksOffWrapper,
+  hooksOnWrapper,
   renderTemplateWrapper,
   updateWrapper,
 } from "../foundryWrapper.mjs";
-import { logToConsole } from "../log.mjs";
 import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 import { cycleClass, cycleIcon } from "../utils.mjs";
 
 function registerHooks(volumeBar, songId) {
   // getSound
-  hooksOn(CUSTOM_HOOKS.getSound, volumeBar, (update) => {
+  hooksOnWrapper(CUSTOM_HOOKS.getSound, volumeBar, (update) => {
     // update from FoundryVTT-slider to PM-slider
     const soundId = update?.passthrough?.soundId;
     if (!soundId || soundId !== songId) return;
@@ -113,7 +112,7 @@ export async function addSongInfo(element, song) {
 
 export function removeSongInfoHooks(element, id) {
   const volumeBar = element.find(`#${id}-song-info`)?.find(".pm-volume-bar");
-  hooksOff(CUSTOM_HOOKS.getSound, volumeBar);
+  hooksOffWrapper(CUSTOM_HOOKS.getSound, volumeBar);
 }
 
 /**

@@ -1,7 +1,7 @@
 import {
   getPlayingPlaylists,
-  hooksOff,
-  hooksOn,
+  hooksOffWrapper,
+  hooksOnWrapper,
   renderTemplateWrapper,
 } from "../foundryWrapper.mjs";
 import { CUSTOM_HOOKS } from "../observables.mjs";
@@ -10,7 +10,7 @@ import { stopSound, updateProgressBar } from "../utils.mjs";
 
 function registerHooks(progressElement, soundId) {
   // getSound
-  hooksOn(CUSTOM_HOOKS.getSound, progressElement, (update) => {
+  hooksOnWrapper(CUSTOM_HOOKS.getSound, progressElement, (update) => {
     const updateId = update?.passthrough?.soundId;
     if (!updateId || updateId !== soundId) return;
     updateProgressBar(progressElement, update);
@@ -60,6 +60,6 @@ export function removeSoundNode(element, soundId) {
   if (!soundNode?.length) return;
 
   const soundProgress = soundNode.find(`#${soundId}-sound-node-progress`);
-  hooksOff(CUSTOM_HOOKS.getSound, soundProgress);
+  hooksOffWrapper(CUSTOM_HOOKS.getSound, soundProgress);
   soundNode.remove();
 }

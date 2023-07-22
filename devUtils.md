@@ -6,69 +6,45 @@ Prettier does not support partials which is why they aren't used. Small, reusabl
 
 ### Icons
 
-#### play
+```html
+<!-- play -->
+<i class="pm-icon fas fa-play" data-pm-id="{{id}}" data-icon="play"></i>
 
-```hbs
-<div class="pm-icon" data-icon="play">
-  <i class="fas fa-play"></i>
-</div>
-```
+<!-- pause -->
+<i class="pm-icon fas fa-pause" data-pm-id="{{id}}" data-icon="pause"></i>
 
-#### pause
+<!-- stop -->
+<i class="pm-icon fas fa-stop" data-pm-id="{{id}}" data-icon="stop"></i>
 
-```hbs
-<div class="pm-icon" data-icon="pause">
-  <i class="fas fa-pause"></i>
-</div>
-```
+<!-- shuffle -->
+<i class="pm-icon fas fa-shuffle" data-pm-id="{{id}}" data-icon="shuffle"></i>
 
-### play/pause
+<!-- repeat -->
+<i class="pm-icon fas fa-repeat" data-pm-id="{{id}}" data-icon="repeat"></i>
 
-```hbs
-<div class="pm-icon" data-icon="playPause">
-  <i class="fas fa-play"></i>
-  <i class="fas fa-pause pm-inactive"></i>
-</div>
-```
+<!-- volume -->
+<i class="pm-icon fas fa-volume" data-pm-id="{{id}}" data-icon="volume"></i>
 
-#### repeat
+<!-- volume-x -->
+<i
+  class="pm-icon fas fa-volume-xmark"
+  data-pm-id="{{id}}"
+  data-icon="volume-xmark"
+></i>
 
-```hbs
-<div class="pm-icon" data-icon="repeat">
-  <i class="fas fa-repeat"></i>
-</div>
-```
+<!-- backward -->
+<i
+  class="pm-icon fas fa-backward-step"
+  data-pm-id="{{id}}"
+  data-icon="backward-step"
+></i>
 
-#### shuffle
-
-```hbs
-<div class="pm-icon" data-icon="shuffle">
-  <i class="fas fa-shuffle"></i>
-</div>
-```
-
-#### volume
-
-```hbs
-<div class="pm-icon" data-icon="volume">
-  <i class="fas fa-volume"></i>
-</div>
-```
-
-#### backward-step
-
-```hbs
-<div class="pm-icon" data-icon="backward-step">
-  <i class="fas fa-backward-step"></i>
-</div>
-```
-
-#### forward-step
-
-```hbs
-<div class="pm-icon" data-icon="forward-step">
-  <i class="fas fa-forward-step"></i>
-</div>
+<!-- forward -->
+<i
+  class="pm-icon fas fa-forward-step"
+  data-pm-id="{{id}}"
+  data-icon="forward-step"
+></i>
 ```
 
 ## Find FoundryVTT code
