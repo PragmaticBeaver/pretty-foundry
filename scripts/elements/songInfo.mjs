@@ -7,6 +7,7 @@ import {
   renderTemplateWrapper,
   updateWrapper,
 } from "../foundryWrapper.mjs";
+import { logToConsole } from "../log.mjs";
 import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 import { cycleClass, cycleIcon } from "../utils.mjs";
@@ -69,7 +70,7 @@ export async function addSongInfo(element, song) {
     switchVolumeIcon(volumeButton, newVolume > 0);
   });
   // set initial volume icon
-  switchVolumeIcon(volumeButton, song.effectiveVolume > 0);
+  switchVolumeIcon(volumeButton, song.volume > 0);
 
   // repeat button
   const repeatButton = songInfo.find('*[data-icon="repeat"]');
