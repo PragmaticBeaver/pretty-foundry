@@ -7,7 +7,6 @@ import {
   renderTemplateWrapper,
   updateWrapper,
 } from "../foundryWrapper.mjs";
-import { logToConsole } from "../log.mjs";
 import { CUSTOM_HOOKS } from "../observables.mjs";
 import { TEMPLATE_IDS, getTemplatePath } from "../templates.mjs";
 import { cycleClass, cycleIcon } from "../utils.mjs";
