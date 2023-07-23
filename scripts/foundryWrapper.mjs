@@ -142,9 +142,8 @@ export function overrideApplicationStyles(appId) {
     // "pm-force-box-shadow-none"
   ];
 
+  // remove content background
   const element = $(mixerElement);
-  element.addClass(styles);
-
   const content = element.find(".window-content");
   content.addClass(styles);
 }
