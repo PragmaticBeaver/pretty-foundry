@@ -1,12 +1,12 @@
-import { injectSidebarButton } from "./elements/sidebarButton.mjs";
-import { setHookDebugging } from "./foundryWrapper.mjs";
-import { registerIconEvents } from "./icons.mjs";
-import { logToConsole } from "./log.mjs";
-import { registerObservables } from "./observables.mjs";
 import PrettyMixer from "./prettyMixer.mjs";
-import { registerSettings } from "./settings.mjs";
-import { preloadTemplates } from "./templates.mjs";
+import { injectSidebarButton } from "./elements/sidebarButton.mjs";
 import { loadMixerUi } from "./utils.mjs";
+import { logToConsole } from "./log.mjs";
+import { preloadTemplates } from "./templates.mjs";
+import { registerIconEvents } from "./icons.mjs";
+import { registerObservables } from "./observables.mjs";
+import { registerSettings } from "./settings.mjs";
+import { setHookDebugging } from "./foundryWrapper.mjs";
 
 Hooks.on("init", async () => {
   setHookDebugging(false);

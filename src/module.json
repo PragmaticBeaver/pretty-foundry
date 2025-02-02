@@ -1,7 +1,7 @@
 {
   "id": "pretty-mixer",
   "title": "Pretty Mixer",
-  "description": "A pretty audio mixer with great controls for FoundryVTT.",
+  "description": "Improved FoundryVTT audio controls.",
   "version": "1.0",
   "compatibility": {
     "minimum": 11,
