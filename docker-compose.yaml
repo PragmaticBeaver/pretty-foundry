@@ -1,0 +1,26 @@
+services:
+  # ===============
+  # Watchtower
+  # automatic docker image updates
+  # ===============
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # ====================================
+  # FoundryVTT
+  # ====================================
+  foundryvtt:
+    image: felddy/foundryvtt:11
+    container_name: foundryvtt
+    init: true
+    restart: unless-stopped
+    ports:
+      - 30000:30000/tcp
+    volumes:
+      - ${PWD}/volumes/foundry-vtt/data:/data
+      - ${PWD}/src:/data/Data/modules/pretty-mixer
+    env_file:
+      - ${PWD}/foundry.env
