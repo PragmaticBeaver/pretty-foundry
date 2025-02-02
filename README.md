@@ -2,18 +2,27 @@
 
 ## Development
 
-For a simple development environment add a symlink from the root directory of this repository into your FoundryVTT modules dir.
+### Docker setup
+
+1. Install docker / docker desktop.
+2. Pull images `docker compose pull`
+3. run container `docker compose up --build -d`
+4. open [localhost:30000](http://localhost:30000/)
+
+### Manual setup
+
+For a manual development environment add a symlink from the src directory of this repository into your FoundryVTT modules dir.
 
 #### MacOS example
 
 ```sh
-ln -s ~/src/pretty-mixer/ /Users/Beaver/Library/Application\ Support/FoundryVTT/Data/modules
+ln -s ~/src/pretty-mixer/src /Users/Beaver/Library/Application\ Support/FoundryVTT/Data/modules
 ```
 
-### Windows example
+#### Windows example
 
 ```sh
-mklink /D "D:\FoundryVTT data\Data\modules\pretty-mixer" "E:\src\pretty-mixer"
+mklink /D "D:\FoundryVTT data\Data\modules\pretty-mixer\src" "E:\src\pretty-mixer"
 ```
 
 ## Dev notes - brain storming
