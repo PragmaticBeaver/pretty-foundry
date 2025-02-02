@@ -22,5 +22,6 @@ services:
     volumes:
       - ${PWD}/volumes/foundry-vtt/data:/data
       - ${PWD}/src:/data/Data/modules/pretty-mixer
+      - ${PWD}/data:/data/Data/dev_assets
     env_file:
       - ${PWD}/foundry.env
