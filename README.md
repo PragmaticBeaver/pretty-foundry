@@ -6,13 +6,13 @@ For a simple development environment add a symlink from the root directory of th
 
 #### MacOS example
 
-```bash
+```sh
 ln -s ~/src/pretty-mixer/ /Users/Beaver/Library/Application\ Support/FoundryVTT/Data/modules
 ```
 
 ### Windows example
 
-```bash
+```sh
 mklink /D "D:\FoundryVTT data\Data\modules\pretty-mixer" "E:\src\pretty-mixer"
 ```
 
