@@ -12,7 +12,7 @@ import {
 } from "./elements/playlistNode.mjs";
 import { addSoundNode, removeSoundNode } from "./elements/soundNode.mjs";
 import {
-  FOUDNRY_HOOK_IDS, // getPlaylists,
+  FOUDNRY_HOOK_IDS,
   FOUNDRY_PLAYLIST_MODES,
   getPlayingPlaylists,
   getPlaylist,
@@ -46,6 +46,7 @@ export default class PrettyMixer extends Application {
     PLAYLIST_OVERVIEW_CONTENT_ANCHOR: "#playlist-overview-content-anchor",
     SOUNDBOARD_OVERVIEW_CONTENT_ANCHOR: "#soundboard-overview-content-anchor",
   };
+
   DYNAMIC_ANCHOR_ID_PARTS = {
     PLAYLIST_NODE: "-playlist-node",
     SOUND_NODE: "-sound-node",

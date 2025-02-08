@@ -14,7 +14,7 @@ export const ICON_TYPES = {
 };
 
 export function registerIconEvents() {
-  hooksOnWrapper(PM_UPDATE_ICON_HOOK, $("body"), updatePMIcon);
+  hooksOnWrapper(PM_UPDATE_ICON_HOOK, $("body"), updateIcon);
 }
 
 /**
@@ -24,7 +24,7 @@ export function registerIconEvents() {
  * @param {boolean} enabled enable or disable icon
  * @returns
  */
-function updatePMIcon(id, iconType, enabled) {
+function updateIcon(id, iconType, enabled) {
   if (!id || !iconType) return;
 
   const iconElements = $(`[data-pm-id="${id}"][data-icon="${iconType}"]`);
