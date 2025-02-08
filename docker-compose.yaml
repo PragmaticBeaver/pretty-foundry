@@ -10,8 +10,8 @@ services:
     ports:
       - 30000:30000/tcp
     volumes:
-      - ${PWD}/volumes/foundry-vtt/data:/data # FoundryVTT data
-      - ${PWD}/src:/data/Data/modules/pretty-mixer # THIS plugin
-      - ${PWD}/data:/data/Data/dev_assets # dev assets (music)
+      - ./volumes/foundry-vtt/data:/data # FoundryVTT data
+      - ./src:/data/Data/modules/pretty-mixer # THIS plugin
+      - ./data:/data/Data/dev_assets # dev assets (music)
     env_file:
-      - ${PWD}/foundry.env
+      - ./foundry.env
