@@ -11,23 +11,23 @@ export function logToConsole(msg, data) {
   if (LOG_LEVEL > LOG_LEVEL_INDEX.DEBUG) {
     return;
   }
-  console.log(`%c ${PREFIX} ${msg} ${data || ""}`, "color:#6495ED");
+  console.log(`%c${PREFIX} ${msg} ${data || ""}`, "color:#6495ED");
 }
 
 export function infoToConsole(msg, data) {
   if (LOG_LEVEL > LOG_LEVEL_INDEX.INFO) {
     return;
   }
-  console.info(`%c ${PREFIX} ${msg} ${data || ""}`, "color:green");
+  console.info(`%c${PREFIX} ${msg} ${data || ""}`, "color:green");
 }
 
 export function warnToConsole(msg, data) {
   if (LOG_LEVEL > LOG_LEVEL_INDEX.WARN) {
     return;
   }
-  console.warn(`%c ${PREFIX} ${msg} ${data || ""}`, "color:#DAA520");
+  console.warn(`%c${PREFIX} ${msg} ${data || ""}`, "color:#DAA520");
 }
 
 export function errorToConsole(msg, data) {
-  console.error(`%c ${PREFIX} ${msg} ${data || ""}`, "color:red");
+  console.error(`%c${PREFIX} ${msg} ${data || ""}`, "color:red");
 }
